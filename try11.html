@@ -1,0 +1,1245 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kian Sogoni — Portfolio Hail Mary</title>
+    <meta name="description" content="Kian Sogoni — Computer Science student, developer, and storyteller. A Project Hail Mary–inspired portfolio exploring code, media, and design.">
+    <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='.9em' font-size='90'%3E%E2%AD%90%3C/text%3E%3C/svg%3E">
+
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@500;700;900&family=Plus+Jakarta+Sans:wght@300;400;600;700&family=Press+Start+2P&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
+                        space: { 900: '#060913', 800: '#0b1120', 700: '#111b33' }
+                    },
+                    fontFamily: {
+                        sans: ['Plus Jakarta Sans', 'Inter', 'sans-serif'],
+                        orbitron: ['Orbitron', 'sans-serif'],
+                        minecraft: ['Press Start 2P', 'monospace'],
+                    }
+                }
+            }
+        }
+    </script>
+
+    <style>
+        :root {
+            --phm-offwhite: #E6E8E6;
+            --phm-sage: #B0B8B0;
+            --phm-yellow: #C5B358;
+            --phm-rust: #B85042;
+            --phm-teal: #1F4E5B;
+            --phm-darkteal: #0D1F2D;
+            --space-black: #06090E;
+            --space-void: #0D1F2D;
+            --silver-metallic: #B0B8B0;
+            --glass-bg: rgba(13, 31, 45, 0.45);
+            --glass-border: rgba(197, 179, 88, 0.2);
+        }
+
+        #cosmic-canvas { background-color: #06090E; }
+
+        body {
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            background-color: var(--space-black);
+            color: var(--phm-offwhite);
+            overflow-x: hidden;
+        }
+
+        h1, h2, h3, .font-orbitron { font-family: 'Orbitron', sans-serif; }
+        .font-minecraft { font-family: 'Press Start 2P', monospace; }
+
+        .glass-panel {
+            background: var(--glass-bg);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border: 1px solid var(--glass-border);
+            box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.6), inset 0 0 10px rgba(230, 232, 230, 0.03);
+            border-radius: 1.5rem;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .glass-panel:hover {
+            border-color: rgba(184, 80, 66, 0.4);
+            box-shadow: 0 10px 30px 0 rgba(184, 80, 66, 0.15);
+        }
+
+        ::-webkit-scrollbar { width: 8px; height: 8px; }
+        ::-webkit-scrollbar-track { background: #06090E; }
+        ::-webkit-scrollbar-thumb { background: rgba(184, 80, 66, 0.4); border-radius: 4px; }
+        ::-webkit-scrollbar-thumb:hover { background: rgba(184, 80, 66, 0.7); }
+
+        .text-glow-yellow { text-shadow: 0 0 10px rgba(197, 179, 88, 0.3); }
+
+        .page-view {
+            display: none;
+            opacity: 0;
+            transform: translateY(15px) scale(0.99);
+            transition: opacity 0.4s ease, transform 0.4s ease;
+        }
+        .page-view.active-page {
+            display: block;
+            opacity: 1;
+            transform: translateY(0) scale(1);
+        }
+
+        .nav-tab-btn {
+            position: relative;
+            transition: all 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        .nav-tab-btn .nav-label {
+            max-width: 0;
+            opacity: 0;
+            white-space: nowrap;
+            overflow: hidden;
+            transition: all 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        .nav-tab-btn:hover .nav-label,
+        .nav-tab-btn:focus-visible .nav-label {
+            max-width: 120px;
+            opacity: 1;
+            margin-left: 0.5rem;
+        }
+
+        #starmap-modal { display: none; opacity: 0; transition: opacity 0.3s ease; }
+        #starmap-modal.active { display: flex; opacity: 1; }
+
+        /* Accessibility: visible focus rings */
+        button:focus-visible, a:focus-visible, input:focus-visible, textarea:focus-visible {
+            outline: 2px solid #C5B358;
+            outline-offset: 3px;
+        }
+
+        @media (prefers-reduced-motion: reduce) {
+            *, *::before, *::after {
+                animation-duration: 0.001ms !important;
+                animation-iteration-count: 1 !important;
+                transition-duration: 0.001ms !important;
+            }
+        }
+    </style>
+</head>
+<body class="relative min-h-screen selection:bg-[#B85042]/30 selection:text-[#C5B358]">
+
+    <!-- Skip link for keyboard users -->
+    <a href="#page-home" class="sr-only focus:not-sr-only focus:absolute focus:top-2 focus:left-2 focus:z-[100] focus:px-4 focus:py-2 focus:bg-[#C5B358] focus:text-[#0D1F2D] focus:rounded-lg focus:font-bold">
+        Skip to content
+    </a>
+
+    <!-- Unified cosmic background canvas -->
+    <canvas id="cosmic-canvas" aria-hidden="true" class="fixed top-0 left-0 w-full h-full pointer-events-none z-0"></canvas>
+
+    <!-- Ambient nebulae glows -->
+    <div class="fixed top-1/4 left-10 w-96 h-96 bg-[#1F4E5B]/15 rounded-full blur-3xl pointer-events-none z-0"></div>
+    <div class="fixed bottom-1/3 right-10 w-96 h-96 bg-[#B85042]/10 rounded-full blur-3xl pointer-events-none z-0"></div>
+
+    <!-- ICON-ONLY FLOATING HEADER -->
+    <header class="fixed top-5 left-1/2 -translate-x-1/2 z-40">
+        <nav class="glass-panel px-4 py-2.5 flex items-center justify-center gap-2 border-[#C5B358]/20 shadow-2xl" aria-label="Primary navigation">
+
+            <button onclick="switchPage('home')" id="nav-home" aria-label="Go to Home page" class="nav-tab-btn px-3.5 py-2.5 rounded-full flex items-center justify-center text-[#C5B358] bg-[#C5B358]/10 border border-[#C5B358]/30 hover:bg-[#C5B358]/20 transition-all">
+                <i class="fa-solid fa-house text-lg" aria-hidden="true"></i>
+                <span class="nav-label text-xs font-orbitron font-semibold tracking-wider text-[#C5B358]">Home</span>
+            </button>
+
+            <button onclick="switchPage('about')" id="nav-about" aria-label="Go to About page" class="nav-tab-btn px-3.5 py-2.5 rounded-full flex items-center justify-center text-[#E6E8E6] hover:text-[#C5B358] hover:bg-[#C5B358]/10 border border-transparent hover:border-[#C5B358]/20 transition-all">
+                <i class="fa-solid fa-user-astronaut text-lg" aria-hidden="true"></i>
+                <span class="nav-label text-xs font-orbitron font-semibold tracking-wider text-[#C5B358]">About</span>
+            </button>
+
+            <button onclick="switchPage('projects')" id="nav-projects" aria-label="Go to Projects page" class="nav-tab-btn px-3.5 py-2.5 rounded-full flex items-center justify-center text-[#E6E8E6] hover:text-[#C5B358] hover:bg-[#C5B358]/10 border border-transparent hover:border-[#C5B358]/20 transition-all">
+                <i class="fa-solid fa-rocket text-lg" aria-hidden="true"></i>
+                <span class="nav-label text-xs font-orbitron font-semibold tracking-wider text-[#C5B358]">Projects</span>
+            </button>
+
+            <button onclick="switchPage('gallery')" id="nav-gallery" aria-label="Go to Gallery page" class="nav-tab-btn px-3.5 py-2.5 rounded-full flex items-center justify-center text-[#E6E8E6] hover:text-[#C5B358] hover:bg-[#C5B358]/10 border border-transparent hover:border-[#C5B358]/20 transition-all">
+                <i class="fa-solid fa-images text-lg" aria-hidden="true"></i>
+                <span class="nav-label text-xs font-orbitron font-semibold tracking-wider text-[#C5B358]">Gallery</span>
+            </button>
+
+            <button onclick="switchPage('contact')" id="nav-contact" aria-label="Go to Contact page" class="nav-tab-btn px-3.5 py-2.5 rounded-full flex items-center justify-center text-[#E6E8E6] hover:text-[#C5B358] hover:bg-[#C5B358]/10 border border-transparent hover:border-[#C5B358]/20 transition-all">
+                <i class="fa-solid fa-paper-plane text-lg" aria-hidden="true"></i>
+                <span class="nav-label text-xs font-orbitron font-semibold tracking-wider text-[#C5B358]">Contact</span>
+            </button>
+
+        </nav>
+    </header>
+
+    <div class="fixed bottom-6 right-6 z-40">
+        <button onclick="toggleStarMap()" aria-label="Open star map" class="glass-panel px-4 py-3 border-[#C5B358]/40 flex items-center gap-3 hover:border-[#C5B358] transition-all group shadow-2xl hover:scale-105 active:scale-95">
+            <i class="fa-solid fa-compass text-[#C5B358] text-xl group-hover:rotate-45 transition-transform duration-500" aria-hidden="true"></i>
+            <span class="text-xs font-orbitron font-semibold text-[#E6E8E6] tracking-wider hidden sm:inline">Star Map</span>
+        </button>
+    </div>
+
+    <!-- STAR MAP MODAL -->
+    <div id="starmap-modal" role="dialog" aria-modal="true" aria-labelledby="starmap-title" class="fixed inset-0 bg-black/80 backdrop-blur-md z-50 flex items-center justify-center p-4">
+        <div class="glass-panel p-5 sm:p-6 max-w-2xl w-full border-[#C5B358]/50 relative flex flex-col items-center shadow-[0_0_35px_rgba(197,179,88,0.15)]">
+
+            <button onclick="toggleStarMap()" aria-label="Close star map" class="absolute top-4 right-4 text-[#B0B8B0] hover:text-[#C5B358] text-lg transition-colors">
+                <i class="fa-solid fa-xmark" aria-hidden="true"></i>
+            </button>
+
+            <div class="flex items-center gap-2.5 mb-4 border-b border-[#C5B358]/20 pb-3 w-full justify-center">
+                <i class="fa-solid fa-compass text-[#C5B358] text-xl" aria-hidden="true"></i>
+                <h3 id="starmap-title" class="font-orbitron font-bold text-lg sm:text-xl text-[#C5B358] tracking-wide">Eridian Sector Navigation</h3>
+            </div>
+
+            <div class="w-full h-80 bg-[#06090E] rounded-xl border border-[#C5B358]/30 relative overflow-hidden flex items-center justify-center shadow-inner cursor-pointer">
+                <canvas id="starmap-canvas" width="600" height="320" role="img" aria-label="Interactive star map of the Eridian sector. Click any star to view details." class="w-full h-full"></canvas>
+            </div>
+
+            <div id="star-info-panel" aria-live="polite" class="mt-4 w-full bg-[#0D121D]/90 border border-[#C5B358]/30 rounded-lg p-3 sm:p-4 text-xs sm:text-sm transition-all duration-300">
+                <div class="flex items-center justify-between border-b border-[#C5B358]/20 pb-2 mb-2">
+                    <div class="flex items-center gap-2 font-orbitron font-semibold text-[#C5B358]" id="info-title">
+                        <i class="fa-solid fa-circle-info text-[#00F0FF]" aria-hidden="true"></i>
+                        <span id="star-name">Sol System</span>
+                    </div>
+                    <span id="star-coords" class="font-mono text-[#B0B8B0] text-xs">Coords: [0.0, 0.0]</span>
+                </div>
+                <p id="star-desc" class="text-[#E6E8E6] leading-relaxed">Home star system of humanity. Primary staging zone for deep space reconnaissance into the Eridian Sector.</p>
+                <div id="star-details" class="mt-2 flex flex-wrap gap-4 font-mono text-xs text-[#C5B358]/90">
+                    <span>Spectral Class: <strong class="text-white" id="star-spectral">G2V (Yellow Dwarf)</strong></span>
+                    <span>Distance: <strong class="text-white" id="star-distance">0.0 LY</strong></span>
+                    <span>Status: <strong class="text-white" id="star-status">Active Hub</strong></span>
+                </div>
+            </div>
+
+            <div class="mt-3 text-xs text-[#C5B358]/80 flex justify-between w-full px-2 font-mono">
+                <span><i class="fa-solid fa-hand-pointer text-[#C5B358] mr-1" aria-hidden="true"></i> Click any star to view details</span>
+                <span><i class="fa-solid fa-crosshairs text-[#FF3366] mr-1" aria-hidden="true"></i> 40 Eridani: [16.5, -3.2]</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- MAIN CONTAINER -->
+    <main class="relative z-10 pt-28 pb-16 px-4 max-w-6xl mx-auto min-h-[75vh]">
+
+        <!-- PAGE 1: HOME -->
+        <section id="page-home" class="page-view active-page">
+            <div class="min-h-[70vh] flex flex-col md:flex-row items-center justify-between gap-12 pt-4">
+
+                <div class="flex-1 space-y-6 text-center md:text-left">
+                    <div class="inline-flex items-center gap-2 px-4 py-1.5 rounded-full border border-[#B85042]/30 bg-[#0D1F2D]/60 text-[#C5B358] text-xs font-semibold tracking-wider uppercase shadow-md">
+                        <span class="w-2 h-2 rounded-full bg-[#B85042] animate-pulse"></span>
+                        Portfolio Hail Mary •
+                    </div>
+
+                    <h1 class="text-4xl md:text-6xl font-extrabold leading-tight tracking-wide">
+                        Exploring Space,<br>
+                        <span class="text-transparent bg-clip-text bg-gradient-to-r from-[#C5B358] via-[#E6E8E6] to-[#B85042] text-glow-yellow">
+                            Code &amp; Media
+                        </span>
+                    </h1>
+
+                    <p class="text-[#B0B8B0] text-lg max-w-xl mx-auto md:mx-0 font-light leading-relaxed">
+                        Hi, I'm <span class="font-semibold text-[#C5B358]">Kian Sogoni</span>! A Computer Science student, a student journalist, and a developer — weaving code, embedded hardware, and digital storytelling into stellar web experiences.
+                    </p>
+
+                    <div class="flex flex-wrap items-center justify-center md:justify-start gap-4 pt-2">
+                        <button onclick="switchPage('projects')" class="px-7 py-3.5 rounded-full bg-gradient-to-r from-[#B85042] to-[#1F4E5B] text-white font-orbitron font-bold text-xs tracking-wider uppercase hover:shadow-[0_0_15px_rgba(184,80,66,0.3)] hover:scale-105 transition-all">
+                            <i class="fa-solid fa-meteor mr-2" aria-hidden="true"></i> View Projects
+                        </button>
+                        <button onclick="switchPage('contact')" class="px-7 py-3.5 rounded-full glass-panel hover:border-[#C5B358] font-orbitron font-bold text-xs tracking-wider uppercase text-[#C5B358] hover:scale-105 transition-all">
+                            <i class="fa-solid fa-satellite mr-2" aria-hidden="true"></i> Send Signal
+                        </button>
+                    </div>
+                </div>
+
+                <div class="flex-1 flex justify-center w-full max-w-md mx-auto">
+                    <div class="glass-panel p-6 sm:p-8 rounded-3xl border border-[#C5B358]/20 flex flex-col items-center w-full text-center relative overflow-hidden group shadow-2xl">
+                        <div class="absolute -top-12 -right-12 w-32 h-32 bg-[#1F4E5B]/20 rounded-full blur-2xl"></div>
+                        <div class="absolute -bottom-12 -left-12 w-32 h-32 bg-[#B85042]/15 rounded-full blur-2xl"></div>
+
+                        <span class="text-xs font-orbitron tracking-widest text-[#C5B358] mb-2">INTERACTIVE COMPANION</span>
+                        <h3 class="text-lg font-semibold text-white mb-4">Click or Hover GraceBot</h3>
+
+                        <div class="relative cursor-pointer my-2">
+                            <canvas id="robot-canvas" width="280" height="280" role="img" aria-label="Interactive robot companion named GraceBot. Hover or click to interact." class="rounded-2xl transition-transform duration-300 hover:scale-105"></canvas>
+                        </div>
+
+                        <p id="robot-speech" aria-live="polite" class="text-sm font-sans font-medium text-[#E6E8E6] italic min-h-[44px] flex items-center justify-center bg-[#0D1F2D]/95 px-4 py-2.5 rounded-xl w-full border border-[#C5B358]/30 mt-2 shadow-inner">
+                            "Hello Explorer! Click me to interact!"
+                        </p>
+                    </div>
+                </div>
+
+            </div>
+        </section>
+
+        <!-- PAGE 2: ABOUT -->
+        <section id="page-about" class="page-view space-y-10">
+            <div class="text-center space-y-2">
+                <h2 class="text-3xl md:text-4xl font-bold tracking-wide">
+                    About <span class="text-[#C5B358] text-glow-yellow">Kian</span>
+                </h2>
+                <p class="text-[#B0B8B0] text-sm max-w-md mx-auto">Discover my background, core technologies, and creative skill set.</p>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-12 gap-8">
+                <div class="md:col-span-12 glass-panel p-8 relative overflow-hidden">
+                    <div class="flex items-center gap-3 mb-4 text-[#C5B358] font-orbitron font-bold text-lg">
+                        <div class="w-10 h-10 rounded-xl bg-[#1F4E5B]/40 flex items-center justify-center border border-[#C5B358]/30">
+                            <i class="fa-solid fa-user-astronaut text-xl text-[#C5B358]" aria-hidden="true"></i>
+                        </div>
+                        <h3>Get to know me!</h3>
+                    </div>
+                    <p class="text-[#B0B8B0] leading-relaxed font-light text-base">
+                        I am a passionate Computer Science student dedicated to creating clean, performant software and intuitive user interfaces. My domain spans algorithmic problem solving, web development, and hardware prototyping with Arduino. Beyond code, my background as an award-winning student journalist and broadcaster fuels my strong focus on clear technical communication, creative layout design, and digital media production.
+                    </p>
+                </div>
+
+                <div class="md:col-span-6 glass-panel p-8 relative overflow-hidden">
+                    <div class="flex items-center gap-3 mb-6 text-[#C5B358] font-orbitron font-bold text-lg">
+                        <div class="w-10 h-10 rounded-xl bg-[#1F4E5B]/40 flex items-center justify-center border border-[#C5B358]/30">
+                            <i class="fa-solid fa-code text-xl text-[#C5B358]" aria-hidden="true"></i>
+                        </div>
+                        <h3>Technical Skills</h3>
+                    </div>
+
+                    <div class="grid grid-cols-2 sm:grid-cols-3 gap-3">
+                        <div class="p-3 rounded-xl bg-[#0D1F2D]/80 border border-[#C5B358]/20 hover:border-[#B85042] hover:scale-105 transition-all text-center">
+                            <i class="fa-solid fa-c text-2xl text-[#B85042] mb-1" aria-hidden="true"></i>
+                            <p class="text-xs font-semibold text-[#E6E8E6]">C Language</p>
+                        </div>
+                        <div class="p-3 rounded-xl bg-[#0D1F2D]/80 border border-[#C5B358]/20 hover:border-[#B85042] hover:scale-105 transition-all text-center">
+                            <i class="fa-solid fa-file-code text-2xl text-[#C5B358] mb-1" aria-hidden="true"></i>
+                            <p class="text-xs font-semibold text-[#E6E8E6]">C++</p>
+                        </div>
+                        <div class="p-3 rounded-xl bg-[#0D1F2D]/80 border border-[#C5B358]/20 hover:border-[#B85042] hover:scale-105 transition-all text-center">
+                            <i class="fa-brands fa-html5 text-2xl text-[#B85042] mb-1" aria-hidden="true"></i>
+                            <p class="text-xs font-semibold text-[#E6E8E6]">HTML5 / CSS3</p>
+                        </div>
+                        <div class="p-3 rounded-xl bg-[#0D1F2D]/80 border border-[#C5B358]/20 hover:border-[#B85042] hover:scale-105 transition-all text-center">
+                            <i class="fa-solid fa-microchip text-2xl text-[#C5B358] mb-1" aria-hidden="true"></i>
+                            <p class="text-xs font-semibold text-[#E6E8E6]">Arduino IoT</p>
+                        </div>
+                        <div class="p-3 rounded-xl bg-[#0D1F2D]/80 border border-[#C5B358]/20 hover:border-[#B85042] hover:scale-105 transition-all text-center">
+                            <i class="fa-solid fa-database text-2xl text-[#B85042] mb-1" aria-hidden="true"></i>
+                            <p class="text-xs font-semibold text-[#E6E8E6]">SQL Database</p>
+                        </div>
+                        <div class="p-3 rounded-xl bg-[#0D1F2D]/80 border border-[#C5B358]/20 hover:border-[#B85042] hover:scale-105 transition-all text-center">
+                            <i class="fa-brands fa-js text-2xl text-[#C5B358] mb-1" aria-hidden="true"></i>
+                            <p class="text-xs font-semibold text-[#E6E8E6]">JavaScript</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="md:col-span-6 glass-panel p-8 relative overflow-hidden">
+                    <div class="flex items-center gap-3 mb-6 text-[#C5B358] font-orbitron font-bold text-lg">
+                        <div class="w-10 h-10 rounded-xl bg-[#1F4E5B]/40 flex items-center justify-center border border-[#C5B358]/30">
+                            <i class="fa-solid fa-brain text-xl text-[#C5B358]" aria-hidden="true"></i>
+                        </div>
+                        <h3>Soft Skills</h3>
+                    </div>
+
+                    <div class="space-y-3">
+                        <div class="p-3 rounded-xl bg-[#0D1F2D]/80 border border-[#C5B358]/20 flex items-center gap-3">
+                            <i class="fa-solid fa-crown text-[#C5B358] text-lg w-6 text-center" aria-hidden="true"></i>
+                            <div>
+                                <h4 class="text-sm font-semibold text-[#E6E8E6]">Leadership</h4>
+                                <p class="text-xs text-[#B0B8B0]">Guiding tech projects &amp; campus media delegations.</p>
+                            </div>
+                        </div>
+
+                        <div class="p-3 rounded-xl bg-[#0D1F2D]/80 border border-[#C5B358]/20 flex items-center gap-3">
+                            <i class="fa-solid fa-palette text-[#B85042] text-lg w-6 text-center" aria-hidden="true"></i>
+                            <div>
+                                <h4 class="text-sm font-semibold text-[#E6E8E6]">Design &amp; Layout</h4>
+                                <p class="text-xs text-[#B0B8B0]">UI design and editorial publication aesthetics.</p>
+                            </div>
+                        </div>
+
+                        <div class="p-3 rounded-xl bg-[#0D1F2D]/80 border border-[#C5B358]/20 flex items-center gap-3">
+                            <i class="fa-solid fa-pen-nib text-[#C5B358] text-lg w-6 text-center" aria-hidden="true"></i>
+                            <div>
+                                <h4 class="text-sm font-semibold text-[#E6E8E6]">Copyreading &amp; Scriptwriting</h4>
+                                <p class="text-xs text-[#B0B8B0]">Editing news copy and authoring scripts for broadcasting.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- PAGE 3: PROJECTS -->
+<section id="page-projects" class="page-view space-y-8">
+    <div class="text-center space-y-2">
+        <h2 class="text-3xl md:text-4xl font-bold tracking-wide">
+            Featured <span class="text-[#C5B358] text-glow-yellow">Projects</span>
+        </h2>
+        <p class="text-[#B0B8B0] text-sm max-w-md mx-auto">Explore my software implementations and competition achievements.</p>
+    </div>
+
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+
+        <!-- Project 1 -->
+        <div class="glass-panel overflow-hidden flex flex-col justify-between group">
+            <div class="relative h-48 overflow-hidden bg-[#0D1F2D]">
+                <svg class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" viewBox="0 0 400 200" aria-hidden="true">
+                    <rect width="400" height="200" fill="#0D1F2D"/>
+                    <circle cx="200" cy="100" r="60" fill="none" stroke="rgba(197,179,88,0.2)" stroke-width="6"/>
+                    <path d="M 185 100 H 215 M 200 85 V 115" stroke="#B85042" stroke-width="10" stroke-linecap="round"/>
+                </svg>
+                <span class="absolute top-3 right-3 px-3 py-1 bg-[#1F4E5B]/80 text-[#C5B358] text-xs font-semibold rounded-full border border-[#C5B358]/30">
+                    Healthcare Web App | Completed
+                </span>
+            </div>
+            <div class="p-6 space-y-4">
+                <h3 class="text-xl font-bold font-orbitron text-[#E6E8E6]">1. E-Pharmacy Platform</h3>
+                <p class="text-[#B0B8B0] text-sm font-light">An online pharmacy platform allowing users to browse medication, manage prescriptions, and track order fulfillment.</p>
+                <div class="flex flex-wrap gap-2 pt-2">
+                    <span class="px-2.5 py-0.5 rounded-md bg-[#0D1F2D] text-[#C5B358] text-xs border border-[#C5B358]/20">SQL</span>
+                    <span class="px-2.5 py-0.5 rounded-md bg-[#0D1F2D] text-[#C5B358] text-xs border border-[#C5B358]/20">Java Swing</span>
+                </div>
+                <a href="https://github.com/KianSogoni/ScriptMD-E-Pharmacy-System" target="_blank" rel="noopener noreferrer" aria-label="View E-Pharmacy Platform repository on GitHub"
+                   class="mt-2 w-full py-2.5 px-6 rounded-xl bg-[#0D1F2D] border border-[#C5B358]/40 hover:bg-[#C5B358] hover:text-[#0D1F2D] hover:border-[#C5B358] font-bold text-xs font-orbitron flex items-center justify-center gap-2 text-[#C5B358] transition-all">
+                    <i class="fa-brands fa-github text-base" aria-hidden="true"></i> View Repository
+                </a>
+            </div>
+        </div>
+
+        <!-- Project 2 -->
+        <div class="glass-panel overflow-hidden flex flex-col justify-between group">
+            <div class="relative h-48 overflow-hidden bg-[#0D1F2D]">
+                <svg class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" viewBox="0 0 400 200" aria-hidden="true">
+                    <rect width="400" height="200" fill="#0D1F2D"/>
+                    <path d="M 150 70 L 170 130 H 250 L 270 70 Z" fill="none" stroke="#C5B358" stroke-width="6"/>
+                    <circle cx="180" cy="145" r="8" fill="#B85042"/>
+                    <circle cx="240" cy="145" r="8" fill="#B85042"/>
+                </svg>
+                <span class="absolute top-3 right-3 px-3 py-1 bg-[#1F4E5B]/80 text-[#C5B358] text-xs font-semibold rounded-full border border-[#C5B358]/30">
+                    E-Commerce | In-Progress
+                </span>
+            </div>
+            <div class="p-6 space-y-4">
+                <h3 class="text-xl font-bold font-orbitron text-[#E6E8E6]">2. Online Ordering System</h3>
+                <p class="text-[#B0B8B0] text-sm font-light">Interactive menu and food ordering application featuring item customization and automatic receipt generation.</p>
+                <div class="flex flex-wrap gap-2 pt-2">
+                    <span class="px-2.5 py-0.5 rounded-md bg-[#0D1F2D] text-[#C5B358] text-xs border border-[#C5B358]/20">HTML</span>
+                    <span class="px-2.5 py-0.5 rounded-md bg-[#0D1F2D] text-[#C5B358] text-xs border border-[#C5B358]/20">CSS</span>
+                    <span class="px-2.5 py-0.5 rounded-md bg-[#0D1F2D] text-[#C5B358] text-xs border border-[#C5B358]/20">OOP</span>
+                    <span class="px-2.5 py-0.5 rounded-md bg-[#0D1F2D] text-[#C5B358] text-xs border border-[#C5B358]/20">MySQL</span>
+                </div>
+                <a href="https://github.com/yourusername/ordering-system" target="_blank" rel="noopener noreferrer" aria-label="View Online Ordering System repository on GitHub"
+                   class="mt-2 w-full py-2.5 px-6 rounded-xl bg-[#0D1F2D] border border-[#C5B358]/40 hover:bg-[#C5B358] hover:text-[#0D1F2D] hover:border-[#C5B358] font-bold text-xs font-orbitron flex items-center justify-center gap-2 text-[#C5B358] transition-all">
+                    <i class="fa-brands fa-github text-base" aria-hidden="true"></i> View Repository
+                </a>
+            </div>
+        </div>
+
+        <!-- Project 3 -->
+        <div class="glass-panel overflow-hidden flex flex-col justify-between group">
+            <div class="relative h-48 overflow-hidden bg-[#0D1F2D]">
+                <svg class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" viewBox="0 0 400 200" aria-hidden="true">
+                    <rect width="400" height="200" fill="#0D1F2D"/>
+                    <rect x="150" y="40" width="100" height="120" rx="8" fill="none" stroke="#1F4E5B" stroke-width="6"/>
+                    <line x1="165" y1="65" x2="235" y2="65" stroke="#C5B358" stroke-width="4"/>
+                    <circle cx="175" cy="95" r="5" fill="#B85042"/>
+                    <circle cx="200" cy="95" r="5" fill="#B85042"/>
+                    <circle cx="225" cy="95" r="5" fill="#B85042"/>
+                </svg>
+                <span class="absolute top-3 right-3 px-3 py-1 bg-[#1F4E5B]/80 text-[#C5B358] text-xs font-semibold rounded-full border border-[#C5B358]/30">
+                    Utility Application | Completed
+                </span>
+            </div>
+            <div class="p-6 space-y-4">
+                <h3 class="text-xl font-bold font-orbitron text-[#E6E8E6]">3. Scientific Calculator</h3>
+                <p class="text-[#B0B8B0] text-sm font-light">Feature-rich mathematical utility computing trigonometric functions, logarithms, and memory operations.</p>
+                <div class="flex flex-wrap gap-2 pt-2">
+                    <span class="px-2.5 py-0.5 rounded-md bg-[#0D1F2D] text-[#C5B358] text-xs border border-[#C5B358]/20">HTML</span>
+                    <span class="px-2.5 py-0.5 rounded-md bg-[#0D1F2D] text-[#C5B358] text-xs border border-[#C5B358]/20">CSS</span>
+                    <span class="px-2.5 py-0.5 rounded-md bg-[#0D1F2D] text-[#C5B358] text-xs border border-[#C5B358]/20">JavaScript</span>
+                    <span class="px-2.5 py-0.5 rounded-md bg-[#0D1F2D] text-[#C5B358] text-xs border border-[#C5B358]/20">Algorithms</span>
+                </div>
+                <a href=" https://kiansogoni.github.io/SciFi-SciCal/" target="_blank" rel="noopener noreferrer" aria-label="View Scientific Calculator repository on GitHub"
+                   class="mt-2 w-full py-2.5 px-6 rounded-xl bg-[#0D1F2D] border border-[#C5B358]/40 hover:bg-[#C5B358] hover:text-[#0D1F2D] hover:border-[#C5B358] font-bold text-xs font-orbitron flex items-center justify-center gap-2 text-[#C5B358] transition-all">
+                    <i class="fa-brands fa-github text-base" aria-hidden="true"></i> View Repository
+                </a>
+            </div>
+        </div>
+
+        <!-- Project 4 (Journalism — FB link, no repo) -->
+        <div class="glass-panel overflow-hidden flex flex-col justify-between group">
+                    <div class="relative h-48 overflow-hidden bg-[#0D1F2D]">
+                        <svg class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" viewBox="0 0 400 200" aria-hidden="true">
+                            <rect width="400" height="200" fill="#0D1F2D"/>
+                            <circle cx="200" cy="100" r="55" fill="none" stroke="#1F4E5B" stroke-width="3"/>
+                            <ellipse cx="200" cy="100" rx="80" ry="22" fill="none" stroke="#C5B358" stroke-width="2" transform="rotate(-20 200 100)"/>
+                            <circle cx="200" cy="100" r="14" fill="#B85042"/>
+                            <circle cx="160" cy="88" r="3" fill="#E6E8E6"/>
+                        </svg>
+                        <span class="absolute top-3 right-3 px-3 py-1 bg-[#1F4E5B]/80 text-[#C5B358] text-xs font-semibold rounded-full border border-[#C5B358]/30">
+                            Interactive Web App | Completed
+                        </span>
+                    </div>
+                    <div class="p-6 space-y-4">
+                        <h3 class="text-xl font-bold font-orbitron text-[#E6E8E6]">4. Project Hail Mary UI Tribute</h3>
+                        <p class="text-[#B0B8B0] text-sm font-light">An interactive 3D star map built from scratch on HTML5 Canvas — hand-rolled 3D projection math, drag-to-orbit camera, pinch-zoom gesture support, and keyboard navigation. The direct inspiration for this portfolio's theme.</p>
+                        <div class="flex flex-wrap gap-2 pt-2">
+                            <span class="px-2.5 py-0.5 rounded-md bg-[#0D1F2D] text-[#C5B358] text-xs border border-[#C5B358]/20">HTML5 Canvas</span>
+                            <span class="px-2.5 py-0.5 rounded-md bg-[#0D1F2D] text-[#C5B358] text-xs border border-[#C5B358]/20">JavaScript</span>
+                            <span class="px-2.5 py-0.5 rounded-md bg-[#0D1F2D] text-[#C5B358] text-xs border border-[#C5B358]/20">3D Projection</span>
+                            <span class="px-2.5 py-0.5 rounded-md bg-[#0D1F2D] text-[#C5B358] text-xs border border-[#C5B358]/20">Gesture Input</span>
+                            <span class="px-2.5 py-0.5 rounded-md bg-[#0D1F2D] text-[#C5B358] text-xs border border-[#C5B358]/20">Real-time Rendering</span>
+                        </div>
+                        <a href="https://github.com/YOURUSERNAME/phm-ui" target="_blank" rel="noopener noreferrer" aria-label="View Project Hail Mary UI repository on GitHub"
+                           class="mt-2 w-full py-2.5 px-6 rounded-xl bg-[#0D1F2D] border border-[#C5B358]/40 hover:bg-[#C5B358] hover:text-[#0D1F2D] hover:border-[#C5B358] font-bold text-xs font-orbitron flex items-center justify-center gap-2 text-[#C5B358] transition-all">
+                            <i class="fa-brands fa-github text-base" aria-hidden="true"></i> View Repository
+                        </a>
+                    </div>
+                </div>
+
+        <!-- Project 5 -->
+        <div class="glass-panel overflow-hidden flex flex-col justify-between group md:col-span-2">
+                    <div class="relative h-48 overflow-hidden bg-[#0D1F2D]">
+                        <svg class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" viewBox="0 0 400 200" aria-hidden="true">
+                            <rect width="400" height="200" fill="#0D1F2D"/>
+                            <path d="M 200 40 L 215 80 H 255 L 222 105 L 235 145 L 200 120 L 165 145 L 178 105 L 145 80 H 185 Z" fill="#C5B358"/>
+                        </svg>
+                        <span class="absolute top-3 right-3 px-3 py-1 bg-[#1F4E5B]/80 text-[#C5B358] text-xs font-semibold rounded-full border border-[#C5B358]/30">
+                            Journalism Championship | Achieved
+                        </span>
+                    </div>
+                    <div class="p-6 space-y-4">
+                        <h3 class="text-xl font-bold font-orbitron text-[#C5B358]">5. NSPC Broadcasting Champion</h3>
+                        <p class="text-[#B0B8B0] text-sm font-light">National Schools Press Conference winning production in Radio &amp; TV Scriptwriting and Broadcasting — where my background in writing and media production took center stage.</p>
+                        <a href="https://www.facebook.com/share/v/1DEN3nnFdq/" target="_blank" rel="noopener noreferrer" aria-label="View NSPC Broadcasting Championship post on Facebook"
+                           class="w-full md:w-auto md:self-start py-2.5 px-6 rounded-xl bg-[#B85042] hover:bg-[#C5B358] hover:text-[#0D1F2D] font-bold text-xs font-orbitron flex items-center justify-center gap-2 text-white transition-all">
+                            <i class="fa-brands fa-facebook text-base" aria-hidden="true"></i> View Championship Post on FB
+                        </a>
+                    </div>
+              </div>
+            </div>
+        </section>
+
+        <!-- PAGE 4: GALLERY -->
+        <section id="page-gallery" class="page-view space-y-8">
+            <div class="text-center space-y-2">
+                <h2 class="text-3xl md:text-4xl font-bold tracking-wide">
+                    Media &amp; <span class="text-[#C5B358] text-glow-yellow">Gallery</span>
+                </h2>
+                <p class="text-[#B0B8B0] text-sm max-w-md mx-auto">Open the Google Drive folders to inspect high-resolution media assets.</p>
+            </div>
+
+            <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
+                <a href="https://drive.google.com/drive/folders/1JfE5XORN2wegqNCYqvawFE7qq12_FlXO?usp=drive_link" target="_blank" rel="noopener noreferrer" class="glass-panel p-6 group flex flex-col gap-4 hover:-translate-y-2 transition-all">
+                    <div class="h-44 rounded-xl bg-[#0D1F2D] border border-[#C5B358]/20 flex flex-col items-center justify-center gap-2 group-hover:border-[#C5B358] transition-colors">
+                        <i class="fa-solid fa-folder-open text-4xl text-[#C5B358] group-hover:scale-110 transition-transform" aria-hidden="true"></i>
+                        <span class="text-xs text-[#C5B358] font-mono">Open Google Drive</span>
+                    </div>
+                    <div>
+                        <h4 class="font-orbitron font-bold text-lg text-[#E6E8E6]">Project Screenshots</h4>
+                        <p class="text-[#B0B8B0] text-xs mt-1">Interface captures and application designs.</p>
+                    </div>
+                </a>
+
+                <a href="https://drive.google.com/drive/folders/19wvtz8SYFKTeh70FPNxni5FOCOPh_z_O?usp=drive_link" target="_blank" rel="noopener noreferrer" class="glass-panel p-6 group flex flex-col gap-4 hover:-translate-y-2 transition-all">
+                    <div class="h-44 rounded-xl bg-[#0D1F2D] border border-[#C5B358]/20 flex flex-col items-center justify-center gap-2 group-hover:border-[#C5B358] transition-colors">
+                        <i class="fa-solid fa-photo-film text-4xl text-[#C5B358] group-hover:scale-110 transition-transform" aria-hidden="true"></i>
+                        <span class="text-xs text-[#C5B358] font-mono">Open Google Drive</span>
+                    </div>
+                    <div>
+                        <h4 class="font-orbitron font-bold text-lg text-[#E6E8E6]">My JOURNey Highlights</h4>
+                        <p class="text-[#B0B8B0] text-xs mt-1">Competition photos and event photos.</p>
+                    </div>
+                </a>
+
+                <a href="https://drive.google.com/drive/folders/1yC2YH2VHCs96zshewzHj0DunVXWRK_3T?usp=drive_link" target="_blank" rel="noopener noreferrer" class="glass-panel p-6 group flex flex-col gap-4 hover:-translate-y-2 transition-all">
+                    <div class="h-44 rounded-xl bg-[#0D1F2D] border border-[#C5B358]/20 flex flex-col items-center justify-center gap-2 group-hover:border-[#C5B358] transition-colors">
+                        <i class="fa-solid fa-palette text-4xl text-[#C5B358] group-hover:scale-110 transition-transform" aria-hidden="true"></i>
+                        <span class="text-xs text-[#C5B358] font-mono">Open Google Drive</span>
+                    </div>
+                    <div>
+                        <h4 class="font-orbitron font-bold text-lg text-[#E6E8E6]">Pubmats &amp; Graphics</h4>
+                        <p class="text-[#B0B8B0] text-xs mt-1">Digital poster arts and layouts.</p>
+                    </div>
+                </a>
+            </div>
+        </div>
+    </div>
+        </section>
+
+        <!-- PAGE 5: CONTACT -->
+        <section id="page-contact" class="page-view space-y-8">
+            <div class="glass-panel p-8 md:p-12 max-w-2xl mx-auto relative overflow-hidden">
+                <div class="text-center space-y-2 mb-8">
+                    <h2 class="text-3xl font-bold font-orbitron">
+                        Send a <span class="text-[#C5B358] text-glow-yellow">Transmission</span>
+                    </h2>
+                    <p class="text-[#B0B8B0] text-sm">Have a question or proposal? Send a message directly.</p>
+                </div>
+
+                <form id="contact-form" class="space-y-6">
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-6">
+                        <div>
+                            <label class="block text-xs font-semibold text-[#C5B358] uppercase tracking-wider mb-2">Your Name <span class="text-[#B85042]">*</span></label>
+                            <input type="text" id="contact-name" required placeholder="e.g. Ryland Grace" class="w-full px-4 py-3 rounded-xl bg-[#0D1F2D]/90 border border-[#C5B358]/20 text-white placeholder-[#B0B8B0]/40 focus:outline-none focus:border-[#C5B358] transition-all text-sm">
+                        </div>
+
+                        <div>
+                            <label class="block text-xs font-semibold text-[#C5B358] uppercase tracking-wider mb-2">Contact No. <span class="text-[#B85042]">*</span></label>
+                            <input type="tel" id="contact-phone" required placeholder="e.g. 0912-345-6789" class="w-full px-4 py-3 rounded-xl bg-[#0D1F2D]/90 border border-[#C5B358]/20 text-white placeholder-[#B0B8B0]/40 focus:outline-none focus:border-[#C5B358] transition-all text-sm">
+                        </div>
+                    </div>
+
+                    <div>
+                        <label class="block text-xs font-semibold text-[#C5B358] uppercase tracking-wider mb-2">Subject <span class="text-[#B85042]">*</span></label>
+                        <input type="text" id="contact-subject" required placeholder="e.g. Project Inquiry / Collaboration" class="w-full px-4 py-3 rounded-xl bg-[#0D1F2D]/90 border border-[#C5B358]/20 text-white placeholder-[#B0B8B0]/40 focus:outline-none focus:border-[#C5B358] transition-all text-sm">
+                    </div>
+
+                    <div>
+                        <label class="block text-xs font-semibold text-[#C5B358] uppercase tracking-wider mb-2">Message</label>
+                        <textarea id="contact-msg" rows="4" placeholder="Your transmission..." class="w-full px-4 py-3 rounded-xl bg-[#0D1F2D]/90 border border-[#C5B358]/20 text-white placeholder-[#B0B8B0]/40 focus:outline-none focus:border-[#C5B358] transition-all text-sm"></textarea>
+                    </div>
+
+                    <button type="submit" class="w-full py-3.5 rounded-xl bg-gradient-to-r from-[#B85042] via-[#1F4E5B] to-[#0D1F2D] font-orbitron font-bold text-xs tracking-widest uppercase text-white hover:shadow-[0_0_15px_rgba(184,80,66,0.3)] transition-all">
+                        Transmit Signal
+                    </button>
+
+                    <div id="contact-status" class="text-center font-semibold text-sm hidden"></div>
+                </form>
+
+                <div class="mt-8 pt-6 border-t border-[#C5B358]/20 text-center">
+                    <p class="text-xs uppercase font-semibold text-[#B0B8B0] tracking-widest mb-4">Direct Frequencies</p>
+                    <div class="flex justify-center items-center gap-4">
+
+                        <a href="https://github.com/yourusername" target="_blank" rel="noopener noreferrer" title="GitHub" aria-label="GitHub profile" class="p-3 rounded-xl bg-[#0D1F2D]/80 border border-[#C5B358]/20 text-[#B0B8B0] hover:text-[#C5B358] hover:border-[#C5B358] hover:shadow-[0_0_10px_rgba(197,179,88,0.2)] transition-all">
+                            <svg class="w-5 h-5 fill-current" viewBox="0 0 24 24" aria-hidden="true">
+                                <path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z"/>
+                            </svg>
+                        </a>
+
+                        <a href="https://linkedin.com/in/yourusername" target="_blank" rel="noopener noreferrer" title="LinkedIn" aria-label="LinkedIn profile" class="p-3 rounded-xl bg-[#0D1F2D]/80 border border-[#C5B358]/20 text-[#B0B8B0] hover:text-[#C5B358] hover:border-[#C5B358] hover:shadow-[0_0_10px_rgba(197,179,88,0.2)] transition-all">
+                            <svg class="w-5 h-5 fill-current" viewBox="0 0 24 24" aria-hidden="true">
+                                <path d="M19 0h-14c-2.761 0-5 2.239-5 5v14c0 2.761 2.239 5 5 5h14c2.762 0 5-2.239 5-5v-14c0-2.761-2.238-5-5-5zm-11 19h-3v-11h3v11zm-1.5-12.268c-.966 0-1.75-.79-1.75-1.764s.784-1.764 1.75-1.764 1.75.79 1.75 1.764-.783 1.764-1.75 1.764zm13.5 12.268h-3v-5.604c0-3.368-4-3.113-4 0v5.604h-3v-11h3v1.765c1.396-2.586 7-2.777 7 2.476v6.759z"/>
+                            </svg>
+                        </a>
+
+                        <a href="https://facebook.com/yourusername" target="_blank" rel="noopener noreferrer" title="Facebook" aria-label="Facebook profile" class="p-3 rounded-xl bg-[#0D1F2D]/80 border border-[#C5B358]/20 text-[#B0B8B0] hover:text-[#C5B358] hover:border-[#C5B358] hover:shadow-[0_0_10px_rgba(197,179,88,0.2)] transition-all">
+                            <svg class="w-5 h-5 fill-current" viewBox="0 0 24 24" aria-hidden="true">
+                                <path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/>
+                            </svg>
+                        </a>
+
+                        <a href="mailto:youremail@example.com" title="Direct Email" aria-label="Send email" class="p-3 rounded-xl bg-[#0D1F2D]/80 border border-[#C5B358]/20 text-[#B0B8B0] hover:text-[#C5B358] hover:border-[#C5B358] hover:shadow-[0_0_10px_rgba(197,179,88,0.2)] transition-all">
+                            <svg class="w-5 h-5 fill-current" viewBox="0 0 24 24" aria-hidden="true">
+                                <path d="M0 3v18h24v-18h-24zm21.518 2l-9.518 7.713-9.518-7.713h19.036zm-19.518 14v-11.817l10 8.104 10-8.104v11.817h-20z"/>
+                            </svg>
+                        </a>
+
+                    </div>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- FOOTER -->
+    <footer class="max-w-7xl mx-auto w-full px-4 sm:px-6 lg:px-8 mt-12 mb-6 relative z-10">
+        <div class="glass-panel rounded-2xl border border-[#C5B358]/20 py-6 px-6 text-center flex flex-col items-center justify-center space-y-2">
+
+            <h3 class="font-orbitron text-sm font-bold text-[#C5B358] tracking-widest uppercase">
+                Welcome to my Portfolio!
+            </h3>
+
+            <p class="text-xs text-[#B0B8B0] tracking-wide">
+                &copy; 2026 Kian Sogoni • <span class="italic">"and the universe said i love you. Because you are love" - Minecraft</span>
+            </p>
+
+        </div>
+    </footer>
+
+    <script>
+        /* ── Unified Cosmic Background: Speedlines + Twinkling Stars ── */
+        (function initCosmicBackground() {
+            const canvas = document.getElementById('cosmic-canvas');
+            if (!canvas) return;
+            const ctx = canvas.getContext('2d');
+
+            const palette = [
+                'rgba(184, 80, 66,',
+                'rgba(31, 78, 91,',
+                'rgba(197, 179, 88,',
+                'rgba(176, 184, 176,',
+                'rgba(230, 232, 230,'
+            ];
+
+            let speedLines = [];
+            let stars = [];
+
+            function resize() {
+                canvas.width = window.innerWidth;
+                canvas.height = window.innerHeight;
+                seed();
+            }
+
+            function seed() {
+                speedLines = [];
+                stars = [];
+
+                const lineCount = Math.min(28, Math.floor(canvas.width / 60));
+                for (let i = 0; i < lineCount; i++) {
+                    speedLines.push({
+                        x: Math.random() * canvas.width,
+                        y: Math.random() * canvas.height,
+                        length: Math.random() * 220 + 80,
+                        speed: Math.random() * 2.2 + 0.7,
+                        color: palette[Math.floor(Math.random() * palette.length)],
+                        alpha: Math.random() * 0.28 + 0.08
+                    });
+                }
+
+                const starCount = Math.floor((canvas.width * canvas.height) / 3800);
+                for (let i = 0; i < starCount; i++) {
+                    stars.push({
+                        x: Math.random() * canvas.width,
+                        y: Math.random() * canvas.height,
+                        radius: Math.random() * 1.3 + 0.3,
+                        alpha: Math.random(),
+                        speed: Math.random() * 0.008 + 0.003,
+                        isGold: Math.random() > 0.65
+                    });
+                }
+            }
+
+            function draw() {
+                ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+                for (const line of speedLines) {
+                    line.y += line.speed * 1.1;
+                    line.x += line.speed * 0.65;
+                    if (line.y > canvas.height || line.x > canvas.width) {
+                        line.y = -line.length;
+                        line.x = Math.random() * canvas.width - 200;
+                    }
+                    const grad = ctx.createLinearGradient(
+                        line.x, line.y,
+                        line.x + line.length * 0.5, line.y + line.length
+                    );
+                    grad.addColorStop(0, line.color + '0)');
+                    grad.addColorStop(0.5, line.color + line.alpha + ')');
+                    grad.addColorStop(1, line.color + '0)');
+
+                    ctx.beginPath();
+                    ctx.moveTo(line.x, line.y);
+                    ctx.lineTo(line.x + line.length * 0.5, line.y + line.length);
+                    ctx.strokeStyle = grad;
+                    ctx.lineWidth = 1.6;
+                    ctx.stroke();
+                }
+
+                for (const s of stars) {
+                    s.alpha += s.speed;
+                    if (s.alpha > 1 || s.alpha < 0) s.speed = -s.speed;
+                    ctx.beginPath();
+                    ctx.arc(s.x, s.y, s.radius, 0, Math.PI * 2);
+                    ctx.fillStyle = s.isGold
+                        ? `rgba(197, 179, 88, ${Math.abs(s.alpha)})`
+                        : `rgba(230, 232, 230, ${Math.abs(s.alpha)})`;
+                    ctx.fill();
+                }
+
+                requestAnimationFrame(draw);
+            }
+
+            window.addEventListener('resize', resize);
+            resize();
+            draw();
+        })();
+
+        /* 1. Multi-Page Switcher */
+        function switchPage(pageId) {
+            const pages = document.querySelectorAll('.page-view');
+            pages.forEach(p => p.classList.remove('active-page'));
+
+            const navBtns = document.querySelectorAll('.nav-tab-btn');
+            navBtns.forEach(btn => {
+                btn.classList.remove('text-[#C5B358]', 'bg-[#C5B358]/10', 'border-[#C5B358]/30');
+                btn.classList.add('text-[#E6E8E6]', 'border-transparent');
+            });
+
+            const targetPage = document.getElementById(`page-${pageId}`);
+            if (targetPage) targetPage.classList.add('active-page');
+
+            const activeTab = document.getElementById(`nav-${pageId}`);
+            if (activeTab) {
+                activeTab.classList.remove('text-[#E6E8E6]', 'border-transparent');
+                activeTab.classList.add('text-[#C5B358]', 'bg-[#C5B358]/10', 'border-[#C5B358]/30');
+            }
+
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        /* 2. Star Map */
+        const starMapData = [
+            { x: 90, y: 200, r: 8, color: '#00F0FF', name: 'Sol System', coords: '[0.0, 0.0]', spectral: 'G2V (Yellow Dwarf)', distance: '0.0 LY', status: 'Primary Station', desc: 'Home star system of humanity. Primary staging zone for deep space reconnaissance into the Eridian Sector.', labelPos: 'bottom', glow: '#00F0FF' },
+            { x: 250, y: 100, r: 10, color: '#FF3366', name: '40 Eridani', coords: '[16.5, -3.2]', spectral: 'K1V (Orange Main-Seq)', distance: '16.5 LY', status: 'Primary Target', desc: 'Triple star system containing an iron-rich super-Earth in the habitable zone. Primary objective of mission Eridus.', labelPos: 'top', glow: '#FF3366' },
+            { x: 420, y: 170, r: 8, color: '#33FF99', name: 'Eridian Prime', coords: '[22.1, +4.8]', spectral: 'M0V (Red Dwarf)', distance: '22.1 LY', status: 'Outpost Active', desc: 'Resource-rich planetary system harboring complex metallic structures and localized magnetic anomalies.', labelPos: 'bottom', glow: '#33FF99' },
+            { x: 520, y: 80, r: 7, color: '#FFCC00', name: 'Vega Station', coords: '[25.0, +12.4]', spectral: 'A0V (Blue-White)', distance: '25.0 LY', status: 'Relay Beacon', desc: 'Luminous main-sequence star serving as the long-range navigational signal relay for outer sector transit.', labelPos: 'top', glow: '#FFCC00' },
+            { x: 170, y: 60, r: 5, color: '#A066FF', name: 'Alpha Centauri', coords: '[4.3, -0.8]', spectral: 'G2V / K1V Binary', distance: '4.3 LY', status: 'Transit Hub', desc: 'Closest star system to Sol. Serves as a vital refueling waypoint for interstellar sub-light probes.', labelPos: 'top', glow: '#A066FF' },
+            { x: 350, y: 250, r: 6, color: '#FF66B2', name: 'Sirius B', coords: '[8.6, -1.4]', spectral: 'DA2 (White Dwarf)', distance: '8.6 LY', status: 'Scientific Reserve', desc: 'Dense white dwarf companion system utilized for zero-gravity quantum telemetry research.', labelPos: 'bottom', glow: '#FF66B2' },
+            { x: 530, y: 230, r: 5, color: '#00E5FF', name: 'Proxima', coords: '[4.2, +0.2]', spectral: 'M5.5V (Flare Star)', distance: '4.2 LY', status: 'Monitoring Station', desc: 'Red dwarf subject to frequent magnetic flares. Automated sensory arrays actively record solar wind impacts.', labelPos: 'top', glow: '#00E5FF' }
+        ];
+
+        const bgStarsData = [
+            { x: 40, y: 50, r: 1.5, c: '#FF9999' }, { x: 150, y: 260, r: 2, c: '#99E6FF' },
+            { x: 210, y: 170, r: 1.2, c: '#FFFF99' }, { x: 300, y: 40, r: 1.8, c: '#DAB6FF' },
+            { x: 380, y: 110, r: 1.5, c: '#99FFBB' }, { x: 470, y: 260, r: 2, c: '#FFB3E6' },
+            { x: 560, y: 140, r: 1.2, c: '#66FFFF' }, { x: 110, y: 110, r: 2, c: '#FFE066' }
+        ];
+
+        let selectedStar = starMapData[0];
+        let hoveredStar = null;
+
+        function toggleStarMap() {
+            const modal = document.getElementById('starmap-modal');
+            modal.classList.toggle('active');
+            if (modal.classList.contains('active')) {
+                drawStarMapCanvas();
+                updateInfoPanel(selectedStar);
+            }
+        }
+
+        function updateInfoPanel(star) {
+            if (!star) return;
+            document.getElementById('star-name').textContent = star.name;
+            document.getElementById('star-coords').textContent = `Coords: ${star.coords}`;
+            document.getElementById('star-desc').textContent = star.desc;
+            document.getElementById('star-spectral').textContent = star.spectral;
+            document.getElementById('star-distance').textContent = star.distance;
+            document.getElementById('star-status').textContent = star.status;
+
+            const infoTitleIcon = document.querySelector('#info-title i');
+            if (infoTitleIcon) infoTitleIcon.style.color = star.color;
+        }
+
+        function getCanvasMousePos(canvas, evt) {
+            const rect = canvas.getBoundingClientRect();
+            const scaleX = canvas.width / rect.width;
+            const scaleY = canvas.height / rect.height;
+            return {
+                x: (evt.clientX - rect.left) * scaleX,
+                y: (evt.clientY - rect.top) * scaleY
+            };
+        }
+
+        function findStarAt(pos) {
+            return starMapData.find(s => {
+                const dx = pos.x - s.x;
+                const dy = pos.y - s.y;
+                return Math.sqrt(dx * dx + dy * dy) <= (s.r + 10);
+            });
+        }
+
+        function drawStarMapCanvas() {
+            const smCanvas = document.getElementById('starmap-canvas');
+            if (!smCanvas) return;
+            const smCtx = smCanvas.getContext('2d');
+            const w = smCanvas.width;
+            const h = smCanvas.height;
+
+            smCtx.clearRect(0, 0, w, h);
+
+            smCtx.strokeStyle = 'rgba(197, 179, 88, 0.12)';
+            smCtx.lineWidth = 1;
+            for (let x = 0; x < w; x += 40) {
+                smCtx.beginPath(); smCtx.moveTo(x, 0); smCtx.lineTo(x, h); smCtx.stroke();
+            }
+            for (let y = 0; y < h; y += 40) {
+                smCtx.beginPath(); smCtx.moveTo(0, y); smCtx.lineTo(w, y); smCtx.stroke();
+            }
+
+            smCtx.strokeStyle = 'rgba(197, 179, 88, 0.18)';
+            smCtx.lineWidth = 1;
+            smCtx.beginPath(); smCtx.arc(w / 2, h / 2, 120, 0, Math.PI * 2); smCtx.stroke();
+            smCtx.beginPath(); smCtx.arc(w / 2, h / 2, 60, 0, Math.PI * 2); smCtx.stroke();
+
+            smCtx.strokeStyle = 'rgba(212, 175, 55, 0.4)';
+            smCtx.lineWidth = 1.5;
+            smCtx.setLineDash([5, 5]);
+            smCtx.beginPath();
+            smCtx.moveTo(starMapData[0].x, starMapData[0].y);
+            smCtx.lineTo(starMapData[1].x, starMapData[1].y);
+            smCtx.lineTo(starMapData[2].x, starMapData[2].y);
+            smCtx.lineTo(starMapData[3].x, starMapData[3].y);
+            smCtx.stroke();
+            smCtx.setLineDash([]);
+
+            bgStarsData.forEach(s => {
+                smCtx.fillStyle = s.c;
+                smCtx.beginPath();
+                smCtx.arc(s.x, s.y, s.r, 0, Math.PI * 2);
+                smCtx.fill();
+            });
+
+            starMapData.forEach(s => {
+                const isSelected = selectedStar && selectedStar.name === s.name;
+                const isHovered = hoveredStar && hoveredStar.name === s.name;
+
+                if (isSelected) {
+                    smCtx.strokeStyle = '#C5B358';
+                    smCtx.lineWidth = 1.5;
+                    smCtx.beginPath();
+                    smCtx.arc(s.x, s.y, s.r * 2.2, 0, Math.PI * 2);
+                    smCtx.stroke();
+
+                    smCtx.strokeStyle = s.color;
+                    smCtx.lineWidth = 1;
+                    smCtx.beginPath();
+                    smCtx.arc(s.x, s.y, s.r * 2.8, 0, Math.PI * 2);
+                    smCtx.stroke();
+                }
+
+                const glowMult = isHovered ? 3.5 : (isSelected ? 3.0 : 2.5);
+                const grad = smCtx.createRadialGradient(s.x, s.y, 0, s.x, s.y, s.r * glowMult);
+                grad.addColorStop(0, s.glow);
+                grad.addColorStop(1, 'transparent');
+                smCtx.fillStyle = grad;
+                smCtx.beginPath();
+                smCtx.arc(s.x, s.y, s.r * glowMult, 0, Math.PI * 2);
+                smCtx.fill();
+
+                smCtx.fillStyle = s.color;
+                smCtx.beginPath();
+                smCtx.arc(s.x, s.y, isHovered ? s.r * 1.2 : s.r, 0, Math.PI * 2);
+                smCtx.fill();
+
+                smCtx.fillStyle = '#FFFFFF';
+                smCtx.beginPath();
+                smCtx.arc(s.x, s.y, s.r * 0.4, 0, Math.PI * 2);
+                smCtx.fill();
+
+                smCtx.fillStyle = isSelected ? '#FFFFFF' : '#C5B358';
+                smCtx.font = (isSelected || isHovered) ? 'bold 12px Orbitron, sans-serif' : '11px Orbitron, sans-serif';
+                smCtx.textAlign = 'center';
+                const labelY = s.labelPos === 'top' ? s.y - (s.r + 10) : s.y + (s.r + 16);
+                smCtx.fillText(s.name, s.x, labelY);
+            });
+        }
+
+        // Bind canvas listeners + init robot once
+        window.addEventListener('load', () => {
+            initRobot();
+
+            const smCanvas = document.getElementById('starmap-canvas');
+            if (smCanvas) {
+                smCanvas.addEventListener('mousemove', (e) => {
+                    const pos = getCanvasMousePos(smCanvas, e);
+                    const star = findStarAt(pos);
+                    if (star !== hoveredStar) {
+                        hoveredStar = star;
+                        smCanvas.style.cursor = star ? 'pointer' : 'default';
+                        drawStarMapCanvas();
+                    }
+                });
+
+                smCanvas.addEventListener('click', (e) => {
+                    const pos = getCanvasMousePos(smCanvas, e);
+                    const star = findStarAt(pos);
+                    if (star) {
+                        selectedStar = star;
+                        updateInfoPanel(star);
+                        drawStarMapCanvas();
+                    }
+                });
+            }
+        });
+
+        /* 4. Interactive Canvas Robot */
+        function initRobot() {
+            const canvas = document.getElementById('robot-canvas');
+            if (!canvas) return;
+
+            const ctx = canvas.getContext('2d');
+            const speech = document.getElementById('robot-speech');
+
+            let state = 'idle';
+            let eyeScaleY = 1;
+            let time = 0;
+            let mouseX = canvas.width / 2;
+            let mouseY = canvas.height / 2;
+            let particles = [];
+
+            const speechPhrases = {
+                idle: ["Hello Explorer! Click or hover me!"],
+                happy: ["Yay! ^^", "Beep boop! :33", "Amaze, Amaze, Amaze! 💖"]
+            };
+
+            canvas.addEventListener('mousemove', (e) => {
+                const rect = canvas.getBoundingClientRect();
+                mouseX = e.clientX - rect.left;
+                mouseY = e.clientY - rect.top;
+            });
+
+            canvas.addEventListener('mouseenter', () => triggerHappy());
+            canvas.addEventListener('mouseleave', () => {
+                mouseX = canvas.width / 2;
+                mouseY = canvas.height / 2;
+            });
+
+            function drawHeart(x, y, size, color, alpha) {
+                ctx.save();
+                ctx.translate(x, y);
+                ctx.fillStyle = color;
+                ctx.globalAlpha = Math.max(0, alpha);
+                ctx.beginPath();
+                const d = size;
+                ctx.moveTo(0, 0);
+                ctx.bezierCurveTo(-d / 2, -d / 2, -d, d / 3, 0, d);
+                ctx.bezierCurveTo(d, d / 3, d / 2, -d / 2, 0, 0);
+                ctx.fill();
+                ctx.restore();
+            }
+
+            function draw3DBlock(x, y, width, height, radius, baseColor, topColor, sideColor) {
+                ctx.save();
+                ctx.translate(x, y);
+
+                ctx.shadowColor = 'rgba(197, 179, 88, 0.2)';
+                ctx.shadowBlur = 12;
+                ctx.shadowOffsetY = 6;
+
+                ctx.fillStyle = baseColor;
+                ctx.beginPath();
+                ctx.roundRect(-width/2, -height/2, width, height, radius);
+                ctx.fill();
+
+                ctx.shadowColor = 'transparent';
+
+                const topGrad = ctx.createLinearGradient(0, -height/2, 0, 0);
+                topGrad.addColorStop(0, topColor);
+                topGrad.addColorStop(1, 'rgba(255, 255, 255, 0)');
+                ctx.fillStyle = topGrad;
+                ctx.beginPath();
+                ctx.roundRect(-width/2 + 2, -height/2 + 2, width - 4, height/2, [radius, radius, 0, 0]);
+                ctx.fill();
+
+                const btmGrad = ctx.createLinearGradient(0, 0, 0, height/2);
+                btmGrad.addColorStop(0, 'rgba(0, 0, 0, 0)');
+                btmGrad.addColorStop(1, sideColor);
+                ctx.fillStyle = btmGrad;
+                ctx.beginPath();
+                ctx.roundRect(-width/2 + 2, 0, width - 4, height/2 - 2, [0, 0, radius, radius]);
+                ctx.fill();
+
+                ctx.strokeStyle = 'rgba(197, 179, 88, 0.4)';
+                ctx.lineWidth = 2;
+                ctx.beginPath();
+                ctx.roundRect(-width/2, -height/2, width, height, radius);
+                ctx.stroke();
+
+                ctx.restore();
+            }
+
+            function drawCute3DRobot() {
+                ctx.clearRect(0, 0, canvas.width, canvas.height);
+                time += 0.04;
+
+                const cx = canvas.width / 2;
+                const hoverOffsetY = Math.sin(time * 2.5) * 8;
+                const cy = canvas.height / 2 + hoverOffsetY;
+
+                const shadowScale = 1 - (hoverOffsetY / 30);
+                ctx.fillStyle = 'rgba(197, 179, 88, 0.12)';
+                ctx.beginPath();
+                ctx.ellipse(cx, canvas.height - 25, 45 * shadowScale, 10 * shadowScale, 0, 0, Math.PI * 2);
+                ctx.fill();
+
+                const targetOffsetX = (mouseX - cx) * 0.12;
+                const targetOffsetY = (mouseY - cy) * 0.12;
+
+                const grad = ctx.createRadialGradient(cx, cy, 10, cx, cy, 110);
+                grad.addColorStop(0, 'rgba(197, 179, 88, 0.15)');
+                grad.addColorStop(1, 'rgba(0, 0, 0, 0)');
+                ctx.fillStyle = grad;
+                ctx.beginPath();
+                ctx.arc(cx, cy, 110, 0, Math.PI * 2);
+                ctx.fill();
+
+                ctx.strokeStyle = '#B85042';
+                ctx.lineWidth = 3;
+                ctx.beginPath();
+                ctx.moveTo(cx, cy - 55);
+                ctx.lineTo(cx, cy - 78);
+                ctx.stroke();
+
+                const orbColor = (state === 'happy') ? '#B85042' : '#C5B358';
+                ctx.fillStyle = orbColor;
+                ctx.shadowColor = orbColor;
+                ctx.shadowBlur = 10;
+                ctx.beginPath();
+                ctx.arc(cx, cy - 82, 7, 0, Math.PI * 2);
+                ctx.fill();
+                ctx.shadowColor = 'transparent';
+
+                draw3DBlock(cx - 52, cy - 25, 14, 22, 5, '#0D1F2D', 'rgba(197, 179, 88, 0.3)', 'rgba(0, 0, 0, 0.6)');
+                draw3DBlock(cx + 52, cy - 25, 14, 22, 5, '#0D1F2D', 'rgba(197, 179, 88, 0.3)', 'rgba(0, 0, 0, 0.6)');
+
+                draw3DBlock(cx, cy - 25, 92, 60, 18, '#1F4E5B', 'rgba(255, 255, 255, 0.2)', 'rgba(6, 9, 14, 0.8)');
+
+                ctx.fillStyle = '#06090E';
+                ctx.strokeStyle = 'rgba(197, 179, 88, 0.3)';
+                ctx.lineWidth = 1.5;
+                ctx.beginPath();
+                ctx.roundRect(cx - 38, cy - 43, 76, 36, 10);
+                ctx.fill();
+                ctx.stroke();
+
+                const eyeXShift = Math.max(-8, Math.min(8, targetOffsetX * 0.6));
+                const eyeYShift = Math.max(-5, Math.min(5, targetOffsetY * 0.6));
+
+                ctx.save();
+                ctx.translate(cx - 16 + eyeXShift, cy - 25 + eyeYShift);
+                ctx.scale(1, eyeScaleY);
+                if (state === 'happy') {
+                    ctx.beginPath();
+                    ctx.arc(0, 2, 7, 1.1 * Math.PI, 1.9 * Math.PI, false);
+                    ctx.lineWidth = 3;
+                    ctx.strokeStyle = '#B85042';
+                    ctx.stroke();
+                } else {
+                    ctx.fillStyle = '#C5B358';
+                    ctx.beginPath();
+                    ctx.arc(0, 0, 6.5, 0, Math.PI * 2);
+                    ctx.fill();
+                    ctx.fillStyle = '#ffffff';
+                    ctx.beginPath();
+                    ctx.arc(-2, -2, 2, 0, Math.PI * 2);
+                    ctx.fill();
+                }
+                ctx.restore();
+
+                ctx.save();
+                ctx.translate(cx + 16 + eyeXShift, cy - 25 + eyeYShift);
+                ctx.scale(1, eyeScaleY);
+                if (state === 'happy') {
+                    ctx.beginPath();
+                    ctx.arc(0, 2, 7, 1.1 * Math.PI, 1.9 * Math.PI, false);
+                    ctx.lineWidth = 3;
+                    ctx.strokeStyle = '#B85042';
+                    ctx.stroke();
+                } else {
+                    ctx.fillStyle = '#C5B358';
+                    ctx.beginPath();
+                    ctx.arc(0, 0, 6.5, 0, Math.PI * 2);
+                    ctx.fill();
+                    ctx.fillStyle = '#ffffff';
+                    ctx.beginPath();
+                    ctx.arc(-2, -2, 2, 0, Math.PI * 2);
+                    ctx.fill();
+                }
+                ctx.restore();
+
+                ctx.fillStyle = 'rgba(184, 80, 66, 0.4)';
+                ctx.beginPath();
+                ctx.arc(cx - 26 + eyeXShift, cy - 17 + eyeYShift, 4.5, 0, Math.PI * 2);
+                ctx.arc(cx + 26 + eyeXShift, cy - 17 + eyeYShift, 4.5, 0, Math.PI * 2);
+                ctx.fill();
+
+                const bodyY = cy + 28;
+                draw3DBlock(cx, bodyY, 70, 48, 14, '#1F4E5B', 'rgba(255, 255, 255, 0.15)', 'rgba(6, 9, 14, 0.8)');
+                drawHeart(cx, bodyY - 10, 10, state === 'happy' ? '#B85042' : '#C5B358', 1.0);
+
+                const armWave = Math.sin(time * 3) * 5;
+                draw3DBlock(cx - 45, bodyY - 2 + armWave, 14, 28, 6, '#0D1F2D', 'rgba(197, 179, 88, 0.2)', 'rgba(0,0,0,0.6)');
+                draw3DBlock(cx + 45, bodyY - 2 - armWave, 14, 28, 6, '#0D1F2D', 'rgba(197, 179, 88, 0.2)', 'rgba(0,0,0,0.6)');
+
+                particles.forEach((p, idx) => {
+                    p.y -= p.speedY;
+                    p.x += Math.sin(time * 4 + idx) * 0.8;
+                    p.alpha -= 0.018;
+                    drawHeart(p.x, p.y, p.size, p.color, p.alpha);
+                    if (p.alpha <= 0) particles.splice(idx, 1);
+                });
+            }
+
+            function robotLoop() {
+                drawCute3DRobot();
+                requestAnimationFrame(robotLoop);
+            }
+            robotLoop();
+
+            setInterval(() => {
+                if (state !== 'blink') {
+                    eyeScaleY = 0.1;
+                    setTimeout(() => { eyeScaleY = 1; }, 180);
+                }
+            }, 3200);
+
+            function triggerHappy() {
+                state = 'happy';
+                if (speech) {
+                    const phrase = speechPhrases.happy[Math.floor(Math.random() * speechPhrases.happy.length)];
+                    speech.textContent = `"${phrase}"`;
+                }
+
+                for (let i = 0; i < 18; i++) {
+                    particles.push({
+                        x: canvas.width / 2 + (Math.random() * 50 - 25),
+                        y: canvas.height / 2 + (Math.random() * 30 - 15),
+                        speedY: Math.random() * 1.8 + 0.8,
+                        size: Math.random() * 6 + 6,
+                        alpha: 1.0,
+                        color: ['#B85042', '#C5B358', '#E6E8E6', '#1F4E5B'][Math.floor(Math.random() * 4)]
+                    });
+                }
+
+                setTimeout(() => {
+                    state = 'idle';
+                    if (speech) {
+                        const idlePhrase = speechPhrases.idle[Math.floor(Math.random() * speechPhrases.idle.length)];
+                        speech.textContent = `"${idlePhrase}"`;
+                    }
+                }, 2800);
+            }
+
+            canvas.addEventListener('click', triggerHappy);
+        }
+
+        /* 4b. Accessibility: close starmap on Escape or backdrop click */
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape') {
+                const modal = document.getElementById('starmap-modal');
+                if (modal && modal.classList.contains('active')) toggleStarMap();
+            }
+        });
+
+        const starmapModal = document.getElementById('starmap-modal');
+        if (starmapModal) {
+            starmapModal.addEventListener('click', (e) => {
+                if (e.target.id === 'starmap-modal') toggleStarMap();
+            });
+        }
+
+        /* 5. Contact Form */
+        const contactForm = document.getElementById('contact-form');
+        const contactStatus = document.getElementById('contact-status');
+
+        if (contactForm) {
+            contactForm.addEventListener('submit', (e) => {
+                e.preventDefault();
+                const name = document.getElementById('contact-name').value;
+                contactStatus.classList.remove('hidden');
+                contactStatus.className = "text-center font-semibold text-sm text-[#C5B358]";
+                contactStatus.textContent = `Transmission received! Thank you, ${name}.`;
+                contactForm.reset();
+            });
+        }
+
+        /* 6. Initialization — robot is initialized in the starmap load handler */
+    </script>
+</body>
+</html>
