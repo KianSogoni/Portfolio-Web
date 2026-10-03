@@ -6,6 +6,7 @@
     <title>Kian Sogoni — Portfolio Hail Mary</title>
     <meta name="description" content="Kian Sogoni — Computer Science student, developer, and storyteller. A Project Hail Mary–inspired portfolio exploring code, media, and design.">
     <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='.9em' font-size='90'%3E%E2%AD%90%3C/text%3E%3C/svg%3E">
+    
     <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
     <!-- Google Fonts -->
@@ -284,17 +285,38 @@
                 <p class="text-[#B0B8B0] text-sm max-w-md mx-auto">Discover my background, core technologies, and creative skill set.</p>
             </div>
 
-            <div class="grid grid-cols-1 md:grid-cols-12 gap-8">
-                <div class="md:col-span-12 glass-panel p-8 relative overflow-hidden">
-                    <div class="flex items-center gap-3 mb-4 text-[#C5B358] font-orbitron font-bold text-lg">
+                            <div class="md:col-span-12 glass-panel p-8 relative overflow-hidden">
+                    <div class="flex items-center gap-3 mb-6 text-[#C5B358] font-orbitron font-bold text-lg">
                         <div class="w-10 h-10 rounded-xl bg-[#1F4E5B]/40 flex items-center justify-center border border-[#C5B358]/30">
                             <i class="fa-solid fa-user-astronaut text-xl text-[#C5B358]" aria-hidden="true"></i>
                         </div>
                         <h3>Get to know me!</h3>
                     </div>
-                    <p class="text-[#B0B8B0] leading-relaxed font-light text-base">
-                        I am a passionate Computer Science student dedicated to creating clean, performant software and intuitive user interfaces. My domain spans algorithmic problem solving, web development, and hardware prototyping with Arduino. Beyond code, my background as an award-winning student journalist and broadcaster fuels my strong focus on clear technical communication, creative layout design, and digital media production.
-                    </p>
+
+                    <div class="flex flex-col md:flex-row gap-8 items-center md:items-start">
+                        <!-- Profile Photo -->
+                        <div class="relative flex-shrink-0">
+                            <div class="w-40 h-40 md:w-48 md:h-48 rounded-2xl overflow-hidden border-2 border-[#C5B358]/40 shadow-[0_0_25px_rgba(197,179,88,0.15)]">
+                                <img
+                                    src="assets/ki.jpg"
+                                    alt="Portrait photo of Kian Sogoni"
+                                    class="w-full h-full object-cover"
+                                    loading="lazy"
+                                >
+                            </div>
+                            <!-- Small decorative accent -->
+                            <div class="absolute -bottom-2 -right-2 w-10 h-10 rounded-xl bg-[#1F4E5B] border border-[#C5B358]/40 flex items-center justify-center shadow-lg">
+                                <i class="fa-solid fa-satellite-dish text-[#C5B358] text-sm" aria-hidden="true"></i>
+                            </div>
+                        </div>
+
+                        <!-- Bio Text -->
+                        <div class="flex-1 space-y-3">
+                            <p class="text-[#B0B8B0] leading-relaxed font-light text-base">
+                                I am a passionate Computer Science student dedicated to creating clean, performant software and intuitive user interfaces. My domain spans algorithmic problem solving, web development, and hardware prototyping with Arduino. Beyond code, my background as an award-winning student journalist and broadcaster fuels my strong focus on clear technical communication, creative layout design, and digital media production.
+                            </p>
+                        </div>
+                    </div>
                 </div>
 
                 <div class="md:col-span-6 glass-panel p-8 relative overflow-hidden">
