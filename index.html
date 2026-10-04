@@ -1244,18 +1244,53 @@
             });
         }
 
-        /* 5. Contact Form */
+                /* 5. Contact Form — real submission via Vercel Function */
         const contactForm = document.getElementById('contact-form');
         const contactStatus = document.getElementById('contact-status');
 
         if (contactForm) {
-            contactForm.addEventListener('submit', (e) => {
+            contactForm.addEventListener('submit', async (e) => {
                 e.preventDefault();
-                const name = document.getElementById('contact-name').value;
-                contactStatus.classList.remove('hidden');
-                contactStatus.className = "text-center font-semibold text-sm text-[#C5B358]";
-                contactStatus.textContent = `Transmission received! Thank you, ${name}.`;
-                contactForm.reset();
+
+                const submitBtn = contactForm.querySelector('button[type="submit"]');
+                const originalText = submitBtn.innerHTML;
+
+                submitBtn.disabled = true;
+                submitBtn.innerHTML = '<i class="fa-solid fa-satellite-dish animate-pulse mr-2"></i> Transmitting...';
+
+                const formData = {
+                    name: document.getElementById('contact-name').value,
+                    phone: document.getElementById('contact-phone').value,
+                    subject: document.getElementById('contact-subject').value,
+                    message: document.getElementById('contact-msg').value,
+                };
+
+                try {
+                    const response = await fetch('/api/contact', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify(formData),
+                    });
+
+                    const result = await response.json();
+
+                    contactStatus.classList.remove('hidden');
+                    if (response.ok) {
+                        contactStatus.className = "text-center font-semibold text-sm text-[#C5B358]";
+                        contactStatus.textContent = `Transmission received! Thank you, ${formData.name}.`;
+                        contactForm.reset();
+                    } else {
+                        contactStatus.className = "text-center font-semibold text-sm text-[#B85042]";
+                        contactStatus.textContent = result.error || 'Transmission failed. Please try again.';
+                    }
+                } catch (err) {
+                    contactStatus.classList.remove('hidden');
+                    contactStatus.className = "text-center font-semibold text-sm text-[#B85042]";
+                    contactStatus.textContent = 'Signal lost. Check your connection and try again.';
+                } finally {
+                    submitBtn.disabled = false;
+                    submitBtn.innerHTML = originalText;
+                }
             });
         }
 
