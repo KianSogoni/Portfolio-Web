@@ -201,41 +201,123 @@
     </div>
 
     <!-- STAR MAP MODAL -->
-    <div id="starmap-modal" role="dialog" aria-modal="true" aria-labelledby="starmap-title" class="fixed inset-0 bg-black/80 backdrop-blur-md z-50 flex items-center justify-center p-4">
-        <div class="glass-panel p-5 sm:p-6 max-w-2xl w-full border-[#C5B358]/50 relative flex flex-col items-center shadow-[0_0_35px_rgba(197,179,88,0.15)]">
+        <!-- STAR MAP MODAL — Full GraceUI Experience -->
+    <div id="starmap-modal" role="dialog" aria-modal="true" aria-labelledby="starmap-title" class="fixed inset-0 bg-black/85 backdrop-blur-md z-50 flex items-start sm:items-center justify-center p-2 sm:p-4 overflow-y-auto">
+        <div class="glass-panel p-4 sm:p-6 max-w-5xl w-full border-[#C5B358]/50 relative flex flex-col shadow-[0_0_35px_rgba(197,179,88,0.15)] my-4 sm:my-8">
 
-            <button onclick="toggleStarMap()" aria-label="Close star map" class="absolute top-4 right-4 text-[#B0B8B0] hover:text-[#C5B358] text-lg transition-colors">
-                <i class="fa-solid fa-xmark" aria-hidden="true"></i>
+            <!-- Close -->
+            <button onclick="toggleStarMap()" aria-label="Close star map" class="absolute top-4 right-4 z-10 w-9 h-9 rounded-full bg-[#0D1F2D]/80 hover:bg-[#C5B358]/20 border border-[#C5B358]/40 text-[#C5B358] flex items-center justify-center transition-colors">
+                <i class="fa-solid fa-xmark text-base" aria-hidden="true"></i>
             </button>
 
-            <div class="flex items-center gap-2.5 mb-4 border-b border-[#C5B358]/20 pb-3 w-full justify-center">
-                <i class="fa-solid fa-compass text-[#C5B358] text-xl" aria-hidden="true"></i>
-                <h3 id="starmap-title" class="font-orbitron font-bold text-lg sm:text-xl text-[#C5B358] tracking-wide">Eridian Sector Navigation</h3>
-            </div>
-
-            <div class="w-full h-80 bg-[#06090E] rounded-xl border border-[#C5B358]/30 relative overflow-hidden flex items-center justify-center shadow-inner cursor-pointer">
-                <canvas id="starmap-canvas" width="600" height="320" role="img" aria-label="Interactive star map of the Eridian sector. Click any star to view details." class="w-full h-full"></canvas>
-            </div>
-
-            <div id="star-info-panel" aria-live="polite" class="mt-4 w-full bg-[#0D121D]/90 border border-[#C5B358]/30 rounded-lg p-3 sm:p-4 text-xs sm:text-sm transition-all duration-300">
-                <div class="flex items-center justify-between border-b border-[#C5B358]/20 pb-2 mb-2">
-                    <div class="flex items-center gap-2 font-orbitron font-semibold text-[#C5B358]" id="info-title">
-                        <i class="fa-solid fa-circle-info text-[#00F0FF]" aria-hidden="true"></i>
-                        <span id="star-name">Sol System</span>
+            <!-- Section header -->
+            <div class="flex flex-col gap-3 mb-4 border-b border-[#C5B358]/20 pb-3">
+                <div class="flex items-center gap-2.5">
+                    <i class="fa-solid fa-globe text-[#C5B358] text-xl" aria-hidden="true"></i>
+                    <div>
+                        <div class="text-[10px] font-orbitron text-[#C5B358] tracking-widest uppercase">Interactive Navigation Systems</div>
+                        <h3 id="starmap-title" class="font-orbitron font-bold text-lg sm:text-xl text-white tracking-wide">Sector Star Map &amp; Trajectories</h3>
                     </div>
-                    <span id="star-coords" class="font-mono text-[#B0B8B0] text-xs">Coords: [0.0, 0.0]</span>
                 </div>
-                <p id="star-desc" class="text-[#E6E8E6] leading-relaxed">Home star system of humanity. Primary staging zone for deep space reconnaissance into the Eridian Sector.</p>
-                <div id="star-details" class="mt-2 flex flex-wrap gap-4 font-mono text-xs text-[#C5B358]/90">
-                    <span>Spectral Class: <strong class="text-white" id="star-spectral">G2V (Yellow Dwarf)</strong></span>
-                    <span>Distance: <strong class="text-white" id="star-distance">0.0 LY</strong></span>
-                    <span>Status: <strong class="text-white" id="star-status">Active Hub</strong></span>
+                <div class="flex flex-wrap gap-2">
+                    <button onclick="resetMapCamera()" class="px-3 py-1.5 rounded glass-panel hover:bg-[#1F4E5B]/40 text-xs font-orbitron text-[#E6E8E6] transition-colors">
+                        <i class="fa-solid fa-rotate-left mr-1" aria-hidden="true"></i> Reset View
+                    </button>
+                    <button onclick="toggleTrajectories()" class="px-3 py-1.5 rounded glass-panel hover:bg-[#1F4E5B]/40 text-xs font-orbitron text-[#C5B358] transition-colors">
+                        <i class="fa-solid fa-route mr-1" aria-hidden="true"></i> Toggle Routes
+                    </button>
                 </div>
             </div>
 
-            <div class="mt-3 text-xs text-[#C5B358]/80 flex justify-between w-full px-2 font-mono">
-                <span><i class="fa-solid fa-hand-pointer text-[#C5B358] mr-1" aria-hidden="true"></i> Click any star to view details</span>
-                <span><i class="fa-solid fa-crosshairs text-[#FF3366] mr-1" aria-hidden="true"></i> 40 Eridani: [16.5, -3.2]</span>
+            <!-- Body grid -->
+            <div class="grid grid-cols-1 lg:grid-cols-12 gap-4 items-start">
+
+                <!-- Canvas column -->
+                <div class="lg:col-span-8">
+                    <div class="relative rounded-xl overflow-hidden bg-[#06090E] border border-[#C5B358]/30 h-[340px] sm:h-[420px] lg:h-[500px]">
+                        <canvas id="starmap-canvas" role="img" aria-label="Interactive star map of the Eridian sector." class="w-full h-full cursor-grab active:cursor-grabbing" style="touch-action: none;"></canvas>
+
+                        <!-- NAVIGATION HUD -->
+                        <div class="absolute top-3 left-3 bg-[#06090E]/85 backdrop-blur border border-[#C5B358]/30 rounded-lg p-2.5 text-xs space-y-1 font-mono pointer-events-none max-w-[65%]">
+                            <div class="text-[#C5B358] font-orbitron font-bold text-[10px] tracking-wider">NAVIGATION HUD</div>
+                            <div class="text-[#B0B8B0] text-[10px]">GRID: ERIDIAN-SOL LOG-4</div>
+                            <div class="text-[#B0B8B0]/80 text-[10px]">TARGET: <span id="hudTargetText" class="text-white">Sol &lt;-&gt; 40 Eridani</span></div>
+                        </div>
+
+                        <!-- Bottom bar -->
+                        <div class="absolute bottom-3 left-3 right-3 flex justify-between items-end gap-2 pointer-events-none">
+                            <div class="bg-[#06090E]/85 backdrop-blur border border-[#1F4E5B]/60 rounded-lg p-2 text-[10px] text-[#B0B8B0] font-mono max-w-[60%] hidden sm:block">
+                                Click star to inspect • Drag to pan • Scroll to zoom • Arrows to orbit
+                            </div>
+                            <div class="bg-[#06090E]/85 backdrop-blur border border-[#C5B358]/30 rounded-lg px-2.5 py-1 text-[10px] text-[#C5B358] font-orbitron whitespace-nowrap">
+                                SECTOR: LOCAL BUBBLE
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Side panel column -->
+                <div class="lg:col-span-4 space-y-3">
+
+                    <!-- SYSTEM ANALYSIS -->
+                    <div id="starDetailPanel" class="bg-[#0D121D]/90 border border-[#C5B358]/30 rounded-2xl p-4 space-y-3 border-l-4 border-l-[#C5B358]">
+                        <div class="flex items-center justify-between">
+                            <span class="text-[10px] font-orbitron text-[#C5B358] tracking-wider">SYSTEM ANALYSIS</span>
+                            <span id="starTypeBadge" class="text-[10px] font-mono px-2 py-0.5 rounded bg-[#C5B358]/10 text-[#C5B358] border border-[#C5B358]/30">Class G2V</span>
+                        </div>
+
+                        <div>
+                            <h3 id="starName" class="text-lg font-orbitron font-bold text-white">Sol System</h3>
+                            <p id="starSubtitle" class="text-[11px] text-[#B0B8B0] font-mono mt-0.5">Earth Homeworld</p>
+                        </div>
+
+                        <p id="starDescription" class="text-xs text-[#E6E8E6] leading-relaxed">
+                            Home star system of humanity. Petrova line Astrophage infection neutralized via Taumoeba deployment.
+                        </p>
+
+                        <div class="grid grid-cols-2 gap-2 text-xs font-mono pt-2 border-t border-[#C5B358]/20">
+                            <div class="bg-[#06090E]/60 p-2 rounded">
+                                <div class="text-[#B0B8B0]/60 text-[10px]">DISTANCE</div>
+                                <div id="starDistance" class="text-[#E6E8E6] font-bold">0.0 ly</div>
+                            </div>
+                            <div class="bg-[#06090E]/60 p-2 rounded">
+                                <div class="text-[#B0B8B0]/60 text-[10px]">ASTROPHAGE</div>
+                                <div id="starAstrophage" class="text-emerald-400 font-bold">CLEARED</div>
+                            </div>
+                        </div>
+
+                        <button onclick="focusSelectedStar()" class="w-full py-2 rounded bg-[#C5B358]/10 hover:bg-[#C5B358]/20 border border-[#C5B358]/40 text-[#C5B358] text-[10px] font-orbitron tracking-wider transition-colors">
+                            CENTER CAMERA ON SYSTEM
+                        </button>
+                    </div>
+
+                    <!-- FEATURED LOCATIONS -->
+                    <div class="bg-[#0D121D]/90 border border-[#C5B358]/30 rounded-2xl p-4 space-y-3">
+                        <div class="text-[10px] font-orbitron text-[#E6E8E6] font-semibold flex items-center justify-between">
+                            <span>FEATURED LOCATIONS</span>
+                            <i class="fa-solid fa-location-crosshairs text-[#C5B358]" aria-hidden="true"></i>
+                        </div>
+                        <div class="grid grid-cols-2 gap-2 text-xs">
+                            <button onclick="selectStarByName('Sol System')" class="p-2 rounded bg-[#06090E]/80 hover:border-[#C5B358]/50 border border-[#1F4E5B]/60 text-left text-[#E6E8E6] font-orbitron transition-all">
+                                <div class="text-[#C5B358] font-bold text-[11px]">Sol System</div>
+                                <div class="text-[9px] text-[#B0B8B0]">Earth Origin</div>
+                            </button>
+                            <button onclick="selectStarByName('40 Eridani')" class="p-2 rounded bg-[#06090E]/80 hover:border-[#C5B358]/50 border border-[#1F4E5B]/60 text-left text-[#E6E8E6] font-orbitron transition-all">
+                                <div class="text-[#00E5FF] font-bold text-[11px]">40 Eridani</div>
+                                <div class="text-[9px] text-[#B0B8B0]">Eridian Home</div>
+                            </button>
+                            <button onclick="selectStarByName('Tau Ceti')" class="p-2 rounded bg-[#06090E]/80 hover:border-[#C5B358]/50 border border-[#1F4E5B]/60 text-left text-[#E6E8E6] font-orbitron transition-all">
+                                <div class="text-[#E6E8E6] font-bold text-[11px]">Tau Ceti</div>
+                                <div class="text-[9px] text-[#B0B8B0]">Immune System</div>
+                            </button>
+                            <button onclick="selectStarByName('Epsilon Eridani')" class="p-2 rounded bg-[#06090E]/80 hover:border-[#C5B358]/50 border border-[#1F4E5B]/60 text-left text-[#E6E8E6] font-orbitron transition-all">
+                                <div class="text-[#E6E8E6] font-bold text-[11px]">Epsilon Eridani</div>
+                                <div class="text-[9px] text-[#B0B8B0]">Infested Sector</div>
+                            </button>
+                        </div>
+                    </div>
+
+                </div>
             </div>
         </div>
     </div>
@@ -771,553 +853,311 @@
         </div>
     </footer>
 
-    <script>
-        /* ── Unified Cosmic Background: Speedlines + Twinkling Stars ── */
+        <script>
+        /* ── Cosmic Background ── */
         (function initCosmicBackground() {
             const canvas = document.getElementById('cosmic-canvas');
             if (!canvas) return;
             const ctx = canvas.getContext('2d');
+            const palette = ['rgba(184, 80, 66,','rgba(31, 78, 91,','rgba(197, 179, 88,','rgba(176, 184, 176,','rgba(230, 232, 230,'];
+            let speedLines = [], stars = [];
 
-            const palette = [
-                'rgba(184, 80, 66,',
-                'rgba(31, 78, 91,',
-                'rgba(197, 179, 88,',
-                'rgba(176, 184, 176,',
-                'rgba(230, 232, 230,'
-            ];
-
-            let speedLines = [];
-            let stars = [];
-
-            function resize() {
-                canvas.width = window.innerWidth;
-                canvas.height = window.innerHeight;
-                seed();
-            }
-
+            function resize() { canvas.width = window.innerWidth; canvas.height = window.innerHeight; seed(); }
             function seed() {
-                speedLines = [];
-                stars = [];
-
+                speedLines = []; stars = [];
                 const lineCount = Math.min(28, Math.floor(canvas.width / 60));
                 for (let i = 0; i < lineCount; i++) {
-                    speedLines.push({
-                        x: Math.random() * canvas.width,
-                        y: Math.random() * canvas.height,
-                        length: Math.random() * 220 + 80,
-                        speed: Math.random() * 2.2 + 0.7,
-                        color: palette[Math.floor(Math.random() * palette.length)],
-                        alpha: Math.random() * 0.28 + 0.08
-                    });
+                    speedLines.push({ x: Math.random() * canvas.width, y: Math.random() * canvas.height, length: Math.random() * 220 + 80, speed: Math.random() * 2.2 + 0.7, color: palette[Math.floor(Math.random() * palette.length)], alpha: Math.random() * 0.28 + 0.08 });
                 }
-
                 const starCount = Math.floor((canvas.width * canvas.height) / 3800);
                 for (let i = 0; i < starCount; i++) {
-                    stars.push({
-                        x: Math.random() * canvas.width,
-                        y: Math.random() * canvas.height,
-                        radius: Math.random() * 1.3 + 0.3,
-                        alpha: Math.random(),
-                        speed: Math.random() * 0.008 + 0.003,
-                        isGold: Math.random() > 0.65
-                    });
+                    stars.push({ x: Math.random() * canvas.width, y: Math.random() * canvas.height, radius: Math.random() * 1.3 + 0.3, alpha: Math.random(), speed: Math.random() * 0.008 + 0.003, isGold: Math.random() > 0.65 });
                 }
             }
-
             function draw() {
                 ctx.clearRect(0, 0, canvas.width, canvas.height);
-
                 for (const line of speedLines) {
-                    line.y += line.speed * 1.1;
-                    line.x += line.speed * 0.65;
-                    if (line.y > canvas.height || line.x > canvas.width) {
-                        line.y = -line.length;
-                        line.x = Math.random() * canvas.width - 200;
-                    }
-                    const grad = ctx.createLinearGradient(
-                        line.x, line.y,
-                        line.x + line.length * 0.5, line.y + line.length
-                    );
-                    grad.addColorStop(0, line.color + '0)');
-                    grad.addColorStop(0.5, line.color + line.alpha + ')');
-                    grad.addColorStop(1, line.color + '0)');
-
-                    ctx.beginPath();
-                    ctx.moveTo(line.x, line.y);
-                    ctx.lineTo(line.x + line.length * 0.5, line.y + line.length);
-                    ctx.strokeStyle = grad;
-                    ctx.lineWidth = 1.6;
-                    ctx.stroke();
+                    line.y += line.speed * 1.1; line.x += line.speed * 0.65;
+                    if (line.y > canvas.height || line.x > canvas.width) { line.y = -line.length; line.x = Math.random() * canvas.width - 200; }
+                    const grad = ctx.createLinearGradient(line.x, line.y, line.x + line.length * 0.5, line.y + line.length);
+                    grad.addColorStop(0, line.color + '0)'); grad.addColorStop(0.5, line.color + line.alpha + ')'); grad.addColorStop(1, line.color + '0)');
+                    ctx.beginPath(); ctx.moveTo(line.x, line.y); ctx.lineTo(line.x + line.length * 0.5, line.y + line.length);
+                    ctx.strokeStyle = grad; ctx.lineWidth = 1.6; ctx.stroke();
                 }
-
                 for (const s of stars) {
-                    s.alpha += s.speed;
-                    if (s.alpha > 1 || s.alpha < 0) s.speed = -s.speed;
-                    ctx.beginPath();
-                    ctx.arc(s.x, s.y, s.radius, 0, Math.PI * 2);
-                    ctx.fillStyle = s.isGold
-                        ? `rgba(197, 179, 88, ${Math.abs(s.alpha)})`
-                        : `rgba(230, 232, 230, ${Math.abs(s.alpha)})`;
+                    s.alpha += s.speed; if (s.alpha > 1 || s.alpha < 0) s.speed = -s.speed;
+                    ctx.beginPath(); ctx.arc(s.x, s.y, s.radius, 0, Math.PI * 2);
+                    ctx.fillStyle = s.isGold ? `rgba(197, 179, 88, ${Math.abs(s.alpha)})` : `rgba(230, 232, 230, ${Math.abs(s.alpha)})`;
                     ctx.fill();
                 }
-
                 requestAnimationFrame(draw);
             }
-
-            window.addEventListener('resize', resize);
-            resize();
-            draw();
+            window.addEventListener('resize', resize); resize(); draw();
         })();
 
-        /* 1. Multi-Page Switcher */
+        /* ── Page switcher ── */
         function switchPage(pageId) {
-            const pages = document.querySelectorAll('.page-view');
-            pages.forEach(p => p.classList.remove('active-page'));
-
-            const navBtns = document.querySelectorAll('.nav-tab-btn');
-            navBtns.forEach(btn => {
+            document.querySelectorAll('.page-view').forEach(p => p.classList.remove('active-page'));
+            document.querySelectorAll('.nav-tab-btn').forEach(btn => {
                 btn.classList.remove('text-[#C5B358]', 'bg-[#C5B358]/10', 'border-[#C5B358]/30');
                 btn.classList.add('text-[#E6E8E6]', 'border-transparent');
             });
-
             const targetPage = document.getElementById(`page-${pageId}`);
             if (targetPage) targetPage.classList.add('active-page');
-
             const activeTab = document.getElementById(`nav-${pageId}`);
             if (activeTab) {
                 activeTab.classList.remove('text-[#E6E8E6]', 'border-transparent');
                 activeTab.classList.add('text-[#C5B358]', 'bg-[#C5B358]/10', 'border-[#C5B358]/30');
             }
-
             window.scrollTo({ top: 0, behavior: 'smooth' });
         }
 
-        /* 2. Star Map */
-        const starMapData = [
-            { x: 90, y: 200, r: 8, color: '#00F0FF', name: 'Sol System', coords: '[0.0, 0.0]', spectral: 'G2V (Yellow Dwarf)', distance: '0.0 LY', status: 'Primary Station', desc: 'Home star system of humanity. Primary staging zone for deep space reconnaissance into the Eridian Sector.', labelPos: 'bottom', glow: '#00F0FF' },
-            { x: 250, y: 100, r: 10, color: '#FF3366', name: '40 Eridani', coords: '[16.5, -3.2]', spectral: 'K1V (Orange Main-Seq)', distance: '16.5 LY', status: 'Primary Target', desc: 'Triple star system containing an iron-rich super-Earth in the habitable zone. Primary objective of mission Eridus.', labelPos: 'top', glow: '#FF3366' },
-            { x: 420, y: 170, r: 8, color: '#33FF99', name: 'Eridian Prime', coords: '[22.1, +4.8]', spectral: 'M0V (Red Dwarf)', distance: '22.1 LY', status: 'Outpost Active', desc: 'Resource-rich planetary system harboring complex metallic structures and localized magnetic anomalies.', labelPos: 'bottom', glow: '#33FF99' },
-            { x: 520, y: 80, r: 7, color: '#FFCC00', name: 'Vega Station', coords: '[25.0, +12.4]', spectral: 'A0V (Blue-White)', distance: '25.0 LY', status: 'Relay Beacon', desc: 'Luminous main-sequence star serving as the long-range navigational signal relay for outer sector transit.', labelPos: 'top', glow: '#FFCC00' },
-            { x: 170, y: 60, r: 5, color: '#A066FF', name: 'Alpha Centauri', coords: '[4.3, -0.8]', spectral: 'G2V / K1V Binary', distance: '4.3 LY', status: 'Transit Hub', desc: 'Closest star system to Sol. Serves as a vital refueling waypoint for interstellar sub-light probes.', labelPos: 'top', glow: '#A066FF' },
-            { x: 350, y: 250, r: 6, color: '#FF66B2', name: 'Sirius B', coords: '[8.6, -1.4]', spectral: 'DA2 (White Dwarf)', distance: '8.6 LY', status: 'Scientific Reserve', desc: 'Dense white dwarf companion system utilized for zero-gravity quantum telemetry research.', labelPos: 'bottom', glow: '#FF66B2' },
-            { x: 530, y: 230, r: 5, color: '#00E5FF', name: 'Proxima', coords: '[4.2, +0.2]', spectral: 'M5.5V (Flare Star)', distance: '4.2 LY', status: 'Monitoring Station', desc: 'Red dwarf subject to frequent magnetic flares. Automated sensory arrays actively record solar wind impacts.', labelPos: 'top', glow: '#00E5FF' }
+        /* ── Star Map Engine (from grace2) ── */
+        const STAR_DATA = [
+            { id: 'sol', name: 'Sol System', x: 0, y: 0, z: 0, color: '#FFD700', radius: 9, class: 'Class G2V', subtitle: 'Earth Homeworld', dist: '0.0 ly', astrophage: 'CLEARED', desc: 'Home star system of humanity. Petrova line Astrophage infection neutralized via Taumoeba deployment.' },
+            { id: 'eridani', name: '40 Eridani', x: -80, y: 45, z: 20, color: '#00E5FF', radius: 8, class: 'Class K1V', subtitle: 'Eridian Homeworld (Rocky)', dist: '11.9 ly', astrophage: 'CLEARED', desc: 'Triple star system home to the Eridian civilization. Primary mission partner in saving both biospheres.' },
+            { id: 'tau_ceti', name: 'Tau Ceti', x: 60, y: -50, z: -30, color: '#A0E0FF', radius: 7.5, class: 'Class G8V', subtitle: 'Taumoeba Origin', dist: '11.9 ly', astrophage: 'NATURAL IMMUNITY', desc: 'Target star showing no solar dimming. Source of Taumoeba species capable of preying on Astrophage.' },
+            { id: 'epsilon_eridani', name: 'Epsilon Eridani', x: -40, y: -70, z: 40, color: '#FFB347', radius: 6.5, class: 'Class K2V', subtitle: 'Neighboring Infected System', dist: '10.5 ly', astrophage: 'INFESTED', desc: 'Neighboring star experiencing severe Petrova dimming due to Astrophage migration.' },
+            { id: 'alpha_centauri', name: 'Alpha Centauri', x: 45, y: 35, z: -10, color: '#FFE4B5', radius: 7, class: 'Class G2V/K1V', subtitle: 'Closest System', dist: '4.37 ly', astrophage: 'MONITORED', desc: 'Nearest stellar neighbor system. High density monitoring active for Petrova activity.' },
+            { id: 'sirius', name: 'Sirius', x: -30, y: 90, z: -50, color: '#FFFFFF', radius: 10, class: 'Class A1V', subtitle: 'Brightest Star', dist: '8.6 ly', astrophage: 'NOMINAL', desc: 'Luminous main sequence star. No Petrova spectrum anomalies detected.' }
         ];
 
-        const bgStarsData = [
-            { x: 40, y: 50, r: 1.5, c: '#FF9999' }, { x: 150, y: 260, r: 2, c: '#99E6FF' },
-            { x: 210, y: 170, r: 1.2, c: '#FFFF99' }, { x: 300, y: 40, r: 1.8, c: '#DAB6FF' },
-            { x: 380, y: 110, r: 1.5, c: '#99FFBB' }, { x: 470, y: 260, r: 2, c: '#FFB3E6' },
-            { x: 560, y: 140, r: 1.2, c: '#66FFFF' }, { x: 110, y: 110, r: 2, c: '#FFE066' }
+        const TRAJECTORIES = [
+            { from: 'sol', to: 'tau_ceti', color: 'rgba(197, 179, 88, 0.6)' },
+            { from: 'tau_ceti', to: 'eridani', color: 'rgba(0, 229, 255, 0.6)' },
+            { from: 'eridani', to: 'sol', color: 'rgba(52, 211, 153, 0.6)' }
         ];
 
-        let selectedStar = starMapData[0];
-        let hoveredStar = null;
+        let starmapEngine = null;
+        let selectedStar = STAR_DATA[0];
+        let showTrajectories = true;
+
+        class StarMapEngine {
+            constructor(canvasId) {
+                this.canvas = document.getElementById(canvasId);
+                if (!this.canvas) return;
+                this.ctx = this.canvas.getContext('2d');
+                this.width = 0; this.height = 0;
+                this.zoom = 1.8; this.panX = 0; this.panY = 0;
+                this.rotX = 0.3; this.rotY = 0.4;
+                this.isDragging = false; this.lastMouseX = 0; this.lastMouseY = 0;
+                this.targetZoom = this.zoom; this.targetPanX = this.panX; this.targetPanY = this.panY;
+                this.targetRotX = this.rotX; this.targetRotY = this.rotY;
+                this.touchMode = null; this.lastTouchDist = 0; this.hoveredStar = null;
+                this.init();
+            }
+            init() {
+                this.resize();
+                window.addEventListener('resize', () => this.resize());
+                this.bindEvents();
+            }
+            resize() {
+                if (!this.canvas) return;
+                const rect = this.canvas.parentElement.getBoundingClientRect();
+                this.width = rect.width || 600;
+                this.height = rect.height || 480;
+                const dpr = window.devicePixelRatio || 1;
+                this.canvas.width = this.width * dpr;
+                this.canvas.height = this.height * dpr;
+                this.ctx.setTransform(1, 0, 0, 1, 0, 0);
+                this.ctx.scale(dpr, dpr);
+            }
+            bindEvents() {
+                this.canvas.addEventListener('mousedown', (e) => { this.isDragging = true; this.lastMouseX = e.clientX; this.lastMouseY = e.clientY; });
+                window.addEventListener('mouseup', () => { this.isDragging = false; });
+                this.canvas.addEventListener('mousemove', (e) => {
+                    const rect = this.canvas.getBoundingClientRect();
+                    const mouseX = e.clientX - rect.left, mouseY = e.clientY - rect.top;
+                    if (this.isDragging) {
+                        this.targetRotY += (e.clientX - this.lastMouseX) * 0.005;
+                        this.targetRotX += (e.clientY - this.lastMouseY) * 0.005;
+                        this.lastMouseX = e.clientX; this.lastMouseY = e.clientY;
+                    } else this.checkHover(mouseX, mouseY);
+                });
+                this.canvas.addEventListener('wheel', (e) => {
+                    e.preventDefault();
+                    this.targetZoom = Math.max(0.8, Math.min(3.5, this.targetZoom - e.deltaY * 0.0015));
+                }, { passive: false });
+                this.canvas.addEventListener('click', () => { if (this.hoveredStar) updateSelectedStar(this.hoveredStar); });
+                this.canvas.addEventListener('touchstart', (e) => {
+                    if (e.touches.length === 1) { this.touchMode = 'drag'; this.lastMouseX = e.touches[0].clientX; this.lastMouseY = e.touches[0].clientY; }
+                    else if (e.touches.length === 2) { this.touchMode = 'pinch'; this.lastTouchDist = this.getTouchDist(e.touches); }
+                }, { passive: true });
+                this.canvas.addEventListener('touchmove', (e) => {
+                    if (this.touchMode === 'drag' && e.touches.length === 1) {
+                        this.targetRotY += (e.touches[0].clientX - this.lastMouseX) * 0.005;
+                        this.targetRotX += (e.touches[0].clientY - this.lastMouseY) * 0.005;
+                        this.lastMouseX = e.touches[0].clientX; this.lastMouseY = e.touches[0].clientY;
+                        e.preventDefault();
+                    } else if (this.touchMode === 'pinch' && e.touches.length === 2) {
+                        const dist = this.getTouchDist(e.touches);
+                        this.targetZoom = Math.max(0.8, Math.min(3.5, this.targetZoom + (this.lastTouchDist - dist) * 0.01));
+                        this.lastTouchDist = dist; e.preventDefault();
+                    }
+                }, { passive: false });
+                this.canvas.addEventListener('touchend', () => {
+                    if (this.touchMode === 'drag' && this.hoveredStar) updateSelectedStar(this.hoveredStar);
+                    this.touchMode = null; this.lastTouchDist = 0;
+                });
+            }
+            getTouchDist(touches) {
+                const dx = touches[0].clientX - touches[1].clientX;
+                const dy = touches[0].clientY - touches[1].clientY;
+                return Math.hypot(dx, dy);
+            }
+            project(x, y, z) {
+                const rx = x * Math.cos(this.rotY) - z * Math.sin(this.rotY);
+                let rz = x * Math.sin(this.rotY) + z * Math.cos(this.rotY);
+                const ry = y * Math.cos(this.rotX) - rz * Math.sin(this.rotX);
+                rz = y * Math.sin(this.rotX) + rz * Math.cos(this.rotX);
+                const scale = (400 * this.zoom) / (rz + 400);
+                return { x: this.width / 2 + (rx + this.panX) * scale, y: this.height / 2 + (ry + this.panY) * scale, scale, depth: rz };
+            }
+            checkHover(mouseX, mouseY) {
+                let found = null, bestDist = Infinity;
+                STAR_DATA.forEach(star => {
+                    const p = this.project(star.x, star.y, star.z);
+                    const dist = Math.hypot(p.x - mouseX, p.y - mouseY);
+                    const hitRadius = star.radius * p.scale * 1.5;
+                    if (dist < hitRadius && dist < bestDist) { bestDist = dist; found = star; }
+                });
+                this.hoveredStar = found;
+                this.canvas.style.cursor = found ? 'pointer' : (this.isDragging ? 'grabbing' : 'grab');
+            }
+            ease() {
+                const k = 0.15;
+                this.zoom += (this.targetZoom - this.zoom) * k;
+                this.panX += (this.targetPanX - this.panX) * k;
+                this.panY += (this.targetPanY - this.panY) * k;
+                this.rotX += (this.targetRotX - this.rotX) * k;
+                this.rotY += (this.targetRotY - this.rotY) * k;
+            }
+            render() {
+                if (!this.ctx) return;
+                this.ease();
+                this.ctx.clearRect(0, 0, this.width, this.height);
+
+                this.ctx.strokeStyle = 'rgba(197, 179, 88, 0.05)';
+                this.ctx.lineWidth = 1;
+                for (let x = -200; x <= 200; x += 40) {
+                    const p1 = this.project(x, -100, 0);
+                    const p2 = this.project(x, 100, 0);
+                    this.ctx.beginPath(); this.ctx.moveTo(p1.x, p1.y); this.ctx.lineTo(p2.x, p2.y); this.ctx.stroke();
+                }
+
+                if (showTrajectories) {
+                    TRAJECTORIES.forEach(traj => {
+                        const s1 = STAR_DATA.find(s => s.id === traj.from);
+                        const s2 = STAR_DATA.find(s => s.id === traj.to);
+                        if (s1 && s2) {
+                            const p1 = this.project(s1.x, s1.y, s1.z);
+                            const p2 = this.project(s2.x, s2.y, s2.z);
+                            this.ctx.save();
+                            this.ctx.strokeStyle = traj.color;
+                            this.ctx.lineWidth = 1.5;
+                            this.ctx.setLineDash([6, 4]);
+                            this.ctx.beginPath(); this.ctx.moveTo(p1.x, p1.y); this.ctx.lineTo(p2.x, p2.y); this.ctx.stroke();
+                            this.ctx.restore();
+                        }
+                    });
+                }
+
+                STAR_DATA.slice().sort((a, b) => this.project(b.x, b.y, b.z).depth - this.project(a.x, a.y, a.z).depth).forEach(star => {
+                    const p = this.project(star.x, star.y, star.z);
+                    const isSelected = selectedStar && selectedStar.id === star.id;
+                    const isHovered = this.hoveredStar && this.hoveredStar.id === star.id;
+                    const auraRadius = (star.radius * (isSelected || isHovered ? 3.5 : 2.5)) * p.scale;
+                    const gradient = this.ctx.createRadialGradient(p.x, p.y, 0, p.x, p.y, auraRadius);
+                    gradient.addColorStop(0, star.color); gradient.addColorStop(1, 'transparent');
+                    this.ctx.fillStyle = gradient;
+                    this.ctx.beginPath(); this.ctx.arc(p.x, p.y, auraRadius, 0, Math.PI * 2); this.ctx.fill();
+
+                    this.ctx.fillStyle = star.color;
+                    this.ctx.beginPath(); this.ctx.arc(p.x, p.y, star.radius * p.scale, 0, Math.PI * 2); this.ctx.fill();
+
+                    this.ctx.fillStyle = '#FFFFFF';
+                    this.ctx.beginPath(); this.ctx.arc(p.x, p.y, star.radius * 0.45 * p.scale, 0, Math.PI * 2); this.ctx.fill();
+
+                    if (isSelected || isHovered) {
+                        this.ctx.strokeStyle = '#C5B358';
+                        this.ctx.lineWidth = 1.5;
+                        this.ctx.beginPath(); this.ctx.arc(p.x, p.y, (star.radius + 6) * p.scale, 0, Math.PI * 2); this.ctx.stroke();
+                    }
+
+                    this.ctx.fillStyle = isSelected ? '#C5B358' : '#CBD5E1';
+                    this.ctx.font = `${Math.max(10, 11 * p.scale)}px Orbitron, sans-serif`;
+                    this.ctx.textAlign = 'center';
+                    this.ctx.fillText(star.name, p.x, p.y - (star.radius + 10) * p.scale);
+                });
+            }
+            focusOn(x, y) { this.targetPanX = -x; this.targetPanY = -y; }
+        }
 
         function toggleStarMap() {
             const modal = document.getElementById('starmap-modal');
+            const isOpening = !modal.classList.contains('active');
             modal.classList.toggle('active');
-            if (modal.classList.contains('active')) {
-                drawStarMapCanvas();
-                updateInfoPanel(selectedStar);
+
+            if (isOpening) {
+                setTimeout(() => {
+                    if (!starmapEngine) starmapEngine = new StarMapEngine('starmap-canvas');
+                    else starmapEngine.resize();
+                    updateInfoPanel(selectedStar);
+
+                    // Start loop
+                    if (starmapEngine._loop) cancelAnimationFrame(starmapEngine._loop);
+                    const loop = () => {
+                        if (!document.getElementById('starmap-modal').classList.contains('active')) return;
+                        starmapEngine.render();
+                        starmapEngine._loop = requestAnimationFrame(loop);
+                    };
+                    loop();
+                }, 60);
+            } else {
+                if (starmapEngine && starmapEngine._loop) {
+                    cancelAnimationFrame(starmapEngine._loop);
+                    starmapEngine._loop = null;
+                }
             }
         }
 
         function updateInfoPanel(star) {
             if (!star) return;
-            document.getElementById('star-name').textContent = star.name;
-            document.getElementById('star-coords').textContent = `Coords: ${star.coords}`;
-            document.getElementById('star-desc').textContent = star.desc;
-            document.getElementById('star-spectral').textContent = star.spectral;
-            document.getElementById('star-distance').textContent = star.distance;
-            document.getElementById('star-status').textContent = star.status;
-
-            const infoTitleIcon = document.querySelector('#info-title i');
-            if (infoTitleIcon) infoTitleIcon.style.color = star.color;
+            document.getElementById('starName').textContent = star.name;
+            document.getElementById('starSubtitle').textContent = star.subtitle;
+            document.getElementById('starDescription').textContent = star.desc;
+            document.getElementById('starTypeBadge').textContent = star.class;
+            document.getElementById('starDistance').textContent = star.dist;
+            document.getElementById('starAstrophage').textContent = star.astrophage;
+            document.getElementById('hudTargetText').textContent = star.name;
         }
 
-        function getCanvasMousePos(canvas, evt) {
-            const rect = canvas.getBoundingClientRect();
-            const scaleX = canvas.width / rect.width;
-            const scaleY = canvas.height / rect.height;
-            return {
-                x: (evt.clientX - rect.left) * scaleX,
-                y: (evt.clientY - rect.top) * scaleY
-            };
+        function updateSelectedStar(star) {
+            selectedStar = star;
+            updateInfoPanel(star);
         }
 
-        function findStarAt(pos) {
-            return starMapData.find(s => {
-                const dx = pos.x - s.x;
-                const dy = pos.y - s.y;
-                return Math.sqrt(dx * dx + dy * dy) <= (s.r + 10);
-            });
+        function selectStarByName(name) {
+            const star = STAR_DATA.find(s => s.name.toLowerCase() === name.toLowerCase());
+            if (star) { updateSelectedStar(star); focusSelectedStar(); }
         }
 
-        function drawStarMapCanvas() {
-            const smCanvas = document.getElementById('starmap-canvas');
-            if (!smCanvas) return;
-            const smCtx = smCanvas.getContext('2d');
-            const w = smCanvas.width;
-            const h = smCanvas.height;
-
-            smCtx.clearRect(0, 0, w, h);
-
-            smCtx.strokeStyle = 'rgba(197, 179, 88, 0.12)';
-            smCtx.lineWidth = 1;
-            for (let x = 0; x < w; x += 40) {
-                smCtx.beginPath(); smCtx.moveTo(x, 0); smCtx.lineTo(x, h); smCtx.stroke();
-            }
-            for (let y = 0; y < h; y += 40) {
-                smCtx.beginPath(); smCtx.moveTo(0, y); smCtx.lineTo(w, y); smCtx.stroke();
-            }
-
-            smCtx.strokeStyle = 'rgba(197, 179, 88, 0.18)';
-            smCtx.lineWidth = 1;
-            smCtx.beginPath(); smCtx.arc(w / 2, h / 2, 120, 0, Math.PI * 2); smCtx.stroke();
-            smCtx.beginPath(); smCtx.arc(w / 2, h / 2, 60, 0, Math.PI * 2); smCtx.stroke();
-
-            smCtx.strokeStyle = 'rgba(212, 175, 55, 0.4)';
-            smCtx.lineWidth = 1.5;
-            smCtx.setLineDash([5, 5]);
-            smCtx.beginPath();
-            smCtx.moveTo(starMapData[0].x, starMapData[0].y);
-            smCtx.lineTo(starMapData[1].x, starMapData[1].y);
-            smCtx.lineTo(starMapData[2].x, starMapData[2].y);
-            smCtx.lineTo(starMapData[3].x, starMapData[3].y);
-            smCtx.stroke();
-            smCtx.setLineDash([]);
-
-            bgStarsData.forEach(s => {
-                smCtx.fillStyle = s.c;
-                smCtx.beginPath();
-                smCtx.arc(s.x, s.y, s.r, 0, Math.PI * 2);
-                smCtx.fill();
-            });
-
-            starMapData.forEach(s => {
-                const isSelected = selectedStar && selectedStar.name === s.name;
-                const isHovered = hoveredStar && hoveredStar.name === s.name;
-
-                if (isSelected) {
-                    smCtx.strokeStyle = '#C5B358';
-                    smCtx.lineWidth = 1.5;
-                    smCtx.beginPath();
-                    smCtx.arc(s.x, s.y, s.r * 2.2, 0, Math.PI * 2);
-                    smCtx.stroke();
-
-                    smCtx.strokeStyle = s.color;
-                    smCtx.lineWidth = 1;
-                    smCtx.beginPath();
-                    smCtx.arc(s.x, s.y, s.r * 2.8, 0, Math.PI * 2);
-                    smCtx.stroke();
-                }
-
-                const glowMult = isHovered ? 3.5 : (isSelected ? 3.0 : 2.5);
-                const grad = smCtx.createRadialGradient(s.x, s.y, 0, s.x, s.y, s.r * glowMult);
-                grad.addColorStop(0, s.glow);
-                grad.addColorStop(1, 'transparent');
-                smCtx.fillStyle = grad;
-                smCtx.beginPath();
-                smCtx.arc(s.x, s.y, s.r * glowMult, 0, Math.PI * 2);
-                smCtx.fill();
-
-                smCtx.fillStyle = s.color;
-                smCtx.beginPath();
-                smCtx.arc(s.x, s.y, isHovered ? s.r * 1.2 : s.r, 0, Math.PI * 2);
-                smCtx.fill();
-
-                smCtx.fillStyle = '#FFFFFF';
-                smCtx.beginPath();
-                smCtx.arc(s.x, s.y, s.r * 0.4, 0, Math.PI * 2);
-                smCtx.fill();
-
-                smCtx.fillStyle = isSelected ? '#FFFFFF' : '#C5B358';
-                smCtx.font = (isSelected || isHovered) ? 'bold 12px Orbitron, sans-serif' : '11px Orbitron, sans-serif';
-                smCtx.textAlign = 'center';
-                const labelY = s.labelPos === 'top' ? s.y - (s.r + 10) : s.y + (s.r + 16);
-                smCtx.fillText(s.name, s.x, labelY);
-            });
+        function focusSelectedStar() {
+            if (!selectedStar || !starmapEngine) return;
+            starmapEngine.focusOn(selectedStar.x, selectedStar.y);
         }
 
-        window.addEventListener('load', () => {
-            initRobot();
-
-            const smCanvas = document.getElementById('starmap-canvas');
-            if (smCanvas) {
-                smCanvas.addEventListener('mousemove', (e) => {
-                    const pos = getCanvasMousePos(smCanvas, e);
-                    const star = findStarAt(pos);
-                    if (star !== hoveredStar) {
-                        hoveredStar = star;
-                        smCanvas.style.cursor = star ? 'pointer' : 'default';
-                        drawStarMapCanvas();
-                    }
-                });
-
-                smCanvas.addEventListener('click', (e) => {
-                    const pos = getCanvasMousePos(smCanvas, e);
-                    const star = findStarAt(pos);
-                    if (star) {
-                        selectedStar = star;
-                        updateInfoPanel(star);
-                        drawStarMapCanvas();
-                    }
-                });
-            }
-        });
-
-        /* 4. Interactive Canvas Robot */
-        function initRobot() {
-            const canvas = document.getElementById('robot-canvas');
-            if (!canvas) return;
-
-            const ctx = canvas.getContext('2d');
-            const speech = document.getElementById('robot-speech');
-
-            let state = 'idle';
-            let eyeScaleY = 1;
-            let time = 0;
-            let mouseX = canvas.width / 2;
-            let mouseY = canvas.height / 2;
-            let particles = [];
-
-            const speechPhrases = {
-                idle: ["Hello Explorer! Click or hover me!"],
-                happy: ["Yay! ^^", "Beep boop! :33", "Amaze, Amaze, Amaze! 💖"]
-            };
-
-            canvas.addEventListener('mousemove', (e) => {
-                const rect = canvas.getBoundingClientRect();
-                mouseX = e.clientX - rect.left;
-                mouseY = e.clientY - rect.top;
-            });
-
-            canvas.addEventListener('mouseenter', () => triggerHappy());
-            canvas.addEventListener('mouseleave', () => {
-                mouseX = canvas.width / 2;
-                mouseY = canvas.height / 2;
-            });
-
-            function drawHeart(x, y, size, color, alpha) {
-                ctx.save();
-                ctx.translate(x, y);
-                ctx.fillStyle = color;
-                ctx.globalAlpha = Math.max(0, alpha);
-                ctx.beginPath();
-                const d = size;
-                ctx.moveTo(0, 0);
-                ctx.bezierCurveTo(-d / 2, -d / 2, -d, d / 3, 0, d);
-                ctx.bezierCurveTo(d, d / 3, d / 2, -d / 2, 0, 0);
-                ctx.fill();
-                ctx.restore();
-            }
-
-            function draw3DBlock(x, y, width, height, radius, baseColor, topColor, sideColor) {
-                ctx.save();
-                ctx.translate(x, y);
-
-                ctx.shadowColor = 'rgba(197, 179, 88, 0.2)';
-                ctx.shadowBlur = 12;
-                ctx.shadowOffsetY = 6;
-
-                ctx.fillStyle = baseColor;
-                ctx.beginPath();
-                ctx.roundRect(-width/2, -height/2, width, height, radius);
-                ctx.fill();
-
-                ctx.shadowColor = 'transparent';
-
-                const topGrad = ctx.createLinearGradient(0, -height/2, 0, 0);
-                topGrad.addColorStop(0, topColor);
-                topGrad.addColorStop(1, 'rgba(255, 255, 255, 0)');
-                ctx.fillStyle = topGrad;
-                ctx.beginPath();
-                ctx.roundRect(-width/2 + 2, -height/2 + 2, width - 4, height/2, [radius, radius, 0, 0]);
-                ctx.fill();
-
-                const btmGrad = ctx.createLinearGradient(0, 0, 0, height/2);
-                btmGrad.addColorStop(0, 'rgba(0, 0, 0, 0)');
-                btmGrad.addColorStop(1, sideColor);
-                ctx.fillStyle = btmGrad;
-                ctx.beginPath();
-                ctx.roundRect(-width/2 + 2, 0, width - 4, height/2 - 2, [0, 0, radius, radius]);
-                ctx.fill();
-
-                ctx.strokeStyle = 'rgba(197, 179, 88, 0.4)';
-                ctx.lineWidth = 2;
-                ctx.beginPath();
-                ctx.roundRect(-width/2, -height/2, width, height, radius);
-                ctx.stroke();
-
-                ctx.restore();
-            }
-
-            function drawCute3DRobot() {
-                ctx.clearRect(0, 0, canvas.width, canvas.height);
-                time += 0.04;
-
-                const cx = canvas.width / 2;
-                const hoverOffsetY = Math.sin(time * 2.5) * 8;
-                const cy = canvas.height / 2 + hoverOffsetY;
-
-                const shadowScale = 1 - (hoverOffsetY / 30);
-                ctx.fillStyle = 'rgba(197, 179, 88, 0.12)';
-                ctx.beginPath();
-                ctx.ellipse(cx, canvas.height - 25, 45 * shadowScale, 10 * shadowScale, 0, 0, Math.PI * 2);
-                ctx.fill();
-
-                const targetOffsetX = (mouseX - cx) * 0.12;
-                const targetOffsetY = (mouseY - cy) * 0.12;
-
-                const grad = ctx.createRadialGradient(cx, cy, 10, cx, cy, 110);
-                grad.addColorStop(0, 'rgba(197, 179, 88, 0.15)');
-                grad.addColorStop(1, 'rgba(0, 0, 0, 0)');
-                ctx.fillStyle = grad;
-                ctx.beginPath();
-                ctx.arc(cx, cy, 110, 0, Math.PI * 2);
-                ctx.fill();
-
-                ctx.strokeStyle = '#B85042';
-                ctx.lineWidth = 3;
-                ctx.beginPath();
-                ctx.moveTo(cx, cy - 55);
-                ctx.lineTo(cx, cy - 78);
-                ctx.stroke();
-
-                const orbColor = (state === 'happy') ? '#B85042' : '#C5B358';
-                ctx.fillStyle = orbColor;
-                ctx.shadowColor = orbColor;
-                ctx.shadowBlur = 10;
-                ctx.beginPath();
-                ctx.arc(cx, cy - 82, 7, 0, Math.PI * 2);
-                ctx.fill();
-                ctx.shadowColor = 'transparent';
-
-                draw3DBlock(cx - 52, cy - 25, 14, 22, 5, '#0D1F2D', 'rgba(197, 179, 88, 0.3)', 'rgba(0, 0, 0, 0.6)');
-                draw3DBlock(cx + 52, cy - 25, 14, 22, 5, '#0D1F2D', 'rgba(197, 179, 88, 0.3)', 'rgba(0, 0, 0, 0.6)');
-
-                draw3DBlock(cx, cy - 25, 92, 60, 18, '#1F4E5B', 'rgba(255, 255, 255, 0.2)', 'rgba(6, 9, 14, 0.8)');
-
-                ctx.fillStyle = '#06090E';
-                ctx.strokeStyle = 'rgba(197, 179, 88, 0.3)';
-                ctx.lineWidth = 1.5;
-                ctx.beginPath();
-                ctx.roundRect(cx - 38, cy - 43, 76, 36, 10);
-                ctx.fill();
-                ctx.stroke();
-
-                const eyeXShift = Math.max(-8, Math.min(8, targetOffsetX * 0.6));
-                const eyeYShift = Math.max(-5, Math.min(5, targetOffsetY * 0.6));
-
-                ctx.save();
-                ctx.translate(cx - 16 + eyeXShift, cy - 25 + eyeYShift);
-                ctx.scale(1, eyeScaleY);
-                if (state === 'happy') {
-                    ctx.beginPath();
-                    ctx.arc(0, 2, 7, 1.1 * Math.PI, 1.9 * Math.PI, false);
-                    ctx.lineWidth = 3;
-                    ctx.strokeStyle = '#B85042';
-                    ctx.stroke();
-                } else {
-                    ctx.fillStyle = '#C5B358';
-                    ctx.beginPath();
-                    ctx.arc(0, 0, 6.5, 0, Math.PI * 2);
-                    ctx.fill();
-                    ctx.fillStyle = '#ffffff';
-                    ctx.beginPath();
-                    ctx.arc(-2, -2, 2, 0, Math.PI * 2);
-                    ctx.fill();
-                }
-                ctx.restore();
-
-                ctx.save();
-                ctx.translate(cx + 16 + eyeXShift, cy - 25 + eyeYShift);
-                ctx.scale(1, eyeScaleY);
-                if (state === 'happy') {
-                    ctx.beginPath();
-                    ctx.arc(0, 2, 7, 1.1 * Math.PI, 1.9 * Math.PI, false);
-                    ctx.lineWidth = 3;
-                    ctx.strokeStyle = '#B85042';
-                    ctx.stroke();
-                } else {
-                    ctx.fillStyle = '#C5B358';
-                    ctx.beginPath();
-                    ctx.arc(0, 0, 6.5, 0, Math.PI * 2);
-                    ctx.fill();
-                    ctx.fillStyle = '#ffffff';
-                    ctx.beginPath();
-                    ctx.arc(-2, -2, 2, 0, Math.PI * 2);
-                    ctx.fill();
-                }
-                ctx.restore();
-
-                ctx.fillStyle = 'rgba(184, 80, 66, 0.4)';
-                ctx.beginPath();
-                ctx.arc(cx - 26 + eyeXShift, cy - 17 + eyeYShift, 4.5, 0, Math.PI * 2);
-                ctx.arc(cx + 26 + eyeXShift, cy - 17 + eyeYShift, 4.5, 0, Math.PI * 2);
-                ctx.fill();
-
-                const bodyY = cy + 28;
-                draw3DBlock(cx, bodyY, 70, 48, 14, '#1F4E5B', 'rgba(255, 255, 255, 0.15)', 'rgba(6, 9, 14, 0.8)');
-                drawHeart(cx, bodyY - 10, 10, state === 'happy' ? '#B85042' : '#C5B358', 1.0);
-
-                const armWave = Math.sin(time * 3) * 5;
-                draw3DBlock(cx - 45, bodyY - 2 + armWave, 14, 28, 6, '#0D1F2D', 'rgba(197, 179, 88, 0.2)', 'rgba(0,0,0,0.6)');
-                draw3DBlock(cx + 45, bodyY - 2 - armWave, 14, 28, 6, '#0D1F2D', 'rgba(197, 179, 88, 0.2)', 'rgba(0,0,0,0.6)');
-
-                particles.forEach((p, idx) => {
-                    p.y -= p.speedY;
-                    p.x += Math.sin(time * 4 + idx) * 0.8;
-                    p.alpha -= 0.018;
-                    drawHeart(p.x, p.y, p.size, p.color, p.alpha);
-                    if (p.alpha <= 0) particles.splice(idx, 1);
-                });
-            }
-
-            function robotLoop() {
-                drawCute3DRobot();
-                requestAnimationFrame(robotLoop);
-            }
-            robotLoop();
-
-            setInterval(() => {
-                if (state !== 'blink') {
-                    eyeScaleY = 0.1;
-                    setTimeout(() => { eyeScaleY = 1; }, 180);
-                }
-            }, 3200);
-
-            function triggerHappy() {
-                state = 'happy';
-                if (speech) {
-                    const phrase = speechPhrases.happy[Math.floor(Math.random() * speechPhrases.happy.length)];
-                    speech.textContent = `"${phrase}"`;
-                }
-
-                for (let i = 0; i < 18; i++) {
-                    particles.push({
-                        x: canvas.width / 2 + (Math.random() * 50 - 25),
-                        y: canvas.height / 2 + (Math.random() * 30 - 15),
-                        speedY: Math.random() * 1.8 + 0.8,
-                        size: Math.random() * 6 + 6,
-                        alpha: 1.0,
-                        color: ['#B85042', '#C5B358', '#E6E8E6', '#1F4E5B'][Math.floor(Math.random() * 4)]
-                    });
-                }
-
-                setTimeout(() => {
-                    state = 'idle';
-                    if (speech) {
-                        const idlePhrase = speechPhrases.idle[Math.floor(Math.random() * speechPhrases.idle.length)];
-                        speech.textContent = `"${idlePhrase}"`;
-                    }
-                }, 2800);
-            }
-
-            canvas.addEventListener('click', triggerHappy);
+        function resetMapCamera() {
+            if (!starmapEngine) return;
+            starmapEngine.targetZoom = 1.8;
+            starmapEngine.targetPanX = 0;
+            starmapEngine.targetPanY = 0;
+            starmapEngine.targetRotX = 0.3;
+            starmapEngine.targetRotY = 0.4;
         }
 
-        /* 4b. Accessibility: close starmap on Escape or backdrop click */
+        function toggleTrajectories() { showTrajectories = !showTrajectories; }
+
         document.addEventListener('keydown', (e) => {
             if (e.key === 'Escape') {
                 const modal = document.getElementById('starmap-modal');
@@ -1332,36 +1172,149 @@
             });
         }
 
-        /* 5. Contact Form — real submission via Vercel Function */
+        /* ── GraceBot ── */
+        function initRobot() {
+            const canvas = document.getElementById('robot-canvas');
+            if (!canvas) return;
+            const ctx = canvas.getContext('2d');
+            const speech = document.getElementById('robot-speech');
+            let state = 'idle', eyeScaleY = 1, time = 0;
+            let mouseX = canvas.width / 2, mouseY = canvas.height / 2;
+            let particles = [];
+            const speechPhrases = {
+                idle: ["Hello Explorer! Click or hover me!"],
+                happy: ["Yay! ^^", "Beep boop! :33", "Amaze, Amaze, Amaze! 💖"]
+            };
+            canvas.addEventListener('mousemove', (e) => {
+                const rect = canvas.getBoundingClientRect();
+                mouseX = e.clientX - rect.left; mouseY = e.clientY - rect.top;
+            });
+            canvas.addEventListener('mouseenter', () => triggerHappy());
+            canvas.addEventListener('mouseleave', () => { mouseX = canvas.width / 2; mouseY = canvas.height / 2; });
+            function drawHeart(x, y, size, color, alpha) {
+                ctx.save(); ctx.translate(x, y); ctx.fillStyle = color; ctx.globalAlpha = Math.max(0, alpha);
+                ctx.beginPath(); const d = size;
+                ctx.moveTo(0, 0);
+                ctx.bezierCurveTo(-d/2, -d/2, -d, d/3, 0, d);
+                ctx.bezierCurveTo(d, d/3, d/2, -d/2, 0, 0);
+                ctx.fill(); ctx.restore();
+            }
+            function draw3DBlock(x, y, width, height, radius, baseColor, topColor, sideColor) {
+                ctx.save(); ctx.translate(x, y);
+                ctx.shadowColor = 'rgba(197, 179, 88, 0.2)'; ctx.shadowBlur = 12; ctx.shadowOffsetY = 6;
+                ctx.fillStyle = baseColor;
+                ctx.beginPath(); ctx.roundRect(-width/2, -height/2, width, height, radius); ctx.fill();
+                ctx.shadowColor = 'transparent';
+                const topGrad = ctx.createLinearGradient(0, -height/2, 0, 0);
+                topGrad.addColorStop(0, topColor); topGrad.addColorStop(1, 'rgba(255, 255, 255, 0)');
+                ctx.fillStyle = topGrad;
+                ctx.beginPath(); ctx.roundRect(-width/2 + 2, -height/2 + 2, width - 4, height/2, [radius, radius, 0, 0]); ctx.fill();
+                const btmGrad = ctx.createLinearGradient(0, 0, 0, height/2);
+                btmGrad.addColorStop(0, 'rgba(0, 0, 0, 0)'); btmGrad.addColorStop(1, sideColor);
+                ctx.fillStyle = btmGrad;
+                ctx.beginPath(); ctx.roundRect(-width/2 + 2, 0, width - 4, height/2 - 2, [0, 0, radius, radius]); ctx.fill();
+                ctx.strokeStyle = 'rgba(197, 179, 88, 0.4)'; ctx.lineWidth = 2;
+                ctx.beginPath(); ctx.roundRect(-width/2, -height/2, width, height, radius); ctx.stroke();
+                ctx.restore();
+            }
+            function drawCute3DRobot() {
+                ctx.clearRect(0, 0, canvas.width, canvas.height);
+                time += 0.04;
+                const cx = canvas.width / 2;
+                const hoverOffsetY = Math.sin(time * 2.5) * 8;
+                const cy = canvas.height / 2 + hoverOffsetY;
+                const shadowScale = 1 - (hoverOffsetY / 30);
+                ctx.fillStyle = 'rgba(197, 179, 88, 0.12)';
+                ctx.beginPath(); ctx.ellipse(cx, canvas.height - 25, 45 * shadowScale, 10 * shadowScale, 0, 0, Math.PI * 2); ctx.fill();
+                const targetOffsetX = (mouseX - cx) * 0.12, targetOffsetY = (mouseY - cy) * 0.12;
+                const grad = ctx.createRadialGradient(cx, cy, 10, cx, cy, 110);
+                grad.addColorStop(0, 'rgba(197, 179, 88, 0.15)'); grad.addColorStop(1, 'rgba(0, 0, 0, 0)');
+                ctx.fillStyle = grad;
+                ctx.beginPath(); ctx.arc(cx, cy, 110, 0, Math.PI * 2); ctx.fill();
+                ctx.strokeStyle = '#B85042'; ctx.lineWidth = 3;
+                ctx.beginPath(); ctx.moveTo(cx, cy - 55); ctx.lineTo(cx, cy - 78); ctx.stroke();
+                const orbColor = (state === 'happy') ? '#B85042' : '#C5B358';
+                ctx.fillStyle = orbColor; ctx.shadowColor = orbColor; ctx.shadowBlur = 10;
+                ctx.beginPath(); ctx.arc(cx, cy - 82, 7, 0, Math.PI * 2); ctx.fill();
+                ctx.shadowColor = 'transparent';
+                draw3DBlock(cx - 52, cy - 25, 14, 22, 5, '#0D1F2D', 'rgba(197, 179, 88, 0.3)', 'rgba(0, 0, 0, 0.6)');
+                draw3DBlock(cx + 52, cy - 25, 14, 22, 5, '#0D1F2D', 'rgba(197, 179, 88, 0.3)', 'rgba(0, 0, 0, 0.6)');
+                draw3DBlock(cx, cy - 25, 92, 60, 18, '#1F4E5B', 'rgba(255, 255, 255, 0.2)', 'rgba(6, 9, 14, 0.8)');
+                ctx.fillStyle = '#06090E'; ctx.strokeStyle = 'rgba(197, 179, 88, 0.3)'; ctx.lineWidth = 1.5;
+                ctx.beginPath(); ctx.roundRect(cx - 38, cy - 43, 76, 36, 10); ctx.fill(); ctx.stroke();
+                const eyeXShift = Math.max(-8, Math.min(8, targetOffsetX * 0.6));
+                const eyeYShift = Math.max(-5, Math.min(5, targetOffsetY * 0.6));
+                ctx.save(); ctx.translate(cx - 16 + eyeXShift, cy - 25 + eyeYShift); ctx.scale(1, eyeScaleY);
+                if (state === 'happy') {
+                    ctx.beginPath(); ctx.arc(0, 2, 7, 1.1 * Math.PI, 1.9 * Math.PI, false);
+                    ctx.lineWidth = 3; ctx.strokeStyle = '#B85042'; ctx.stroke();
+                } else {
+                    ctx.fillStyle = '#C5B358'; ctx.beginPath(); ctx.arc(0, 0, 6.5, 0, Math.PI * 2); ctx.fill();
+                    ctx.fillStyle = '#ffffff'; ctx.beginPath(); ctx.arc(-2, -2, 2, 0, Math.PI * 2); ctx.fill();
+                }
+                ctx.restore();
+                ctx.save(); ctx.translate(cx + 16 + eyeXShift, cy - 25 + eyeYShift); ctx.scale(1, eyeScaleY);
+                if (state === 'happy') {
+                    ctx.beginPath(); ctx.arc(0, 2, 7, 1.1 * Math.PI, 1.9 * Math.PI, false);
+                    ctx.lineWidth = 3; ctx.strokeStyle = '#B85042'; ctx.stroke();
+                } else {
+                    ctx.fillStyle = '#C5B358'; ctx.beginPath(); ctx.arc(0, 0, 6.5, 0, Math.PI * 2); ctx.fill();
+                    ctx.fillStyle = '#ffffff'; ctx.beginPath(); ctx.arc(-2, -2, 2, 0, Math.PI * 2); ctx.fill();
+                }
+                ctx.restore();
+                ctx.fillStyle = 'rgba(184, 80, 66, 0.4)';
+                ctx.beginPath();
+                ctx.arc(cx - 26 + eyeXShift, cy - 17 + eyeYShift, 4.5, 0, Math.PI * 2);
+                ctx.arc(cx + 26 + eyeXShift, cy - 17 + eyeYShift, 4.5, 0, Math.PI * 2);
+                ctx.fill();
+                const bodyY = cy + 28;
+                draw3DBlock(cx, bodyY, 70, 48, 14, '#1F4E5B', 'rgba(255, 255, 255, 0.15)', 'rgba(6, 9, 14, 0.8)');
+                drawHeart(cx, bodyY - 10, 10, state === 'happy' ? '#B85042' : '#C5B358', 1.0);
+                const armWave = Math.sin(time * 3) * 5;
+                draw3DBlock(cx - 45, bodyY - 2 + armWave, 14, 28, 6, '#0D1F2D', 'rgba(197, 179, 88, 0.2)', 'rgba(0,0,0,0.6)');
+                draw3DBlock(cx + 45, bodyY - 2 - armWave, 14, 28, 6, '#0D1F2D', 'rgba(197, 179, 88, 0.2)', 'rgba(0,0,0,0.6)');
+                particles.forEach((p, idx) => {
+                    p.y -= p.speedY; p.x += Math.sin(time * 4 + idx) * 0.8; p.alpha -= 0.018;
+                    drawHeart(p.x, p.y, p.size, p.color, p.alpha);
+                    if (p.alpha <= 0) particles.splice(idx, 1);
+                });
+            }
+            function robotLoop() { drawCute3DRobot(); requestAnimationFrame(robotLoop); }
+            robotLoop();
+            setInterval(() => { if (state !== 'blink') { eyeScaleY = 0.1; setTimeout(() => { eyeScaleY = 1; }, 180); } }, 3200);
+            function triggerHappy() {
+                state = 'happy';
+                if (speech) speech.textContent = `"${speechPhrases.happy[Math.floor(Math.random() * speechPhrases.happy.length)]}"`;
+                for (let i = 0; i < 18; i++) {
+                    particles.push({ x: canvas.width / 2 + (Math.random() * 50 - 25), y: canvas.height / 2 + (Math.random() * 30 - 15), speedY: Math.random() * 1.8 + 0.8, size: Math.random() * 6 + 6, alpha: 1.0, color: ['#B85042', '#C5B358', '#E6E8E6', '#1F4E5B'][Math.floor(Math.random() * 4)] });
+                }
+                setTimeout(() => {
+                    state = 'idle';
+                    if (speech) speech.textContent = `"${speechPhrases.idle[0]}"`;
+                }, 2800);
+            }
+            canvas.addEventListener('click', triggerHappy);
+        }
+
+        /* ── Contact form ── */
         const contactForm = document.getElementById('contact-form');
         const contactStatus = document.getElementById('contact-status');
-
         if (contactForm) {
             contactForm.addEventListener('submit', async (e) => {
                 e.preventDefault();
-
                 const submitBtn = contactForm.querySelector('button[type="submit"]');
                 const originalText = submitBtn.innerHTML;
-
                 submitBtn.disabled = true;
                 submitBtn.innerHTML = '<i class="fa-solid fa-satellite-dish animate-pulse mr-2"></i> Transmitting...';
-
                 const formData = {
                     name: document.getElementById('contact-name').value,
                     phone: document.getElementById('contact-phone').value,
                     subject: document.getElementById('contact-subject').value,
                     message: document.getElementById('contact-msg').value,
                 };
-
                 try {
-                    const response = await fetch('/api/contact', {
-                        method: 'POST',
-                        headers: { 'Content-Type': 'application/json' },
-                        body: JSON.stringify(formData),
-                    });
-
+                    const response = await fetch('/api/contact', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(formData) });
                     const result = await response.json();
-
                     contactStatus.classList.remove('hidden');
                     if (response.ok) {
                         contactStatus.className = "text-center font-semibold text-sm text-[#C5B358]";
@@ -1382,7 +1335,7 @@
             });
         }
 
-        /* 6. Initialization — robot is initialized in the starmap load handler */
+        window.addEventListener('load', () => { initRobot(); });
     </script>
 </body>
 </html>
