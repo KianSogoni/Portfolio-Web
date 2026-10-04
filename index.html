@@ -113,6 +113,14 @@
         #starmap-modal { display: none; opacity: 0; transition: opacity 0.3s ease; }
         #starmap-modal.active { display: flex; opacity: 1; }
 
+        #starmap-canvas {
+          touch-action: manipulation;
+         -webkit-touch-callout: none;
+          -webkit-user-select: none;
+           user-select: none;
+          -webkit-tap-highlight-color: transparent;
+        }
+
         /* Accessibility: visible focus rings */
         button:focus-visible, a:focus-visible, input:focus-visible, textarea:focus-visible {
             outline: 2px solid #C5B358;
