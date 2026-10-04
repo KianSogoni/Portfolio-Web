@@ -110,7 +110,13 @@
             margin-left: 0.5rem;
         }
 
-        #starmap-modal { display: none; opacity: 0; transition: opacity 0.3s ease; }
+        #starmap-modal {
+            display: none;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+            touch-action: manipulation;
+        }
+        
         #starmap-modal.active { display: flex; opacity: 1; }
 
         #starmap-canvas {
