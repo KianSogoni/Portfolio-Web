@@ -135,11 +135,36 @@
             opacity: 0;
             transition: opacity 0.3s ease;
             touch-action: manipulation;
+            /* gold scrollbar for the modal itself */
+            scrollbar-width: thin;
+            scrollbar-color: #C5B358 rgba(13, 31, 45, 0.6);
         }
 
         #starmap-modal.active {
             display: flex;
             opacity: 1;
+        }
+
+        /* hides the page scrollbar when the star map modal is open */
+        body.modal-open {
+            overflow: hidden;
+        }
+
+        /* gold, thicker scrollbar inside the modal — leaves room for its own thumb */
+        #starmap-modal::-webkit-scrollbar {
+            width: 12px;
+        }
+        #starmap-modal::-webkit-scrollbar-track {
+            background: rgba(13, 31, 45, 0.6);
+            border-radius: 6px;
+        }
+        #starmap-modal::-webkit-scrollbar-thumb {
+            background: linear-gradient(180deg, #C5B358 0%, #B85042 100%);
+            border-radius: 6px;
+            border: 2px solid rgba(13, 31, 45, 0.6);
+        }
+        #starmap-modal::-webkit-scrollbar-thumb:hover {
+            background: linear-gradient(180deg, #E6D27A 0%, #C5B358 100%);
         }
 
         /* prevents weird drag/select behavior on the canvas */
@@ -231,7 +256,7 @@
 
     <!-- STAR MAP MODAL -->
     <div id="starmap-modal" role="dialog" aria-modal="true" aria-labelledby="starmap-title" class="fixed inset-0 bg-black/85 backdrop-blur-md z-50 flex items-start sm:items-center justify-center p-2 sm:p-4 overflow-y-auto">
-        <div class="glass-panel p-4 sm:p-6 max-w-5xl w-full border-[#C5B358]/50 relative flex flex-col shadow-[0_0_35px_rgba(197,179,88,0.15)] my-4 sm:my-8">
+        <div class="glass-panel p-4 sm:p-6 max-w-5xl w-full border-[#C5B358]/50 relative flex flex-col shadow-[0_0_35px_rgba(197,179,88,0.15)] my-2 sm:my-4">
 
             <button onclick="toggleStarMap()" aria-label="Close star map" class="absolute top-4 right-4 z-10 w-9 h-9 rounded-full bg-[#0D1F2D]/80 hover:bg-[#C5B358]/20 border border-[#C5B358]/40 text-[#C5B358] flex items-center justify-center transition-colors">
                 <i class="fa-solid fa-xmark text-base" aria-hidden="true"></i>
@@ -258,7 +283,8 @@
             <div class="grid grid-cols-1 lg:grid-cols-12 gap-4 items-start">
 
                 <div class="lg:col-span-8">
-                    <div class="relative rounded-xl overflow-hidden bg-[#06090E] border border-[#C5B358]/30 h-[340px] sm:h-[420px] lg:h-[500px]">
+                    <!-- canvas height caps at 60vh so the system panel below stays visible on short screens -->
+                    <div class="relative rounded-xl overflow-hidden bg-[#06090E] border border-[#C5B358]/30 h-[280px] sm:h-[380px] md:h-[440px] lg:h-[500px]" style="max-height: 60vh;">
                         <canvas id="starmap-canvas" role="img" aria-label="Interactive star map of the Eridian sector." class="w-full h-full cursor-grab active:cursor-grabbing" style="touch-action: none;"></canvas>
 
                         <div class="absolute top-3 left-3 bg-[#06090E]/85 backdrop-blur border border-[#C5B358]/30 rounded-lg p-2.5 text-xs space-y-1 font-mono pointer-events-none max-w-[65%]">
@@ -1303,6 +1329,9 @@
             const modal = document.getElementById('starmap-modal');
             const isOpening = !modal.classList.contains('active');
             modal.classList.toggle('active');
+
+            // hide the page scrollbar while modal is open so scrollbars don't stack
+            document.body.classList.toggle('modal-open', isOpening);
 
             if (isOpening) {
                 // small delay because the canvas needs to be visible before we measure it
