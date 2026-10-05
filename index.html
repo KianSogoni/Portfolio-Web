@@ -141,11 +141,6 @@
             /* leaves room so the scrollbar doesn't sit on top of content */
             padding-right: 20px;
         }
-
-        #starmap-modal > div {
-            max-height: calc(100vh - 2rem);
-        }
-
         #starmap-modal.active {
             display: flex;
             opacity: 1;
@@ -287,7 +282,7 @@
                 </div>
             </div>
 
-            <div class="grid grid-cols-1 lg:grid-cols-12 gap-4 items-start">
+            <div class="grid grid-cols-1 lg:grid-cols-12 gap-4 items-start lg:items-stretch">
 
                 <div class="lg:col-span-8">
                     <!-- canvas height capped so the info panel below stays visible -->
