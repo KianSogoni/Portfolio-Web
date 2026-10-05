@@ -180,6 +180,7 @@
             -webkit-user-select: none;
             user-select: none;
             -webkit-tap-highlight-color: transparent;
+            display: block;
         }
 
         /* accessibility — visible focus rings for keyboard users */
@@ -290,8 +291,8 @@
 
                 <div class="lg:col-span-8">
                     <!-- canvas height capped so the info panel below stays visible -->
-                    <div class="relative rounded-xl overflow-hidden bg-[#06090E] border border-[#C5B358]/30" style="height: min(480px, 50vh); min-height: 240px;">
-                        <canvas id="starmap-canvas" role="img" aria-label="Interactive star map of the Eridian sector." class="w-full h-full cursor-grab active:cursor-grabbing" style="touch-action: none;"></canvas>
+                    <div id="starmap-canvas-wrap" class="relative rounded-xl overflow-hidden bg-[#06090E] border border-[#C5B358]/30" style="height: min(480px, 50vh); min-height: 240px;">
+                        <canvas id="starmap-canvas" role="img" aria-label="Interactive star map of the Eridian sector." class="absolute inset-0 w-full h-full cursor-grab active:cursor-grabbing" style="touch-action: none;"></canvas>
 
                         <div class="absolute top-3 left-3 bg-[#06090E]/85 backdrop-blur border border-[#C5B358]/30 rounded-lg p-2.5 text-xs space-y-1 font-mono pointer-events-none max-w-[65%]">
                             <div class="text-[#C5B358] font-orbitron font-bold text-[10px] tracking-wider">NAVIGATION HUD</div>
@@ -1186,6 +1187,15 @@
         // STAR MAP
         // stars have 3D positions that get rotated then projected down
         // to 2D, so you can drag to orbit + scroll to zoom
+        //
+        // note to self: the canvas kept drawing outside its frame because
+        // it was still in normal flow — it could push its own parent open,
+        // which meant the "clip to the wrapper" trick never actually had
+        // a smaller box to clip against. the fix is to take the canvas out
+        // of flow entirely with absolute inset-0, so it always matches the
+        // wrapper and physically cannot grow past it. combined with the
+        // culling in project() and the ctx.clip() in render() that's three
+        // layers of defense now, which should finally be enough.
         // ============================================================
 
         const STAR_DATA = [
@@ -1244,18 +1254,38 @@
             init() {
                 this.resize();
                 window.addEventListener('resize', () => this.resize());
+
+                // watch the parent so we re-measure whenever it actually
+                // changes size — first open, window resize, sidebar reflow,
+                // all of it. the canvas being absolute means it can't feed
+                // its own size back into the wrapper, so no loop.
+                if (window.ResizeObserver) {
+                    this._ro = new ResizeObserver(() => this.resize());
+                    this._ro.observe(this.canvas.parentElement);
+                }
+
                 this.bindEvents();
             }
 
-            // canvas internal size has to be display size × dpr or it's blurry
+            // canvas internal size has to be display size × dpr or it's blurry.
+            // the canvas is position:absolute with inset-0, so we don't touch
+            // its style width/height — CSS already pins it to the wrapper.
+            // we only resize the pixel buffer here.
             resize() {
                 if (!this.canvas) return;
-                const rect = this.canvas.parentElement.getBoundingClientRect();
-                this.width = rect.width || 600;
-                this.height = rect.height || 480;
+                const parent = this.canvas.parentElement;
+                const rect = parent.getBoundingClientRect();
+                const cssW = Math.max(1, Math.floor(rect.width || 600));
+                const cssH = Math.max(1, Math.floor(rect.height || 480));
+
+                this.width = cssW;
+                this.height = cssH;
+
                 const dpr = window.devicePixelRatio || 1;
-                this.canvas.width = this.width * dpr;
-                this.canvas.height = this.height * dpr;
+                this.canvas.width = Math.floor(cssW * dpr);
+                this.canvas.height = Math.floor(cssH * dpr);
+
+                // reset any old transform before scaling or resizing stacks them
                 this.ctx.setTransform(1, 0, 0, 1, 0, 0);
                 this.ctx.scale(dpr, dpr);
             }
@@ -1338,18 +1368,28 @@
             }
 
             // 3D point -> 2D screen coords
-            // rotate on Y axis, then X, then perspective divide
+            // rotate on Y axis, then X, then perspective divide.
+            // if the point is behind the camera (depth <= 1) we bail and
+            // mark it culled so the renderer skips it — otherwise scale
+            // explodes and the label flies off into other UI
             project(x, y, z) {
                 const rx = x * Math.cos(this.rotY) - z * Math.sin(this.rotY);
                 let rz = x * Math.sin(this.rotY) + z * Math.cos(this.rotY);
                 const ry = y * Math.cos(this.rotX) - rz * Math.sin(this.rotX);
                 rz = y * Math.sin(this.rotX) + rz * Math.cos(this.rotX);
-                const scale = (400 * this.zoom) / (rz + 400);
+
+                const depth = rz + 400;
+                if (depth <= 1) {
+                    return { x: 0, y: 0, scale: 0, depth: rz, culled: true };
+                }
+
+                const scale = (400 * this.zoom) / depth;
                 return {
                     x: this.width / 2 + (rx + this.panX) * scale,
                     y: this.height / 2 + (ry + this.panY) * scale,
                     scale,
-                    depth: rz
+                    depth: rz,
+                    culled: false
                 };
             }
 
@@ -1360,6 +1400,7 @@
 
                 STAR_DATA.forEach(star => {
                     const p = this.project(star.x, star.y, star.z);
+                    if (p.culled) return;
                     const dist = Math.hypot(p.x - mouseX, p.y - mouseY);
                     const hitRadius = star.radius * p.scale * 1.5;
                     // pick closest so overlapping stars don't fight
@@ -1388,12 +1429,21 @@
                 this.ease();
                 this.ctx.clearRect(0, 0, this.width, this.height);
 
+                // clip everything to the canvas box so a rogue projected
+                // point can't paint labels over the sidebar. belt and
+                // suspenders alongside the culling in project().
+                this.ctx.save();
+                this.ctx.beginPath();
+                this.ctx.rect(0, 0, this.width, this.height);
+                this.ctx.clip();
+
                 // faint grid for depth
                 this.ctx.strokeStyle = 'rgba(197, 179, 88, 0.05)';
                 this.ctx.lineWidth = 1;
                 for (let x = -200; x <= 200; x += 40) {
                     const p1 = this.project(x, -100, 0);
                     const p2 = this.project(x, 100, 0);
+                    if (p1.culled || p2.culled) continue;
                     this.ctx.beginPath();
                     this.ctx.moveTo(p1.x, p1.y);
                     this.ctx.lineTo(p2.x, p2.y);
@@ -1408,6 +1458,7 @@
                         if (s1 && s2) {
                             const p1 = this.project(s1.x, s1.y, s1.z);
                             const p2 = this.project(s2.x, s2.y, s2.z);
+                            if (p1.culled || p2.culled) return;
                             this.ctx.save();
                             this.ctx.strokeStyle = traj.color;
                             this.ctx.lineWidth = 1.5;
@@ -1426,6 +1477,8 @@
                     this.project(b.x, b.y, b.z).depth - this.project(a.x, a.y, a.z).depth
                 ).forEach(star => {
                     const p = this.project(star.x, star.y, star.z);
+                    if (p.culled) return;
+
                     const isSelected = selectedStar && selectedStar.id === star.id;
                     const isHovered = this.hoveredStar && this.hoveredStar.id === star.id;
 
@@ -1466,6 +1519,9 @@
                     this.ctx.textAlign = 'center';
                     this.ctx.fillText(star.name, p.x, p.y - (star.radius + 10) * p.scale);
                 });
+
+                // release the clip so future draws (if any) aren't trapped
+                this.ctx.restore();
             }
 
             // used by "center camera on system" button
@@ -1484,8 +1540,10 @@
             document.body.classList.toggle('modal-open', isOpening);
 
             if (isOpening) {
-                // tiny delay because the canvas has to be visible before we measure it
-                setTimeout(() => {
+                // one frame so the modal is visible and laid out. the
+                // ResizeObserver inside the engine catches anything that
+                // changes after this.
+                requestAnimationFrame(() => {
                     if (!starmapEngine) {
                         starmapEngine = new StarMapEngine('starmap-canvas');
                     } else {
@@ -1500,7 +1558,7 @@
                         starmapEngine._loop = requestAnimationFrame(loop);
                     };
                     loop();
-                }, 60);
+                });
             } else {
                 // stop the loop when closed to save cpu
                 if (starmapEngine && starmapEngine._loop) {
