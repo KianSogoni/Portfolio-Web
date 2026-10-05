@@ -138,6 +138,12 @@
             /* gold scrollbar for the modal itself */
             scrollbar-width: thin;
             scrollbar-color: #C5B358 rgba(13, 31, 45, 0.6);
+            /* room for the scrollbar so it doesn't sit on content */
+            padding-right: 20px;
+        }
+
+        #starmap-modal > div {
+            max-height: calc(100vh - 2rem);
         }
 
         #starmap-modal.active {
@@ -255,7 +261,7 @@
     </div>
 
     <!-- STAR MAP MODAL -->
-    <div id="starmap-modal" role="dialog" aria-modal="true" aria-labelledby="starmap-title" class="fixed inset-0 bg-black/85 backdrop-blur-md z-50 flex items-start sm:items-center justify-center p-2 sm:p-4 overflow-y-auto">
+    <div id="starmap-modal" role="dialog" aria-modal="true" aria-labelledby="starmap-title" class="fixed inset-0 bg-black/85 backdrop-blur-md z-50 flex items-start sm:items-center justify-center p-2 sm:p-4 overflow-y-auto" style="overscroll-behavior: contain;">
         <div class="glass-panel p-4 sm:p-6 max-w-5xl w-full border-[#C5B358]/50 relative flex flex-col shadow-[0_0_35px_rgba(197,179,88,0.15)] my-2 sm:my-4">
 
             <button onclick="toggleStarMap()" aria-label="Close star map" class="absolute top-4 right-4 z-10 w-9 h-9 rounded-full bg-[#0D1F2D]/80 hover:bg-[#C5B358]/20 border border-[#C5B358]/40 text-[#C5B358] flex items-center justify-center transition-colors">
@@ -283,8 +289,8 @@
             <div class="grid grid-cols-1 lg:grid-cols-12 gap-4 items-start">
 
                 <div class="lg:col-span-8">
-                    <!-- canvas height caps at 60vh so the system panel below stays visible on short screens -->
-                    <div class="relative rounded-xl overflow-hidden bg-[#06090E] border border-[#C5B358]/30 h-[280px] sm:h-[380px] md:h-[440px] lg:h-[500px]" style="max-height: 60vh;">
+                    <!-- canvas height capped so the info panel below stays visible -->
+                    <div class="relative rounded-xl overflow-hidden bg-[#06090E] border border-[#C5B358]/30" style="height: min(480px, 50vh); min-height: 240px;">
                         <canvas id="starmap-canvas" role="img" aria-label="Interactive star map of the Eridian sector." class="w-full h-full cursor-grab active:cursor-grabbing" style="touch-action: none;"></canvas>
 
                         <div class="absolute top-3 left-3 bg-[#06090E]/85 backdrop-blur border border-[#C5B358]/30 rounded-lg p-2.5 text-xs space-y-1 font-mono pointer-events-none max-w-[65%]">
