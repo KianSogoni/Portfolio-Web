@@ -761,7 +761,7 @@
                 </a>
             </div>
         </section>
-
+        
         <!-- PAGE 5: CONTACT -->
         <section id="page-contact" class="page-view space-y-8">
             <div class="glass-panel p-6 sm:p-8 md:p-12 max-w-2xl mx-auto relative overflow-hidden">
@@ -780,8 +780,23 @@
                         </div>
 
                         <div>
-                            <label class="block text-xs font-semibold text-[#C5B358] uppercase tracking-wider mb-2">Contact No. <span class="text-[#B85042]">*</span></label>
-                            <input type="tel" id="contact-phone" required placeholder="e.g. 0912-345-6789" class="w-full px-4 py-3 rounded-xl bg-[#0D1F2D]/90 border border-[#C5B358]/20 text-white placeholder-[#B0B8B0]/40 focus:outline-none focus:border-[#C5B358] transition-all text-sm">
+                            <label class="block text-xs font-semibold text-[#C5B358] uppercase tracking-wider mb-2">
+                                Contact No. <span class="text-[#B85042]">*</span>
+                                <span id="phone-counter" class="ml-2 font-mono text-[10px] text-[#B0B8B0]/60">0/11</span>
+                            </label>
+                            <input
+                                type="tel"
+                                id="contact-phone"
+                                required
+                                maxlength="11"
+                                inputmode="numeric"
+                                pattern="[0-9]{11}"
+                                placeholder="e.g. 09123456789"
+                                class="w-full px-4 py-3 rounded-xl bg-[#0D1F2D]/90 border border-[#C5B358]/20 text-white placeholder-[#B0B8B0]/40 focus:outline-none focus:border-[#C5B358] transition-all text-sm"
+                            >
+                            <p id="phone-warning" class="mt-1 text-[10px] font-mono text-[#B85042] hidden">
+                                ⚠ Must be exactly 11 digits.
+                            </p>
                         </div>
                     </div>
 
@@ -1350,12 +1365,97 @@
             canvas.addEventListener('click', triggerHappy);
         }
 
-        /* ── Contact form ── */
+                /* ── Contact form ── */
         const contactForm = document.getElementById('contact-form');
         const contactStatus = document.getElementById('contact-status');
+        const phoneInput = document.getElementById('contact-phone');
+        const phoneCounter = document.getElementById('phone-counter');
+        const phoneWarning = document.getElementById('phone-warning');
+
+        // ── Phone input: digits-only + live counter + validation ──
+        if (phoneInput) {
+            phoneInput.addEventListener('input', (e) => {
+                // Strip everything that isn't a digit
+                const digitsOnly = e.target.value.replace(/\D/g, '').slice(0, 11);
+                if (e.target.value !== digitsOnly) {
+                    e.target.value = digitsOnly;
+                }
+
+                // Update counter
+                if (phoneCounter) {
+                    phoneCounter.textContent = `${digitsOnly.length}/11`;
+                    if (digitsOnly.length === 11) {
+                        phoneCounter.classList.remove('text-[#B0B8B0]/60', 'text-[#B85042]');
+                        phoneCounter.classList.add('text-emerald-400');
+                    } else if (digitsOnly.length > 0) {
+                        phoneCounter.classList.remove('text-[#B0B8B0]/60', 'text-emerald-400');
+                        phoneCounter.classList.add('text-[#B85042]');
+                    } else {
+                        phoneCounter.classList.remove('text-emerald-400', 'text-[#B85042]');
+                        phoneCounter.classList.add('text-[#B0B8B0]/60');
+                    }
+                }
+
+                // Toggle warning
+                if (phoneWarning) {
+                    if (digitsOnly.length > 0 && digitsOnly.length < 11) {
+                        phoneWarning.classList.remove('hidden');
+                    } else {
+                        phoneWarning.classList.add('hidden');
+                    }
+                }
+            });
+
+            // Block non-numeric keys
+            phoneInput.addEventListener('keypress', (e) => {
+                if (e.key.length === 1 && !/\d/.test(e.key)) {
+                    e.preventDefault();
+                }
+            });
+
+            // Block paste of non-numeric content
+            phoneInput.addEventListener('paste', (e) => {
+                e.preventDefault();
+                const pasted = (e.clipboardData || window.clipboardData).getData('text');
+                const digits = pasted.replace(/\D/g, '').slice(0, 11);
+                phoneInput.value = (phoneInput.value + digits).slice(0, 11);
+                phoneInput.dispatchEvent(new Event('input'));
+            });
+        }
+
+        // ── Global tap-to-dismiss keyboard ──
+        document.addEventListener('touchstart', (e) => {
+            const target = e.target;
+            if (!(target instanceof HTMLInputElement) && !(target instanceof HTMLTextAreaElement)) {
+                if (document.activeElement && (document.activeElement.tagName === 'INPUT' || document.activeElement.tagName === 'TEXTAREA')) {
+                    document.activeElement.blur();
+                }
+            }
+        }, { passive: true });
+
+        document.addEventListener('click', (e) => {
+            const target = e.target;
+            if (!(target instanceof HTMLInputElement) && !(target instanceof HTMLTextAreaElement)) {
+                if (document.activeElement && (document.activeElement.tagName === 'INPUT' || document.activeElement.tagName === 'TEXTAREA')) {
+                    document.activeElement.blur();
+                }
+            }
+        });
+
+        // ── Form submission ──
         if (contactForm) {
             contactForm.addEventListener('submit', async (e) => {
                 e.preventDefault();
+
+                // Final validation guard
+                if (phoneInput && phoneInput.value.length !== 11) {
+                    contactStatus.classList.remove('hidden');
+                    contactStatus.className = "text-center font-semibold text-sm text-[#B85042]";
+                    contactStatus.textContent = 'Contact number must be exactly 11 digits.';
+                    if (phoneWarning) phoneWarning.classList.remove('hidden');
+                    return;
+                }
+
                 const submitBtn = contactForm.querySelector('button[type="submit"]');
                 const originalText = submitBtn.innerHTML;
                 submitBtn.disabled = true;
@@ -1374,6 +1474,13 @@
                         contactStatus.className = "text-center font-semibold text-sm text-[#C5B358]";
                         contactStatus.textContent = `Transmission received! Thank you, ${formData.name}.`;
                         contactForm.reset();
+                        // Reset counter and warning after form clear
+                        if (phoneCounter) {
+                            phoneCounter.textContent = '0/11';
+                            phoneCounter.classList.remove('text-emerald-400', 'text-[#B85042]');
+                            phoneCounter.classList.add('text-[#B0B8B0]/60');
+                        }
+                        if (phoneWarning) phoneWarning.classList.add('hidden');
                     } else {
                         contactStatus.className = "text-center font-semibold text-sm text-[#B85042]";
                         contactStatus.textContent = result.error || 'Transmission failed. Please try again.';
