@@ -7,12 +7,15 @@
     <meta name="description" content="Kian Sogoni — Computer Science student, developer, and storyteller. A Project Hail Mary–inspired portfolio exploring code, media, and design.">
     <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='.9em' font-size='90'%3E%E2%AD%90%3C/text%3E%3C/svg%3E">
 
-    <!-- Tailwind CSS -->
+    <!-- Tailwind -->
     <script src="https://cdn.tailwindcss.com"></script>
-    <!-- Google Fonts -->
+
+    <!-- Fonts -->
     <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@500;700;900&family=Plus+Jakarta+Sans:wght@300;400;600;700&family=Press+Start+2P&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-    <!-- Font Awesome -->
+
+    <!-- Icons -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
     <script>
         tailwind.config = {
             darkMode: 'class',
@@ -32,6 +35,7 @@
     </script>
 
     <style>
+        /* PHM palette — pulled from the movie posters basically */
         :root {
             --phm-offwhite: #E6E8E6;
             --phm-sage: #B0B8B0;
@@ -41,12 +45,13 @@
             --phm-darkteal: #0D1F2D;
             --space-black: #06090E;
             --space-void: #0D1F2D;
-            --silver-metallic: #B0B8B0;
             --glass-bg: rgba(13, 31, 45, 0.45);
             --glass-border: rgba(197, 179, 88, 0.2);
         }
 
-        #cosmic-canvas { background-color: #06090E; }
+        #cosmic-canvas {
+            background-color: #06090E;
+        }
 
         body {
             font-family: 'Plus Jakarta Sans', sans-serif;
@@ -55,9 +60,15 @@
             overflow-x: hidden;
         }
 
-        h1, h2, h3, .font-orbitron { font-family: 'Orbitron', sans-serif; }
-        .font-minecraft { font-family: 'Press Start 2P', monospace; }
+        h1, h2, h3, .font-orbitron {
+            font-family: 'Orbitron', sans-serif;
+        }
 
+        .font-minecraft {
+            font-family: 'Press Start 2P', monospace;
+        }
+
+        /* glassmorphism for all the panels */
         .glass-panel {
             background: var(--glass-bg);
             backdrop-filter: blur(12px);
@@ -73,29 +84,36 @@
             box-shadow: 0 10px 30px 0 rgba(184, 80, 66, 0.15);
         }
 
+        /* scrollbar stuff */
         ::-webkit-scrollbar { width: 8px; height: 8px; }
         ::-webkit-scrollbar-track { background: #06090E; }
         ::-webkit-scrollbar-thumb { background: rgba(184, 80, 66, 0.4); border-radius: 4px; }
         ::-webkit-scrollbar-thumb:hover { background: rgba(184, 80, 66, 0.7); }
 
-        .text-glow-yellow { text-shadow: 0 0 10px rgba(197, 179, 88, 0.3); }
+        .text-glow-yellow {
+            text-shadow: 0 0 10px rgba(197, 179, 88, 0.3);
+        }
 
+        /* this handles the fake "pages" — each one hides until active-page is set */
         .page-view {
             display: none;
             opacity: 0;
             transform: translateY(15px) scale(0.99);
             transition: opacity 0.4s ease, transform 0.4s ease;
         }
+
         .page-view.active-page {
             display: block;
             opacity: 1;
             transform: translateY(0) scale(1);
         }
 
+        /* nav buttons expand their label on hover */
         .nav-tab-btn {
             position: relative;
             transition: all 0.35s cubic-bezier(0.4, 0, 0.2, 1);
         }
+
         .nav-tab-btn .nav-label {
             max-width: 0;
             opacity: 0;
@@ -103,6 +121,7 @@
             overflow: hidden;
             transition: all 0.35s cubic-bezier(0.4, 0, 0.2, 1);
         }
+
         .nav-tab-btn:hover .nav-label,
         .nav-tab-btn:focus-visible .nav-label {
             max-width: 120px;
@@ -110,34 +129,43 @@
             margin-left: 0.5rem;
         }
 
+        /* star map modal — hidden by default, JS toggles .active */
         #starmap-modal {
             display: none;
             opacity: 0;
             transition: opacity 0.3s ease;
             touch-action: manipulation;
         }
-        
-        #starmap-modal.active { display: flex; opacity: 1; }
 
-        #starmap-canvas {
-          touch-action: manipulation;
-         -webkit-touch-callout: none;
-          -webkit-user-select: none;
-           user-select: none;
-          -webkit-tap-highlight-color: transparent;
+        #starmap-modal.active {
+            display: flex;
+            opacity: 1;
         }
 
-        /* Accessibility: visible focus rings */
+        /* prevents weird drag/select behavior on the canvas */
+        #starmap-canvas {
+            touch-action: manipulation;
+            -webkit-touch-callout: none;
+            -webkit-user-select: none;
+            user-select: none;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        /* accessibility — visible focus rings for keyboard users */
         button:focus-visible, a:focus-visible, input:focus-visible, textarea:focus-visible {
             outline: 2px solid #C5B358;
             outline-offset: 3px;
         }
 
-        /* Mobile nav tightening for narrow phones */
+        /* tighten the nav on really small phones */
         @media (max-width: 380px) {
-            .nav-tab-btn { padding-left: 0.5rem; padding-right: 0.5rem; }
+            .nav-tab-btn {
+                padding-left: 0.5rem;
+                padding-right: 0.5rem;
+            }
         }
 
+        /* respects the user's system preference */
         @media (prefers-reduced-motion: reduce) {
             *, *::before, *::after {
                 animation-duration: 0.001ms !important;
@@ -149,19 +177,19 @@
 </head>
 <body class="relative min-h-screen selection:bg-[#B85042]/30 selection:text-[#C5B358]">
 
-    <!-- Skip link for keyboard users -->
+    <!-- keyboard users can skip past the nav -->
     <a href="#page-home" class="sr-only focus:not-sr-only focus:absolute focus:top-2 focus:left-2 focus:z-[100] focus:px-4 focus:py-2 focus:bg-[#C5B358] focus:text-[#0D1F2D] focus:rounded-lg focus:font-bold">
         Skip to content
     </a>
 
-    <!-- Unified cosmic background canvas -->
+    <!-- the big animated star background -->
     <canvas id="cosmic-canvas" aria-hidden="true" class="fixed top-0 left-0 w-full h-full pointer-events-none z-0"></canvas>
 
-    <!-- Ambient nebulae glows -->
+    <!-- soft nebula glows floating behind everything -->
     <div class="fixed top-1/4 left-10 w-96 h-96 bg-[#1F4E5B]/15 rounded-full blur-3xl pointer-events-none z-0"></div>
     <div class="fixed bottom-1/3 right-10 w-96 h-96 bg-[#B85042]/10 rounded-full blur-3xl pointer-events-none z-0"></div>
 
-    <!-- ICON-ONLY FLOATING HEADER -->
+    <!-- floating icon nav -->
     <header class="fixed top-5 left-1/2 -translate-x-1/2 z-40">
         <nav class="glass-panel px-4 py-2.5 flex items-center justify-center gap-2 border-[#C5B358]/20 shadow-2xl" aria-label="Primary navigation">
 
@@ -193,6 +221,7 @@
         </nav>
     </header>
 
+    <!-- floating star map button (bottom right) -->
     <div class="fixed bottom-6 right-6 z-40">
         <button onclick="toggleStarMap()" aria-label="Open star map" class="glass-panel px-4 py-3 border-[#C5B358]/40 flex items-center gap-3 hover:border-[#C5B358] transition-all group shadow-2xl hover:scale-105 active:scale-95">
             <i class="fa-solid fa-compass text-[#C5B358] text-xl group-hover:rotate-45 transition-transform duration-500" aria-hidden="true"></i>
@@ -200,16 +229,14 @@
         </button>
     </div>
 
-    <!-- STAR MAP MODAL — Full GraceUI Experience -->
+    <!-- STAR MAP MODAL -->
     <div id="starmap-modal" role="dialog" aria-modal="true" aria-labelledby="starmap-title" class="fixed inset-0 bg-black/85 backdrop-blur-md z-50 flex items-start sm:items-center justify-center p-2 sm:p-4 overflow-y-auto">
         <div class="glass-panel p-4 sm:p-6 max-w-5xl w-full border-[#C5B358]/50 relative flex flex-col shadow-[0_0_35px_rgba(197,179,88,0.15)] my-4 sm:my-8">
 
-            <!-- Close -->
             <button onclick="toggleStarMap()" aria-label="Close star map" class="absolute top-4 right-4 z-10 w-9 h-9 rounded-full bg-[#0D1F2D]/80 hover:bg-[#C5B358]/20 border border-[#C5B358]/40 text-[#C5B358] flex items-center justify-center transition-colors">
                 <i class="fa-solid fa-xmark text-base" aria-hidden="true"></i>
             </button>
 
-            <!-- Section header -->
             <div class="flex flex-col gap-3 mb-4 border-b border-[#C5B358]/20 pb-3">
                 <div class="flex items-center gap-2.5">
                     <i class="fa-solid fa-globe text-[#C5B358] text-xl" aria-hidden="true"></i>
@@ -228,22 +255,18 @@
                 </div>
             </div>
 
-            <!-- Body grid -->
             <div class="grid grid-cols-1 lg:grid-cols-12 gap-4 items-start">
 
-                <!-- Canvas column -->
                 <div class="lg:col-span-8">
                     <div class="relative rounded-xl overflow-hidden bg-[#06090E] border border-[#C5B358]/30 h-[340px] sm:h-[420px] lg:h-[500px]">
                         <canvas id="starmap-canvas" role="img" aria-label="Interactive star map of the Eridian sector." class="w-full h-full cursor-grab active:cursor-grabbing" style="touch-action: none;"></canvas>
 
-                        <!-- NAVIGATION HUD -->
                         <div class="absolute top-3 left-3 bg-[#06090E]/85 backdrop-blur border border-[#C5B358]/30 rounded-lg p-2.5 text-xs space-y-1 font-mono pointer-events-none max-w-[65%]">
                             <div class="text-[#C5B358] font-orbitron font-bold text-[10px] tracking-wider">NAVIGATION HUD</div>
                             <div class="text-[#B0B8B0] text-[10px]">GRID: ERIDIAN-SOL LOG-4</div>
                             <div class="text-[#B0B8B0]/80 text-[10px]">TARGET: <span id="hudTargetText" class="text-white">Sol &lt;-&gt; 40 Eridani</span></div>
                         </div>
 
-                        <!-- Bottom bar -->
                         <div class="absolute bottom-3 left-3 right-3 flex justify-between items-end gap-2 pointer-events-none">
                             <div class="bg-[#06090E]/85 backdrop-blur border border-[#1F4E5B]/60 rounded-lg p-2 text-[10px] text-[#B0B8B0] font-mono max-w-[60%] hidden sm:block">
                                 Click star to inspect • Drag to pan • Scroll to zoom • Arrows to orbit
@@ -255,10 +278,8 @@
                     </div>
                 </div>
 
-                <!-- Side panel column -->
                 <div class="lg:col-span-4 space-y-3">
 
-                    <!-- SYSTEM ANALYSIS -->
                     <div id="starDetailPanel" class="bg-[#0D121D]/90 border border-[#C5B358]/30 rounded-2xl p-4 space-y-3 border-l-4 border-l-[#C5B358]">
                         <div class="flex items-center justify-between">
                             <span class="text-[10px] font-orbitron text-[#C5B358] tracking-wider">SYSTEM ANALYSIS</span>
@@ -290,7 +311,6 @@
                         </button>
                     </div>
 
-                    <!-- FEATURED LOCATIONS -->
                     <div class="bg-[#0D121D]/90 border border-[#C5B358]/30 rounded-2xl p-4 space-y-3">
                         <div class="text-[10px] font-orbitron text-[#E6E8E6] font-semibold flex items-center justify-between">
                             <span>FEATURED LOCATIONS</span>
@@ -321,7 +341,7 @@
         </div>
     </div>
 
-    <!-- MAIN CONTAINER -->
+    <!-- MAIN CONTENT -->
     <main class="relative z-10 pt-28 pb-16 px-4 max-w-6xl mx-auto min-h-[75vh]">
 
         <!-- PAGE 1: HOME -->
@@ -395,7 +415,6 @@
                     </div>
 
                     <div class="flex flex-col md:flex-row gap-6 md:gap-8 items-center md:items-start">
-                        <!-- Profile Photo -->
                         <div class="relative flex-shrink-0">
                             <div class="w-40 h-40 md:w-48 md:h-48 rounded-2xl overflow-hidden border-2 border-[#C5B358]/40 shadow-[0_0_25px_rgba(197,179,88,0.15)]">
                                 <img
@@ -411,7 +430,6 @@
                             </div>
                         </div>
 
-                        <!-- Bio Text -->
                         <div class="flex-1 space-y-3">
                             <p class="text-[#B0B8B0] leading-relaxed font-light text-base">
                                 I'm a CS student, an award-winning broadcaster, and a developer — which means I've spent the last few years translating between two languages: the one machines speak, and the one people listen to.
@@ -506,7 +524,7 @@
 
             <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
 
-                <!-- Project 1 -->
+                <!-- E-Pharmacy -->
                 <div class="glass-panel overflow-hidden flex flex-col justify-between group">
                     <div class="relative h-48 overflow-hidden bg-[#0D1F2D]">
                         <svg class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" viewBox="0 0 400 200" aria-hidden="true">
@@ -532,7 +550,7 @@
                     </div>
                 </div>
 
-                <!-- Project 2 -->
+                <!-- Online Ordering -->
                 <div class="glass-panel overflow-hidden flex flex-col justify-between group">
                     <div class="relative h-48 overflow-hidden bg-[#0D1F2D]">
                         <svg class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" viewBox="0 0 400 200" aria-hidden="true">
@@ -561,7 +579,7 @@
                     </div>
                 </div>
 
-                <!-- Project 3 -->
+                <!-- Scientific Calculator -->
                 <div class="glass-panel overflow-hidden flex flex-col justify-between group">
                     <div class="relative h-48 overflow-hidden bg-[#0D1F2D]">
                         <svg class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" viewBox="0 0 400 200" aria-hidden="true">
@@ -592,7 +610,7 @@
                     </div>
                 </div>
 
-                <!-- Project 4 -->
+                <!-- PHM UI Tribute -->
                 <div class="glass-panel overflow-hidden flex flex-col justify-between group">
                     <div class="relative h-48 overflow-hidden bg-[#0D1F2D]">
                         <svg class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" viewBox="0 0 400 200" aria-hidden="true">
@@ -623,7 +641,7 @@
                     </div>
                 </div>
 
-                <!-- Project 5 -->
+                <!-- NSPC Champion (full width) -->
                 <div class="glass-panel overflow-hidden flex flex-col justify-between group md:col-span-2">
                     <div class="relative h-48 overflow-hidden bg-[#0D1F2D]">
                         <svg class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" viewBox="0 0 400 200" aria-hidden="true">
@@ -690,7 +708,7 @@
                 </a>
             </div>
 
-            <!-- PHOTO COMPILATION -->
+            <!-- photo dump — masonry style, 20 images -->
             <div class="text-center space-y-2 mt-20">
                 <h3 class="text-2xl md:text-3xl font-bold tracking-wide">
                     Photo <span class="text-[#C5B358] text-glow-yellow">Compilation</span>
@@ -761,7 +779,7 @@
                 </a>
             </div>
         </section>
-        
+
         <!-- PAGE 5: CONTACT -->
         <section id="page-contact" class="page-view space-y-8">
             <div class="glass-panel p-6 sm:p-8 md:p-12 max-w-2xl mx-auto relative overflow-hidden">
@@ -868,12 +886,14 @@
     </footer>
 
     <script>
-        /* ── Unified Cosmic Background ── */
+        // star background animation - speed lines + twinkling stars
+        // built this because the plain black bg looked too empty lol
         (function initCosmicBackground() {
             const canvas = document.getElementById('cosmic-canvas');
             if (!canvas) return;
             const ctx = canvas.getContext('2d');
 
+            // PHM palette so the streaks match the theme
             const palette = [
                 'rgba(184, 80, 66,',
                 'rgba(31, 78, 91,',
@@ -895,6 +915,7 @@
                 speedLines = [];
                 stars = [];
 
+                // fewer lines on narrow screens so it doesn't get too busy
                 const lineCount = Math.min(28, Math.floor(canvas.width / 60));
                 for (let i = 0; i < lineCount; i++) {
                     speedLines.push({
@@ -907,6 +928,7 @@
                     });
                 }
 
+                // star density scaled by canvas area
                 const starCount = Math.floor((canvas.width * canvas.height) / 3800);
                 for (let i = 0; i < starCount; i++) {
                     stars.push({
@@ -923,6 +945,7 @@
             function draw() {
                 ctx.clearRect(0, 0, canvas.width, canvas.height);
 
+                // drifting speed lines (diagonal)
                 for (const line of speedLines) {
                     line.y += line.speed * 1.1;
                     line.x += line.speed * 0.65;
@@ -946,6 +969,7 @@
                     ctx.stroke();
                 }
 
+                // twinkling stars
                 for (const s of stars) {
                     s.alpha += s.speed;
                     if (s.alpha > 1 || s.alpha < 0) s.speed = -s.speed;
@@ -965,7 +989,7 @@
             draw();
         })();
 
-        /* ── Page switcher ── */
+        // fake "pages" — hide/show sections by adding .active-page
         function switchPage(pageId) {
             document.querySelectorAll('.page-view').forEach(p => p.classList.remove('active-page'));
             document.querySelectorAll('.nav-tab-btn').forEach(btn => {
@@ -982,7 +1006,12 @@
             window.scrollTo({ top: 0, behavior: 'smooth' });
         }
 
-        /* ── Star Map Engine ── */
+        // ============================================================
+        // STAR MAP
+        // 3D star positions get rotated + projected onto a 2D canvas
+        // so you can drag to orbit and scroll to zoom
+        // ============================================================
+
         const STAR_DATA = [
             { id: 'sol', name: 'Sol System', x: 0, y: 0, z: 0, color: '#FFD700', radius: 9, class: 'Class G2V', subtitle: 'Earth Homeworld', dist: '0.0 ly', astrophage: 'CLEARED', desc: 'Home star system of humanity. Petrova line Astrophage infection neutralized via Taumoeba deployment.' },
             { id: 'eridani', name: '40 Eridani', x: -80, y: 45, z: 20, color: '#00E5FF', radius: 8, class: 'Class K1V', subtitle: 'Eridian Homeworld (Rocky)', dist: '11.9 ly', astrophage: 'CLEARED', desc: 'Triple star system home to the Eridian civilization. Primary mission partner in saving both biospheres.' },
@@ -992,6 +1021,7 @@
             { id: 'sirius', name: 'Sirius', x: -30, y: 90, z: -50, color: '#FFFFFF', radius: 10, class: 'Class A1V', subtitle: 'Brightest Star', dist: '8.6 ly', astrophage: 'NOMINAL', desc: 'Luminous main sequence star. No Petrova spectrum anomalies detected.' }
         ];
 
+        // dashed lines showing mission paths between systems
         const TRAJECTORIES = [
             { from: 'sol', to: 'tau_ceti', color: 'rgba(197, 179, 88, 0.6)' },
             { from: 'tau_ceti', to: 'eridani', color: 'rgba(0, 229, 255, 0.6)' },
@@ -1007,20 +1037,41 @@
                 this.canvas = document.getElementById(canvasId);
                 if (!this.canvas) return;
                 this.ctx = this.canvas.getContext('2d');
-                this.width = 0; this.height = 0;
-                this.zoom = 1.8; this.panX = 0; this.panY = 0;
-                this.rotX = 0.3; this.rotY = 0.4;
-                this.isDragging = false; this.lastMouseX = 0; this.lastMouseY = 0;
-                this.targetZoom = this.zoom; this.targetPanX = this.panX; this.targetPanY = this.panY;
-                this.targetRotX = this.rotX; this.targetRotY = this.rotY;
-                this.touchMode = null; this.lastTouchDist = 0; this.hoveredStar = null;
+                this.width = 0;
+                this.height = 0;
+
+                // camera state
+                this.zoom = 1.8;
+                this.panX = 0;
+                this.panY = 0;
+                this.rotX = 0.3;
+                this.rotY = 0.4;
+                this.isDragging = false;
+                this.lastMouseX = 0;
+                this.lastMouseY = 0;
+
+                // targets for smooth easing
+                this.targetZoom = this.zoom;
+                this.targetPanX = this.panX;
+                this.targetPanY = this.panY;
+                this.targetRotX = this.rotX;
+                this.targetRotY = this.rotY;
+
+                // touch state (mobile)
+                this.touchMode = null;
+                this.lastTouchDist = 0;
+                this.hoveredStar = null;
+
                 this.init();
             }
+
             init() {
                 this.resize();
                 window.addEventListener('resize', () => this.resize());
                 this.bindEvents();
             }
+
+            // canvas needs to match its display size × DPR or it looks blurry
             resize() {
                 if (!this.canvas) return;
                 const rect = this.canvas.parentElement.getBoundingClientRect();
@@ -1032,68 +1083,121 @@
                 this.ctx.setTransform(1, 0, 0, 1, 0, 0);
                 this.ctx.scale(dpr, dpr);
             }
+
             bindEvents() {
-                this.canvas.addEventListener('mousedown', (e) => { this.isDragging = true; this.lastMouseX = e.clientX; this.lastMouseY = e.clientY; });
+                // mouse drag = rotate camera
+                this.canvas.addEventListener('mousedown', (e) => {
+                    this.isDragging = true;
+                    this.lastMouseX = e.clientX;
+                    this.lastMouseY = e.clientY;
+                });
+
                 window.addEventListener('mouseup', () => { this.isDragging = false; });
+
                 this.canvas.addEventListener('mousemove', (e) => {
                     const rect = this.canvas.getBoundingClientRect();
-                    const mouseX = e.clientX - rect.left, mouseY = e.clientY - rect.top;
+                    const mouseX = e.clientX - rect.left;
+                    const mouseY = e.clientY - rect.top;
+
                     if (this.isDragging) {
                         this.targetRotY += (e.clientX - this.lastMouseX) * 0.005;
                         this.targetRotX += (e.clientY - this.lastMouseY) * 0.005;
-                        this.lastMouseX = e.clientX; this.lastMouseY = e.clientY;
-                    } else this.checkHover(mouseX, mouseY);
+                        this.lastMouseX = e.clientX;
+                        this.lastMouseY = e.clientY;
+                    } else {
+                        this.checkHover(mouseX, mouseY);
+                    }
                 });
+
                 this.canvas.addEventListener('wheel', (e) => {
                     e.preventDefault();
                     this.targetZoom = Math.max(0.8, Math.min(3.5, this.targetZoom - e.deltaY * 0.0015));
                 }, { passive: false });
-                this.canvas.addEventListener('click', () => { if (this.hoveredStar) updateSelectedStar(this.hoveredStar); });
+
+                this.canvas.addEventListener('click', () => {
+                    if (this.hoveredStar) updateSelectedStar(this.hoveredStar);
+                });
+
+                // touch — one finger drag, two finger pinch
                 this.canvas.addEventListener('touchstart', (e) => {
-                    if (e.touches.length === 1) { this.touchMode = 'drag'; this.lastMouseX = e.touches[0].clientX; this.lastMouseY = e.touches[0].clientY; }
-                    else if (e.touches.length === 2) { this.touchMode = 'pinch'; this.lastTouchDist = this.getTouchDist(e.touches); }
+                    if (e.touches.length === 1) {
+                        this.touchMode = 'drag';
+                        this.lastMouseX = e.touches[0].clientX;
+                        this.lastMouseY = e.touches[0].clientY;
+                    } else if (e.touches.length === 2) {
+                        this.touchMode = 'pinch';
+                        this.lastTouchDist = this.getTouchDist(e.touches);
+                    }
                 }, { passive: true });
+
                 this.canvas.addEventListener('touchmove', (e) => {
                     if (this.touchMode === 'drag' && e.touches.length === 1) {
                         this.targetRotY += (e.touches[0].clientX - this.lastMouseX) * 0.005;
                         this.targetRotX += (e.touches[0].clientY - this.lastMouseY) * 0.005;
-                        this.lastMouseX = e.touches[0].clientX; this.lastMouseY = e.touches[0].clientY;
+                        this.lastMouseX = e.touches[0].clientX;
+                        this.lastMouseY = e.touches[0].clientY;
                         e.preventDefault();
                     } else if (this.touchMode === 'pinch' && e.touches.length === 2) {
                         const dist = this.getTouchDist(e.touches);
                         this.targetZoom = Math.max(0.8, Math.min(3.5, this.targetZoom + (this.lastTouchDist - dist) * 0.01));
-                        this.lastTouchDist = dist; e.preventDefault();
+                        this.lastTouchDist = dist;
+                        e.preventDefault();
                     }
                 }, { passive: false });
+
                 this.canvas.addEventListener('touchend', () => {
-                    if (this.touchMode === 'drag' && this.hoveredStar) updateSelectedStar(this.hoveredStar);
-                    this.touchMode = null; this.lastTouchDist = 0;
+                    // treat quick tap as select if we landed on a star
+                    if (this.touchMode === 'drag' && this.hoveredStar) {
+                        updateSelectedStar(this.hoveredStar);
+                    }
+                    this.touchMode = null;
+                    this.lastTouchDist = 0;
                 });
             }
+
             getTouchDist(touches) {
                 const dx = touches[0].clientX - touches[1].clientX;
                 const dy = touches[0].clientY - touches[1].clientY;
                 return Math.hypot(dx, dy);
             }
+
+            // 3D point -> 2D screen coords
+            // rotate on Y axis, then X axis, then perspective divide
             project(x, y, z) {
                 const rx = x * Math.cos(this.rotY) - z * Math.sin(this.rotY);
                 let rz = x * Math.sin(this.rotY) + z * Math.cos(this.rotY);
                 const ry = y * Math.cos(this.rotX) - rz * Math.sin(this.rotX);
                 rz = y * Math.sin(this.rotX) + rz * Math.cos(this.rotX);
                 const scale = (400 * this.zoom) / (rz + 400);
-                return { x: this.width / 2 + (rx + this.panX) * scale, y: this.height / 2 + (ry + this.panY) * scale, scale, depth: rz };
+                return {
+                    x: this.width / 2 + (rx + this.panX) * scale,
+                    y: this.height / 2 + (ry + this.panY) * scale,
+                    scale,
+                    depth: rz
+                };
             }
+
+            // figure out which star (if any) is under the cursor
             checkHover(mouseX, mouseY) {
-                let found = null, bestDist = Infinity;
+                let found = null;
+                let bestDist = Infinity;
+
                 STAR_DATA.forEach(star => {
                     const p = this.project(star.x, star.y, star.z);
                     const dist = Math.hypot(p.x - mouseX, p.y - mouseY);
                     const hitRadius = star.radius * p.scale * 1.5;
-                    if (dist < hitRadius && dist < bestDist) { bestDist = dist; found = star; }
+                    // pick the closest one so overlapping stars don't fight
+                    if (dist < hitRadius && dist < bestDist) {
+                        bestDist = dist;
+                        found = star;
+                    }
                 });
+
                 this.hoveredStar = found;
                 this.canvas.style.cursor = found ? 'pointer' : (this.isDragging ? 'grabbing' : 'grab');
             }
+
+            // smooth camera interpolation — makes drag feel nice instead of jumpy
             ease() {
                 const k = 0.15;
                 this.zoom += (this.targetZoom - this.zoom) * k;
@@ -1102,19 +1206,25 @@
                 this.rotX += (this.targetRotX - this.rotX) * k;
                 this.rotY += (this.targetRotY - this.rotY) * k;
             }
+
             render() {
                 if (!this.ctx) return;
                 this.ease();
                 this.ctx.clearRect(0, 0, this.width, this.height);
 
+                // faint grid lines for depth
                 this.ctx.strokeStyle = 'rgba(197, 179, 88, 0.05)';
                 this.ctx.lineWidth = 1;
                 for (let x = -200; x <= 200; x += 40) {
                     const p1 = this.project(x, -100, 0);
                     const p2 = this.project(x, 100, 0);
-                    this.ctx.beginPath(); this.ctx.moveTo(p1.x, p1.y); this.ctx.lineTo(p2.x, p2.y); this.ctx.stroke();
+                    this.ctx.beginPath();
+                    this.ctx.moveTo(p1.x, p1.y);
+                    this.ctx.lineTo(p2.x, p2.y);
+                    this.ctx.stroke();
                 }
 
+                // trajectory lines between systems
                 if (showTrajectories) {
                     TRAJECTORIES.forEach(traj => {
                         const s1 = STAR_DATA.find(s => s.id === traj.from);
@@ -1126,41 +1236,67 @@
                             this.ctx.strokeStyle = traj.color;
                             this.ctx.lineWidth = 1.5;
                             this.ctx.setLineDash([6, 4]);
-                            this.ctx.beginPath(); this.ctx.moveTo(p1.x, p1.y); this.ctx.lineTo(p2.x, p2.y); this.ctx.stroke();
+                            this.ctx.beginPath();
+                            this.ctx.moveTo(p1.x, p1.y);
+                            this.ctx.lineTo(p2.x, p2.y);
+                            this.ctx.stroke();
                             this.ctx.restore();
                         }
                     });
                 }
 
-                STAR_DATA.slice().sort((a, b) => this.project(b.x, b.y, b.z).depth - this.project(a.x, a.y, a.z).depth).forEach(star => {
+                // draw stars back-to-front so closer ones overlap correctly
+                STAR_DATA.slice().sort((a, b) =>
+                    this.project(b.x, b.y, b.z).depth - this.project(a.x, a.y, a.z).depth
+                ).forEach(star => {
                     const p = this.project(star.x, star.y, star.z);
                     const isSelected = selectedStar && selectedStar.id === star.id;
                     const isHovered = this.hoveredStar && this.hoveredStar.id === star.id;
+
+                    // glow
                     const auraRadius = (star.radius * (isSelected || isHovered ? 3.5 : 2.5)) * p.scale;
                     const gradient = this.ctx.createRadialGradient(p.x, p.y, 0, p.x, p.y, auraRadius);
-                    gradient.addColorStop(0, star.color); gradient.addColorStop(1, 'transparent');
+                    gradient.addColorStop(0, star.color);
+                    gradient.addColorStop(1, 'transparent');
                     this.ctx.fillStyle = gradient;
-                    this.ctx.beginPath(); this.ctx.arc(p.x, p.y, auraRadius, 0, Math.PI * 2); this.ctx.fill();
+                    this.ctx.beginPath();
+                    this.ctx.arc(p.x, p.y, auraRadius, 0, Math.PI * 2);
+                    this.ctx.fill();
 
+                    // solid core
                     this.ctx.fillStyle = star.color;
-                    this.ctx.beginPath(); this.ctx.arc(p.x, p.y, star.radius * p.scale, 0, Math.PI * 2); this.ctx.fill();
+                    this.ctx.beginPath();
+                    this.ctx.arc(p.x, p.y, star.radius * p.scale, 0, Math.PI * 2);
+                    this.ctx.fill();
 
+                    // white highlight dot
                     this.ctx.fillStyle = '#FFFFFF';
-                    this.ctx.beginPath(); this.ctx.arc(p.x, p.y, star.radius * 0.45 * p.scale, 0, Math.PI * 2); this.ctx.fill();
+                    this.ctx.beginPath();
+                    this.ctx.arc(p.x, p.y, star.radius * 0.45 * p.scale, 0, Math.PI * 2);
+                    this.ctx.fill();
 
+                    // ring when selected/hovered
                     if (isSelected || isHovered) {
                         this.ctx.strokeStyle = '#C5B358';
                         this.ctx.lineWidth = 1.5;
-                        this.ctx.beginPath(); this.ctx.arc(p.x, p.y, (star.radius + 6) * p.scale, 0, Math.PI * 2); this.ctx.stroke();
+                        this.ctx.beginPath();
+                        this.ctx.arc(p.x, p.y, (star.radius + 6) * p.scale, 0, Math.PI * 2);
+                        this.ctx.stroke();
                     }
 
+                    // label
                     this.ctx.fillStyle = isSelected ? '#C5B358' : '#CBD5E1';
                     this.ctx.font = `${Math.max(10, 11 * p.scale)}px Orbitron, sans-serif`;
                     this.ctx.textAlign = 'center';
                     this.ctx.fillText(star.name, p.x, p.y - (star.radius + 10) * p.scale);
                 });
             }
-            focusOn(x, y) { this.targetPanX = -x; this.targetPanY = -y; }
+
+            // used by the "center camera" button
+            focusOn(x, y) {
+                this.targetPanX = -x;
+                this.targetPanY = -y;
+            }
         }
 
         function toggleStarMap() {
@@ -1169,9 +1305,13 @@
             modal.classList.toggle('active');
 
             if (isOpening) {
+                // small delay because the canvas needs to be visible before we measure it
                 setTimeout(() => {
-                    if (!starmapEngine) starmapEngine = new StarMapEngine('starmap-canvas');
-                    else starmapEngine.resize();
+                    if (!starmapEngine) {
+                        starmapEngine = new StarMapEngine('starmap-canvas');
+                    } else {
+                        starmapEngine.resize();
+                    }
                     updateInfoPanel(selectedStar);
 
                     if (starmapEngine._loop) cancelAnimationFrame(starmapEngine._loop);
@@ -1183,6 +1323,7 @@
                     loop();
                 }, 60);
             } else {
+                // stop the loop when modal closes to save CPU
                 if (starmapEngine && starmapEngine._loop) {
                     cancelAnimationFrame(starmapEngine._loop);
                     starmapEngine._loop = null;
@@ -1206,9 +1347,13 @@
             updateInfoPanel(star);
         }
 
+        // used by the "Featured Locations" quick buttons
         function selectStarByName(name) {
             const star = STAR_DATA.find(s => s.name.toLowerCase() === name.toLowerCase());
-            if (star) { updateSelectedStar(star); focusSelectedStar(); }
+            if (star) {
+                updateSelectedStar(star);
+                focusSelectedStar();
+            }
         }
 
         function focusSelectedStar() {
@@ -1225,8 +1370,11 @@
             starmapEngine.targetRotY = 0.4;
         }
 
-        function toggleTrajectories() { showTrajectories = !showTrajectories; }
+        function toggleTrajectories() {
+            showTrajectories = !showTrajectories;
+        }
 
+        // ESC closes the modal
         document.addEventListener('keydown', (e) => {
             if (e.key === 'Escape') {
                 const modal = document.getElementById('starmap-modal');
@@ -1234,6 +1382,7 @@
             }
         });
 
+        // click on the dark backdrop also closes it
         const starmapModal = document.getElementById('starmap-modal');
         if (starmapModal) {
             starmapModal.addEventListener('click', (e) => {
@@ -1241,147 +1390,298 @@
             });
         }
 
-        /* ── GraceBot ── */
+        // ============================================================
+        // GRACEBOT
+        // cute robot companion, drawn entirely on a canvas
+        // ============================================================
+
         function initRobot() {
             const canvas = document.getElementById('robot-canvas');
             if (!canvas) return;
             const ctx = canvas.getContext('2d');
             const speech = document.getElementById('robot-speech');
-            let state = 'idle', eyeScaleY = 1, time = 0;
-            let mouseX = canvas.width / 2, mouseY = canvas.height / 2;
+
+            let state = 'idle';
+            let eyeScaleY = 1;
+            let time = 0;
+            let mouseX = canvas.width / 2;
+            let mouseY = canvas.height / 2;
             let particles = [];
+
             const speechPhrases = {
                 idle: ["Hello Explorer! Click or hover me!"],
                 happy: ["Yay! ^^", "Beep boop! :33", "Amaze, Amaze, Amaze! 💖"]
             };
+
             canvas.addEventListener('mousemove', (e) => {
                 const rect = canvas.getBoundingClientRect();
-                mouseX = e.clientX - rect.left; mouseY = e.clientY - rect.top;
+                mouseX = e.clientX - rect.left;
+                mouseY = e.clientY - rect.top;
             });
+
             canvas.addEventListener('mouseenter', () => triggerHappy());
-            canvas.addEventListener('mouseleave', () => { mouseX = canvas.width / 2; mouseY = canvas.height / 2; });
+            canvas.addEventListener('mouseleave', () => {
+                mouseX = canvas.width / 2;
+                mouseY = canvas.height / 2;
+            });
+
+            // little floating hearts
             function drawHeart(x, y, size, color, alpha) {
-                ctx.save(); ctx.translate(x, y); ctx.fillStyle = color; ctx.globalAlpha = Math.max(0, alpha);
-                ctx.beginPath(); const d = size;
+                ctx.save();
+                ctx.translate(x, y);
+                ctx.fillStyle = color;
+                ctx.globalAlpha = Math.max(0, alpha);
+                ctx.beginPath();
+                const d = size;
                 ctx.moveTo(0, 0);
-                ctx.bezierCurveTo(-d/2, -d/2, -d, d/3, 0, d);
-                ctx.bezierCurveTo(d, d/3, d/2, -d/2, 0, 0);
-                ctx.fill(); ctx.restore();
-            }
-            function draw3DBlock(x, y, width, height, radius, baseColor, topColor, sideColor) {
-                ctx.save(); ctx.translate(x, y);
-                ctx.shadowColor = 'rgba(197, 179, 88, 0.2)'; ctx.shadowBlur = 12; ctx.shadowOffsetY = 6;
-                ctx.fillStyle = baseColor;
-                ctx.beginPath(); ctx.roundRect(-width/2, -height/2, width, height, radius); ctx.fill();
-                ctx.shadowColor = 'transparent';
-                const topGrad = ctx.createLinearGradient(0, -height/2, 0, 0);
-                topGrad.addColorStop(0, topColor); topGrad.addColorStop(1, 'rgba(255, 255, 255, 0)');
-                ctx.fillStyle = topGrad;
-                ctx.beginPath(); ctx.roundRect(-width/2 + 2, -height/2 + 2, width - 4, height/2, [radius, radius, 0, 0]); ctx.fill();
-                const btmGrad = ctx.createLinearGradient(0, 0, 0, height/2);
-                btmGrad.addColorStop(0, 'rgba(0, 0, 0, 0)'); btmGrad.addColorStop(1, sideColor);
-                ctx.fillStyle = btmGrad;
-                ctx.beginPath(); ctx.roundRect(-width/2 + 2, 0, width - 4, height/2 - 2, [0, 0, radius, radius]); ctx.fill();
-                ctx.strokeStyle = 'rgba(197, 179, 88, 0.4)'; ctx.lineWidth = 2;
-                ctx.beginPath(); ctx.roundRect(-width/2, -height/2, width, height, radius); ctx.stroke();
+                ctx.bezierCurveTo(-d / 2, -d / 2, -d, d / 3, 0, d);
+                ctx.bezierCurveTo(d, d / 3, d / 2, -d / 2, 0, 0);
+                ctx.fill();
                 ctx.restore();
             }
+
+            // reusable "3D block" — the body parts are all made of these
+            function draw3DBlock(x, y, width, height, radius, baseColor, topColor, sideColor) {
+                ctx.save();
+                ctx.translate(x, y);
+
+                ctx.shadowColor = 'rgba(197, 179, 88, 0.2)';
+                ctx.shadowBlur = 12;
+                ctx.shadowOffsetY = 6;
+
+                ctx.fillStyle = baseColor;
+                ctx.beginPath();
+                ctx.roundRect(-width/2, -height/2, width, height, radius);
+                ctx.fill();
+
+                ctx.shadowColor = 'transparent';
+
+                // highlight on top
+                const topGrad = ctx.createLinearGradient(0, -height/2, 0, 0);
+                topGrad.addColorStop(0, topColor);
+                topGrad.addColorStop(1, 'rgba(255, 255, 255, 0)');
+                ctx.fillStyle = topGrad;
+                ctx.beginPath();
+                ctx.roundRect(-width/2 + 2, -height/2 + 2, width - 4, height/2, [radius, radius, 0, 0]);
+                ctx.fill();
+
+                // shadow on bottom
+                const btmGrad = ctx.createLinearGradient(0, 0, 0, height/2);
+                btmGrad.addColorStop(0, 'rgba(0, 0, 0, 0)');
+                btmGrad.addColorStop(1, sideColor);
+                ctx.fillStyle = btmGrad;
+                ctx.beginPath();
+                ctx.roundRect(-width/2 + 2, 0, width - 4, height/2 - 2, [0, 0, radius, radius]);
+                ctx.fill();
+
+                ctx.strokeStyle = 'rgba(197, 179, 88, 0.4)';
+                ctx.lineWidth = 2;
+                ctx.beginPath();
+                ctx.roundRect(-width/2, -height/2, width, height, radius);
+                ctx.stroke();
+
+                ctx.restore();
+            }
+
             function drawCute3DRobot() {
                 ctx.clearRect(0, 0, canvas.width, canvas.height);
                 time += 0.04;
+
                 const cx = canvas.width / 2;
                 const hoverOffsetY = Math.sin(time * 2.5) * 8;
                 const cy = canvas.height / 2 + hoverOffsetY;
+
+                // floor shadow
                 const shadowScale = 1 - (hoverOffsetY / 30);
                 ctx.fillStyle = 'rgba(197, 179, 88, 0.12)';
-                ctx.beginPath(); ctx.ellipse(cx, canvas.height - 25, 45 * shadowScale, 10 * shadowScale, 0, 0, Math.PI * 2); ctx.fill();
-                const targetOffsetX = (mouseX - cx) * 0.12, targetOffsetY = (mouseY - cy) * 0.12;
+                ctx.beginPath();
+                ctx.ellipse(cx, canvas.height - 25, 45 * shadowScale, 10 * shadowScale, 0, 0, Math.PI * 2);
+                ctx.fill();
+
+                // eyes follow the cursor
+                const targetOffsetX = (mouseX - cx) * 0.12;
+                const targetOffsetY = (mouseY - cy) * 0.12;
+
+                // ambient glow behind the bot
                 const grad = ctx.createRadialGradient(cx, cy, 10, cx, cy, 110);
-                grad.addColorStop(0, 'rgba(197, 179, 88, 0.15)'); grad.addColorStop(1, 'rgba(0, 0, 0, 0)');
+                grad.addColorStop(0, 'rgba(197, 179, 88, 0.15)');
+                grad.addColorStop(1, 'rgba(0, 0, 0, 0)');
                 ctx.fillStyle = grad;
-                ctx.beginPath(); ctx.arc(cx, cy, 110, 0, Math.PI * 2); ctx.fill();
-                ctx.strokeStyle = '#B85042'; ctx.lineWidth = 3;
-                ctx.beginPath(); ctx.moveTo(cx, cy - 55); ctx.lineTo(cx, cy - 78); ctx.stroke();
+                ctx.beginPath();
+                ctx.arc(cx, cy, 110, 0, Math.PI * 2);
+                ctx.fill();
+
+                // antenna
+                ctx.strokeStyle = '#B85042';
+                ctx.lineWidth = 3;
+                ctx.beginPath();
+                ctx.moveTo(cx, cy - 55);
+                ctx.lineTo(cx, cy - 78);
+                ctx.stroke();
+
+                // glowing antenna tip
                 const orbColor = (state === 'happy') ? '#B85042' : '#C5B358';
-                ctx.fillStyle = orbColor; ctx.shadowColor = orbColor; ctx.shadowBlur = 10;
-                ctx.beginPath(); ctx.arc(cx, cy - 82, 7, 0, Math.PI * 2); ctx.fill();
+                ctx.fillStyle = orbColor;
+                ctx.shadowColor = orbColor;
+                ctx.shadowBlur = 10;
+                ctx.beginPath();
+                ctx.arc(cx, cy - 82, 7, 0, Math.PI * 2);
+                ctx.fill();
                 ctx.shadowColor = 'transparent';
+
+                // ears
                 draw3DBlock(cx - 52, cy - 25, 14, 22, 5, '#0D1F2D', 'rgba(197, 179, 88, 0.3)', 'rgba(0, 0, 0, 0.6)');
                 draw3DBlock(cx + 52, cy - 25, 14, 22, 5, '#0D1F2D', 'rgba(197, 179, 88, 0.3)', 'rgba(0, 0, 0, 0.6)');
+
+                // head
                 draw3DBlock(cx, cy - 25, 92, 60, 18, '#1F4E5B', 'rgba(255, 255, 255, 0.2)', 'rgba(6, 9, 14, 0.8)');
-                ctx.fillStyle = '#06090E'; ctx.strokeStyle = 'rgba(197, 179, 88, 0.3)'; ctx.lineWidth = 1.5;
-                ctx.beginPath(); ctx.roundRect(cx - 38, cy - 43, 76, 36, 10); ctx.fill(); ctx.stroke();
+
+                // face screen
+                ctx.fillStyle = '#06090E';
+                ctx.strokeStyle = 'rgba(197, 179, 88, 0.3)';
+                ctx.lineWidth = 1.5;
+                ctx.beginPath();
+                ctx.roundRect(cx - 38, cy - 43, 76, 36, 10);
+                ctx.fill();
+                ctx.stroke();
+
                 const eyeXShift = Math.max(-8, Math.min(8, targetOffsetX * 0.6));
                 const eyeYShift = Math.max(-5, Math.min(5, targetOffsetY * 0.6));
-                ctx.save(); ctx.translate(cx - 16 + eyeXShift, cy - 25 + eyeYShift); ctx.scale(1, eyeScaleY);
+
+                // left eye
+                ctx.save();
+                ctx.translate(cx - 16 + eyeXShift, cy - 25 + eyeYShift);
+                ctx.scale(1, eyeScaleY);
                 if (state === 'happy') {
-                    ctx.beginPath(); ctx.arc(0, 2, 7, 1.1 * Math.PI, 1.9 * Math.PI, false);
-                    ctx.lineWidth = 3; ctx.strokeStyle = '#B85042'; ctx.stroke();
+                    // curved ^^ eye
+                    ctx.beginPath();
+                    ctx.arc(0, 2, 7, 1.1 * Math.PI, 1.9 * Math.PI, false);
+                    ctx.lineWidth = 3;
+                    ctx.strokeStyle = '#B85042';
+                    ctx.stroke();
                 } else {
-                    ctx.fillStyle = '#C5B358'; ctx.beginPath(); ctx.arc(0, 0, 6.5, 0, Math.PI * 2); ctx.fill();
-                    ctx.fillStyle = '#ffffff'; ctx.beginPath(); ctx.arc(-2, -2, 2, 0, Math.PI * 2); ctx.fill();
+                    ctx.fillStyle = '#C5B358';
+                    ctx.beginPath();
+                    ctx.arc(0, 0, 6.5, 0, Math.PI * 2);
+                    ctx.fill();
+                    ctx.fillStyle = '#ffffff';
+                    ctx.beginPath();
+                    ctx.arc(-2, -2, 2, 0, Math.PI * 2);
+                    ctx.fill();
                 }
                 ctx.restore();
-                ctx.save(); ctx.translate(cx + 16 + eyeXShift, cy - 25 + eyeYShift); ctx.scale(1, eyeScaleY);
+
+                // right eye
+                ctx.save();
+                ctx.translate(cx + 16 + eyeXShift, cy - 25 + eyeYShift);
+                ctx.scale(1, eyeScaleY);
                 if (state === 'happy') {
-                    ctx.beginPath(); ctx.arc(0, 2, 7, 1.1 * Math.PI, 1.9 * Math.PI, false);
-                    ctx.lineWidth = 3; ctx.strokeStyle = '#B85042'; ctx.stroke();
+                    ctx.beginPath();
+                    ctx.arc(0, 2, 7, 1.1 * Math.PI, 1.9 * Math.PI, false);
+                    ctx.lineWidth = 3;
+                    ctx.strokeStyle = '#B85042';
+                    ctx.stroke();
                 } else {
-                    ctx.fillStyle = '#C5B358'; ctx.beginPath(); ctx.arc(0, 0, 6.5, 0, Math.PI * 2); ctx.fill();
-                    ctx.fillStyle = '#ffffff'; ctx.beginPath(); ctx.arc(-2, -2, 2, 0, Math.PI * 2); ctx.fill();
+                    ctx.fillStyle = '#C5B358';
+                    ctx.beginPath();
+                    ctx.arc(0, 0, 6.5, 0, Math.PI * 2);
+                    ctx.fill();
+                    ctx.fillStyle = '#ffffff';
+                    ctx.beginPath();
+                    ctx.arc(-2, -2, 2, 0, Math.PI * 2);
+                    ctx.fill();
                 }
                 ctx.restore();
+
+                // blush
                 ctx.fillStyle = 'rgba(184, 80, 66, 0.4)';
                 ctx.beginPath();
                 ctx.arc(cx - 26 + eyeXShift, cy - 17 + eyeYShift, 4.5, 0, Math.PI * 2);
                 ctx.arc(cx + 26 + eyeXShift, cy - 17 + eyeYShift, 4.5, 0, Math.PI * 2);
                 ctx.fill();
+
+                // body
                 const bodyY = cy + 28;
                 draw3DBlock(cx, bodyY, 70, 48, 14, '#1F4E5B', 'rgba(255, 255, 255, 0.15)', 'rgba(6, 9, 14, 0.8)');
                 drawHeart(cx, bodyY - 10, 10, state === 'happy' ? '#B85042' : '#C5B358', 1.0);
+
+                // arms that wave
                 const armWave = Math.sin(time * 3) * 5;
                 draw3DBlock(cx - 45, bodyY - 2 + armWave, 14, 28, 6, '#0D1F2D', 'rgba(197, 179, 88, 0.2)', 'rgba(0,0,0,0.6)');
                 draw3DBlock(cx + 45, bodyY - 2 - armWave, 14, 28, 6, '#0D1F2D', 'rgba(197, 179, 88, 0.2)', 'rgba(0,0,0,0.6)');
+
+                // update + draw particle hearts
                 particles.forEach((p, idx) => {
-                    p.y -= p.speedY; p.x += Math.sin(time * 4 + idx) * 0.8; p.alpha -= 0.018;
+                    p.y -= p.speedY;
+                    p.x += Math.sin(time * 4 + idx) * 0.8;
+                    p.alpha -= 0.018;
                     drawHeart(p.x, p.y, p.size, p.color, p.alpha);
                     if (p.alpha <= 0) particles.splice(idx, 1);
                 });
             }
-            function robotLoop() { drawCute3DRobot(); requestAnimationFrame(robotLoop); }
+
+            function robotLoop() {
+                drawCute3DRobot();
+                requestAnimationFrame(robotLoop);
+            }
             robotLoop();
-            setInterval(() => { if (state !== 'blink') { eyeScaleY = 0.1; setTimeout(() => { eyeScaleY = 1; }, 180); } }, 3200);
+
+            // blink every ~3 seconds
+            setInterval(() => {
+                if (state !== 'blink') {
+                    eyeScaleY = 0.1;
+                    setTimeout(() => { eyeScaleY = 1; }, 180);
+                }
+            }, 3200);
+
             function triggerHappy() {
                 state = 'happy';
-                if (speech) speech.textContent = `"${speechPhrases.happy[Math.floor(Math.random() * speechPhrases.happy.length)]}"`;
-                for (let i = 0; i < 18; i++) {
-                    particles.push({ x: canvas.width / 2 + (Math.random() * 50 - 25), y: canvas.height / 2 + (Math.random() * 30 - 15), speedY: Math.random() * 1.8 + 0.8, size: Math.random() * 6 + 6, alpha: 1.0, color: ['#B85042', '#C5B358', '#E6E8E6', '#1F4E5B'][Math.floor(Math.random() * 4)] });
+                if (speech) {
+                    const phrase = speechPhrases.happy[Math.floor(Math.random() * speechPhrases.happy.length)];
+                    speech.textContent = `"${phrase}"`;
                 }
+
+                // spawn a burst of hearts
+                for (let i = 0; i < 18; i++) {
+                    particles.push({
+                        x: canvas.width / 2 + (Math.random() * 50 - 25),
+                        y: canvas.height / 2 + (Math.random() * 30 - 15),
+                        speedY: Math.random() * 1.8 + 0.8,
+                        size: Math.random() * 6 + 6,
+                        alpha: 1.0,
+                        color: ['#B85042', '#C5B358', '#E6E8E6', '#1F4E5B'][Math.floor(Math.random() * 4)]
+                    });
+                }
+
                 setTimeout(() => {
                     state = 'idle';
                     if (speech) speech.textContent = `"${speechPhrases.idle[0]}"`;
                 }, 2800);
             }
+
             canvas.addEventListener('click', triggerHappy);
         }
 
-                /* ── Contact form ── */
+        // ============================================================
+        // CONTACT FORM
+        // ============================================================
+
         const contactForm = document.getElementById('contact-form');
         const contactStatus = document.getElementById('contact-status');
         const phoneInput = document.getElementById('contact-phone');
         const phoneCounter = document.getElementById('phone-counter');
         const phoneWarning = document.getElementById('phone-warning');
 
-        // ── Phone input: digits-only + live counter + validation ──
+        // phone input only accepts digits, max 11
         if (phoneInput) {
             phoneInput.addEventListener('input', (e) => {
-                // Strip everything that isn't a digit
+                // strip anything that isn't a digit
                 const digitsOnly = e.target.value.replace(/\D/g, '').slice(0, 11);
                 if (e.target.value !== digitsOnly) {
                     e.target.value = digitsOnly;
                 }
 
-                // Update counter
+                // update counter
                 if (phoneCounter) {
                     phoneCounter.textContent = `${digitsOnly.length}/11`;
                     if (digitsOnly.length === 11) {
@@ -1396,7 +1696,7 @@
                     }
                 }
 
-                // Toggle warning
+                // show/hide warning
                 if (phoneWarning) {
                     if (digitsOnly.length > 0 && digitsOnly.length < 11) {
                         phoneWarning.classList.remove('hidden');
@@ -1406,14 +1706,14 @@
                 }
             });
 
-            // Block non-numeric keys
+            // block letter keys from even registering
             phoneInput.addEventListener('keypress', (e) => {
                 if (e.key.length === 1 && !/\d/.test(e.key)) {
                     e.preventDefault();
                 }
             });
 
-            // Block paste of non-numeric content
+            // pasting — strip non-digits before inserting
             phoneInput.addEventListener('paste', (e) => {
                 e.preventDefault();
                 const pasted = (e.clipboardData || window.clipboardData).getData('text');
@@ -1423,7 +1723,7 @@
             });
         }
 
-        // ── Global tap-to-dismiss keyboard ──
+        // tap outside an input -> dismiss the mobile keyboard
         document.addEventListener('touchstart', (e) => {
             const target = e.target;
             if (!(target instanceof HTMLInputElement) && !(target instanceof HTMLTextAreaElement)) {
@@ -1442,12 +1742,12 @@
             }
         });
 
-        // ── Form submission ──
+        // submit handler — sends to the vercel function at /api/contact
         if (contactForm) {
             contactForm.addEventListener('submit', async (e) => {
                 e.preventDefault();
 
-                // Final validation guard
+                // final check before sending
                 if (phoneInput && phoneInput.value.length !== 11) {
                     contactStatus.classList.remove('hidden');
                     contactStatus.className = "text-center font-semibold text-sm text-[#B85042]";
@@ -1460,21 +1760,29 @@
                 const originalText = submitBtn.innerHTML;
                 submitBtn.disabled = true;
                 submitBtn.innerHTML = '<i class="fa-solid fa-satellite-dish animate-pulse mr-2"></i> Transmitting...';
+
                 const formData = {
                     name: document.getElementById('contact-name').value,
                     phone: document.getElementById('contact-phone').value,
                     subject: document.getElementById('contact-subject').value,
                     message: document.getElementById('contact-msg').value,
                 };
+
                 try {
-                    const response = await fetch('/api/contact', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(formData) });
+                    const response = await fetch('/api/contact', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify(formData)
+                    });
                     const result = await response.json();
+
                     contactStatus.classList.remove('hidden');
                     if (response.ok) {
                         contactStatus.className = "text-center font-semibold text-sm text-[#C5B358]";
                         contactStatus.textContent = `Transmission received! Thank you, ${formData.name}.`;
                         contactForm.reset();
-                        // Reset counter and warning after form clear
+
+                        // reset the phone counter + warning
                         if (phoneCounter) {
                             phoneCounter.textContent = '0/11';
                             phoneCounter.classList.remove('text-emerald-400', 'text-[#B85042]');
