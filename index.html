@@ -7,13 +7,13 @@
     <meta name="description" content="Kian Sogoni — Computer Science student, developer, and storyteller. A Project Hail Mary–inspired portfolio exploring code, media, and design.">
     <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='.9em' font-size='90'%3E%E2%AD%90%3C/text%3E%3C/svg%3E">
 
-    <!-- Tailwind -->
+    <!-- tailwind because writing raw css for everything is pain -->
     <script src="https://cdn.tailwindcss.com"></script>
 
-    <!-- Fonts -->
+    <!-- fonts -->
     <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@500;700;900&family=Plus+Jakarta+Sans:wght@300;400;600;700&family=Press+Start+2P&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 
-    <!-- Icons -->
+    <!-- icons -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 
     <script>
@@ -35,7 +35,7 @@
     </script>
 
     <style>
-        /* PHM palette — pulled from the movie posters basically */
+        /* PHM color palette - grabbed these off the movie poster */
         :root {
             --phm-offwhite: #E6E8E6;
             --phm-sage: #B0B8B0;
@@ -68,7 +68,7 @@
             font-family: 'Press Start 2P', monospace;
         }
 
-        /* glassmorphism for all the panels */
+        /* the frosted glass look for every panel */
         .glass-panel {
             background: var(--glass-bg);
             backdrop-filter: blur(12px);
@@ -84,7 +84,7 @@
             box-shadow: 0 10px 30px 0 rgba(184, 80, 66, 0.15);
         }
 
-        /* scrollbar stuff */
+        /* custom scrollbar */
         ::-webkit-scrollbar { width: 8px; height: 8px; }
         ::-webkit-scrollbar-track { background: #06090E; }
         ::-webkit-scrollbar-thumb { background: rgba(184, 80, 66, 0.4); border-radius: 4px; }
@@ -94,7 +94,7 @@
             text-shadow: 0 0 10px rgba(197, 179, 88, 0.3);
         }
 
-        /* this handles the fake "pages" — each one hides until active-page is set */
+        /* the "fake pages" trick — each section just hides until active */
         .page-view {
             display: none;
             opacity: 0;
@@ -108,7 +108,7 @@
             transform: translateY(0) scale(1);
         }
 
-        /* nav buttons expand their label on hover */
+        /* nav buttons that expand their label on hover */
         .nav-tab-btn {
             position: relative;
             transition: all 0.35s cubic-bezier(0.4, 0, 0.2, 1);
@@ -129,16 +129,16 @@
             margin-left: 0.5rem;
         }
 
-        /* star map modal — hidden by default, JS toggles .active */
+        /* starmap modal — hidden until js adds .active */
         #starmap-modal {
             display: none;
             opacity: 0;
             transition: opacity 0.3s ease;
             touch-action: manipulation;
-            /* gold scrollbar for the modal itself */
+            /* gold scrollbar just for the modal */
             scrollbar-width: thin;
             scrollbar-color: #C5B358 rgba(13, 31, 45, 0.6);
-            /* room for the scrollbar so it doesn't sit on content */
+            /* leaves room so the scrollbar doesn't sit on top of content */
             padding-right: 20px;
         }
 
@@ -151,12 +151,12 @@
             opacity: 1;
         }
 
-        /* hides the page scrollbar when the star map modal is open */
+        /* hides the page scrollbar while the modal is open */
         body.modal-open {
             overflow: hidden;
         }
 
-        /* gold, thicker scrollbar inside the modal — leaves room for its own thumb */
+        /* gold, thicker scrollbar inside the modal */
         #starmap-modal::-webkit-scrollbar {
             width: 12px;
         }
@@ -173,7 +173,7 @@
             background: linear-gradient(180deg, #E6D27A 0%, #C5B358 100%);
         }
 
-        /* prevents weird drag/select behavior on the canvas */
+        /* stops the weird drag/select on the canvas */
         #starmap-canvas {
             touch-action: manipulation;
             -webkit-touch-callout: none;
@@ -188,7 +188,7 @@
             outline-offset: 3px;
         }
 
-        /* tighten the nav on really small phones */
+        /* tighten nav on really narrow phones */
         @media (max-width: 380px) {
             .nav-tab-btn {
                 padding-left: 0.5rem;
@@ -196,7 +196,7 @@
             }
         }
 
-        /* respects the user's system preference */
+        /* respects reduced motion */
         @media (prefers-reduced-motion: reduce) {
             *, *::before, *::after {
                 animation-duration: 0.001ms !important;
@@ -208,19 +208,19 @@
 </head>
 <body class="relative min-h-screen selection:bg-[#B85042]/30 selection:text-[#C5B358]">
 
-    <!-- keyboard users can skip past the nav -->
+    <!-- skip to content for keyboard users -->
     <a href="#page-home" class="sr-only focus:not-sr-only focus:absolute focus:top-2 focus:left-2 focus:z-[100] focus:px-4 focus:py-2 focus:bg-[#C5B358] focus:text-[#0D1F2D] focus:rounded-lg focus:font-bold">
         Skip to content
     </a>
 
-    <!-- the big animated star background -->
+    <!-- animated star field background -->
     <canvas id="cosmic-canvas" aria-hidden="true" class="fixed top-0 left-0 w-full h-full pointer-events-none z-0"></canvas>
 
-    <!-- soft nebula glows floating behind everything -->
+    <!-- soft nebula glows in the corners -->
     <div class="fixed top-1/4 left-10 w-96 h-96 bg-[#1F4E5B]/15 rounded-full blur-3xl pointer-events-none z-0"></div>
     <div class="fixed bottom-1/3 right-10 w-96 h-96 bg-[#B85042]/10 rounded-full blur-3xl pointer-events-none z-0"></div>
 
-    <!-- floating icon nav -->
+    <!-- floating nav -->
     <header class="fixed top-5 left-1/2 -translate-x-1/2 z-40">
         <nav class="glass-panel px-4 py-2.5 flex items-center justify-center gap-2 border-[#C5B358]/20 shadow-2xl" aria-label="Primary navigation">
 
@@ -252,7 +252,7 @@
         </nav>
     </header>
 
-    <!-- floating star map button (bottom right) -->
+    <!-- floating starmap button (bottom right) -->
     <div class="fixed bottom-6 right-6 z-40">
         <button onclick="toggleStarMap()" aria-label="Open star map" class="glass-panel px-4 py-3 border-[#C5B358]/40 flex items-center gap-3 hover:border-[#C5B358] transition-all group shadow-2xl hover:scale-105 active:scale-95">
             <i class="fa-solid fa-compass text-[#C5B358] text-xl group-hover:rotate-45 transition-transform duration-500" aria-hidden="true"></i>
@@ -376,7 +376,7 @@
     <!-- MAIN CONTENT -->
     <main class="relative z-10 pt-28 pb-16 px-4 max-w-6xl mx-auto min-h-[75vh]">
 
-        <!-- PAGE 1: HOME -->
+        <!-- HOME -->
         <section id="page-home" class="page-view active-page">
             <div class="min-h-[70vh] flex flex-col md:flex-row items-center justify-between gap-12 pt-4">
 
@@ -428,7 +428,7 @@
             </div>
         </section>
 
-        <!-- PAGE 2: ABOUT -->
+        <!-- ABOUT -->
         <section id="page-about" class="page-view space-y-10">
             <div class="text-center space-y-2">
                 <h2 class="text-3xl md:text-4xl font-bold tracking-wide">
@@ -438,6 +438,26 @@
             </div>
 
             <div class="grid grid-cols-1 md:grid-cols-12 gap-8">
+
+                <!-- mission statement — why I'm actually in this field -->
+                <div class="md:col-span-12 glass-panel p-6 sm:p-8 relative overflow-hidden border-l-4 border-l-[#B85042]">
+                    <div class="flex items-start gap-4">
+                        <div class="w-12 h-12 rounded-xl bg-[#B85042]/20 flex items-center justify-center border border-[#B85042]/40 flex-shrink-0">
+                            <i class="fa-solid fa-shield-halved text-xl text-[#B85042]" aria-hidden="true"></i>
+                        </div>
+                        <div class="space-y-2">
+                            <div class="text-[10px] font-orbitron text-[#C5B358] tracking-widest uppercase">Long-Term Mission</div>
+                            <h3 class="text-xl md:text-2xl font-bold font-orbitron text-white leading-snug">
+                                Becoming a cybersecurity analyst — and eventually building a firm that keeps everyday Filipinos safe from scams and attacks.
+                            </h3>
+                            <p class="text-[#B0B8B0] text-sm font-light leading-relaxed">
+                                I've seen firsthand how digital attacks hit people who can least afford to recover from them. That's the reason I'm in this field.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- bio + photo -->
                 <div class="md:col-span-12 glass-panel p-6 sm:p-8 relative overflow-hidden">
                     <div class="flex items-center gap-3 mb-6 text-[#C5B358] font-orbitron font-bold text-lg">
                         <div class="w-10 h-10 rounded-xl bg-[#1F4E5B]/40 flex items-center justify-center border border-[#C5B358]/30 flex-shrink-0">
@@ -472,6 +492,31 @@
                     </div>
                 </div>
 
+                <!-- what I'm building right now -->
+                <div class="md:col-span-12 glass-panel p-6 sm:p-8 relative overflow-hidden">
+                    <div class="flex items-center gap-3 mb-5 text-[#C5B358] font-orbitron font-bold text-lg">
+                        <div class="w-10 h-10 rounded-xl bg-[#1F4E5B]/40 flex items-center justify-center border border-[#C5B358]/30 flex-shrink-0">
+                            <i class="fa-solid fa-satellite text-xl text-[#C5B358]" aria-hidden="true"></i>
+                        </div>
+                        <h3>Currently Working On</h3>
+                    </div>
+                    <ul class="space-y-3 text-[#B0B8B0] text-sm font-light">
+                        <li class="flex items-start gap-3">
+                            <i class="fa-solid fa-map text-[#C5B358] mt-1 flex-shrink-0" aria-hidden="true"></i>
+                            <span><strong class="text-[#E6E8E6] font-semibold">Modernized Geospatial Web App</strong> — building a sleek, user-friendly geospatial interface to update tools that are reliable but outdated.</span>
+                        </li>
+                        <li class="flex items-start gap-3">
+                            <i class="fa-solid fa-eye text-[#C5B358] mt-1 flex-shrink-0" aria-hidden="true"></i>
+                            <span><strong class="text-[#E6E8E6] font-semibold">Doorstep Security Vision System</strong> — hooking up local security cameras to custom detection software to monitor doorstep activity.</span>
+                        </li>
+                        <li class="flex items-start gap-3">
+                            <i class="fa-solid fa-book text-[#C5B358] mt-1 flex-shrink-0" aria-hidden="true"></i>
+                            <span><strong class="text-[#E6E8E6] font-semibold">Academic &amp; Lab Focus</strong> — deepening knowledge in Advanced OOP (Java Swing), Database Systems, and Network Architecture.</span>
+                        </li>
+                    </ul>
+                </div>
+
+                <!-- technical skills -->
                 <div class="md:col-span-6 glass-panel p-6 sm:p-8 relative overflow-hidden">
                     <div class="flex items-center gap-3 mb-6 text-[#C5B358] font-orbitron font-bold text-lg">
                         <div class="w-10 h-10 rounded-xl bg-[#1F4E5B]/40 flex items-center justify-center border border-[#C5B358]/30 flex-shrink-0">
@@ -480,34 +525,77 @@
                         <h3>Technical Skills</h3>
                     </div>
 
-                    <div class="grid grid-cols-2 sm:grid-cols-3 gap-3">
-                        <div class="p-3 rounded-xl bg-[#0D1F2D]/80 border border-[#C5B358]/20 hover:border-[#B85042] hover:scale-105 transition-all text-center">
-                            <i class="fa-solid fa-c text-2xl text-[#B85042] mb-1" aria-hidden="true"></i>
-                            <p class="text-xs font-semibold text-[#E6E8E6]">C Language</p>
+                    <!-- languages -->
+                    <div class="mb-4">
+                        <div class="text-[10px] font-orbitron text-[#C5B358]/80 tracking-widest uppercase mb-2">Languages</div>
+                        <div class="grid grid-cols-3 gap-2">
+                            <div class="p-2.5 rounded-lg bg-[#0D1F2D]/80 border border-[#C5B358]/20 hover:border-[#B85042] hover:scale-105 transition-all text-center">
+                                <i class="fa-solid fa-c text-xl text-[#B85042] mb-0.5" aria-hidden="true"></i>
+                                <p class="text-[10px] font-semibold text-[#E6E8E6]">C</p>
+                            </div>
+                            <div class="p-2.5 rounded-lg bg-[#0D1F2D]/80 border border-[#C5B358]/20 hover:border-[#B85042] hover:scale-105 transition-all text-center">
+                                <i class="fa-solid fa-file-code text-xl text-[#C5B358] mb-0.5" aria-hidden="true"></i>
+                                <p class="text-[10px] font-semibold text-[#E6E8E6]">C++</p>
+                            </div>
+                            <div class="p-2.5 rounded-lg bg-[#0D1F2D]/80 border border-[#C5B358]/20 hover:border-[#B85042] hover:scale-105 transition-all text-center">
+                                <i class="fa-brands fa-java text-xl text-[#B85042] mb-0.5" aria-hidden="true"></i>
+                                <p class="text-[10px] font-semibold text-[#E6E8E6]">Java</p>
+                            </div>
+                            <div class="p-2.5 rounded-lg bg-[#0D1F2D]/80 border border-[#C5B358]/20 hover:border-[#B85042] hover:scale-105 transition-all text-center">
+                                <i class="fa-brands fa-js text-xl text-[#C5B358] mb-0.5" aria-hidden="true"></i>
+                                <p class="text-[10px] font-semibold text-[#E6E8E6]">JavaScript</p>
+                            </div>
+                            <div class="p-2.5 rounded-lg bg-[#0D1F2D]/80 border border-[#C5B358]/20 hover:border-[#B85042] hover:scale-105 transition-all text-center">
+                                <i class="fa-brands fa-php text-xl text-[#B85042] mb-0.5" aria-hidden="true"></i>
+                                <p class="text-[10px] font-semibold text-[#E6E8E6]">PHP</p>
+                            </div>
+                            <div class="p-2.5 rounded-lg bg-[#0D1F2D]/80 border border-[#C5B358]/20 hover:border-[#B85042] hover:scale-105 transition-all text-center">
+                                <i class="fa-solid fa-database text-xl text-[#C5B358] mb-0.5" aria-hidden="true"></i>
+                                <p class="text-[10px] font-semibold text-[#E6E8E6]">MySQL</p>
+                            </div>
                         </div>
-                        <div class="p-3 rounded-xl bg-[#0D1F2D]/80 border border-[#C5B358]/20 hover:border-[#B85042] hover:scale-105 transition-all text-center">
-                            <i class="fa-solid fa-file-code text-2xl text-[#C5B358] mb-1" aria-hidden="true"></i>
-                            <p class="text-xs font-semibold text-[#E6E8E6]">C++</p>
+                    </div>
+
+                    <!-- web -->
+                    <div class="mb-4">
+                        <div class="text-[10px] font-orbitron text-[#C5B358]/80 tracking-widest uppercase mb-2">Web</div>
+                        <div class="grid grid-cols-3 gap-2">
+                            <div class="p-2.5 rounded-lg bg-[#0D1F2D]/80 border border-[#C5B358]/20 hover:border-[#B85042] hover:scale-105 transition-all text-center">
+                                <i class="fa-brands fa-html5 text-xl text-[#B85042] mb-0.5" aria-hidden="true"></i>
+                                <p class="text-[10px] font-semibold text-[#E6E8E6]">HTML5</p>
+                            </div>
+                            <div class="p-2.5 rounded-lg bg-[#0D1F2D]/80 border border-[#C5B358]/20 hover:border-[#B85042] hover:scale-105 transition-all text-center">
+                                <i class="fa-brands fa-css3-alt text-xl text-[#C5B358] mb-0.5" aria-hidden="true"></i>
+                                <p class="text-[10px] font-semibold text-[#E6E8E6]">CSS3</p>
+                            </div>
+                            <div class="p-2.5 rounded-lg bg-[#0D1F2D]/80 border border-[#C5B358]/20 hover:border-[#B85042] hover:scale-105 transition-all text-center">
+                                <i class="fa-solid fa-network-wired text-xl text-[#B85042] mb-0.5" aria-hidden="true"></i>
+                                <p class="text-[10px] font-semibold text-[#E6E8E6]">Cisco</p>
+                            </div>
                         </div>
-                        <div class="p-3 rounded-xl bg-[#0D1F2D]/80 border border-[#C5B358]/20 hover:border-[#B85042] hover:scale-105 transition-all text-center">
-                            <i class="fa-brands fa-html5 text-2xl text-[#B85042] mb-1" aria-hidden="true"></i>
-                            <p class="text-xs font-semibold text-[#E6E8E6]">HTML5 / CSS3</p>
-                        </div>
-                        <div class="p-3 rounded-xl bg-[#0D1F2D]/80 border border-[#C5B358]/20 hover:border-[#B85042] hover:scale-105 transition-all text-center">
-                            <i class="fa-solid fa-microchip text-2xl text-[#C5B358] mb-1" aria-hidden="true"></i>
-                            <p class="text-xs font-semibold text-[#E6E8E6]">Arduino IoT</p>
-                        </div>
-                        <div class="p-3 rounded-xl bg-[#0D1F2D]/80 border border-[#C5B358]/20 hover:border-[#B85042] hover:scale-105 transition-all text-center">
-                            <i class="fa-solid fa-database text-2xl text-[#B85042] mb-1" aria-hidden="true"></i>
-                            <p class="text-xs font-semibold text-[#E6E8E6]">SQL Database</p>
-                        </div>
-                        <div class="p-3 rounded-xl bg-[#0D1F2D]/80 border border-[#C5B358]/20 hover:border-[#B85042] hover:scale-105 transition-all text-center">
-                            <i class="fa-brands fa-js text-2xl text-[#C5B358] mb-1" aria-hidden="true"></i>
-                            <p class="text-xs font-semibold text-[#E6E8E6]">JavaScript</p>
+                    </div>
+
+                    <!-- hardware -->
+                    <div>
+                        <div class="text-[10px] font-orbitron text-[#C5B358]/80 tracking-widest uppercase mb-2">Hardware &amp; Prototyping</div>
+                        <div class="grid grid-cols-3 gap-2">
+                            <div class="p-2.5 rounded-lg bg-[#0D1F2D]/80 border border-[#C5B358]/20 hover:border-[#B85042] hover:scale-105 transition-all text-center">
+                                <i class="fa-solid fa-microchip text-xl text-[#C5B358] mb-0.5" aria-hidden="true"></i>
+                                <p class="text-[10px] font-semibold text-[#E6E8E6]">Arduino</p>
+                            </div>
+                            <div class="p-2.5 rounded-lg bg-[#0D1F2D]/80 border border-[#C5B358]/20 hover:border-[#B85042] hover:scale-105 transition-all text-center">
+                                <i class="fa-solid fa-diagram-project text-xl text-[#B85042] mb-0.5" aria-hidden="true"></i>
+                                <p class="text-[10px] font-semibold text-[#E6E8E6]">Tinkercad</p>
+                            </div>
+                            <div class="p-2.5 rounded-lg bg-[#0D1F2D]/80 border border-[#C5B358]/20 hover:border-[#B85042] hover:scale-105 transition-all text-center">
+                                <i class="fa-solid fa-robot text-xl text-[#C5B358] mb-0.5" aria-hidden="true"></i>
+                                <p class="text-[10px] font-semibold text-[#E6E8E6]">IoT</p>
+                            </div>
                         </div>
                     </div>
                 </div>
 
+                <!-- soft skills -->
                 <div class="md:col-span-6 glass-panel p-6 sm:p-8 relative overflow-hidden">
                     <div class="flex items-center gap-3 mb-6 text-[#C5B358] font-orbitron font-bold text-lg">
                         <div class="w-10 h-10 rounded-xl bg-[#1F4E5B]/40 flex items-center justify-center border border-[#C5B358]/30 flex-shrink-0">
@@ -540,12 +628,68 @@
                                 <p class="text-xs text-[#B0B8B0]">Editing news copy and authoring scripts for broadcasting.</p>
                             </div>
                         </div>
+
+                        <div class="p-3 rounded-xl bg-[#0D1F2D]/80 border border-[#C5B358]/20 flex items-center gap-3">
+                            <i class="fa-solid fa-shield-halved text-[#B85042] text-lg w-6 text-center" aria-hidden="true"></i>
+                            <div>
+                                <h4 class="text-sm font-semibold text-[#E6E8E6]">Security Mindset</h4>
+                                <p class="text-xs text-[#B0B8B0]">Thinking about how systems fail before they do.</p>
+                            </div>
+                        </div>
+
+                        <div class="p-3 rounded-xl bg-[#0D1F2D]/80 border border-[#C5B358]/20 flex items-center gap-3">
+                            <i class="fa-solid fa-screwdriver-wrench text-[#C5B358] text-lg w-6 text-center" aria-hidden="true"></i>
+                            <div>
+                                <h4 class="text-sm font-semibold text-[#E6E8E6]">Builder's Persistence</h4>
+                                <p class="text-xs text-[#B0B8B0]">Learning by simulating, prototyping, and iterating — because building is non-negotiable.</p>
+                            </div>
+                        </div>
+
+                        <div class="p-3 rounded-xl bg-[#0D1F2D]/80 border border-[#C5B358]/20 flex items-center gap-3">
+                            <i class="fa-solid fa-newspaper text-[#B85042] text-lg w-6 text-center" aria-hidden="true"></i>
+                            <div>
+                                <h4 class="text-sm font-semibold text-[#E6E8E6]">Journalist Mindset</h4>
+                                <p class="text-xs text-[#B0B8B0]">Technical documentation held to the same standard as news writing.</p>
+                            </div>
+                        </div>
                     </div>
                 </div>
+
+                <!-- where all this came from -->
+                <div class="md:col-span-12 glass-panel p-6 sm:p-8 relative overflow-hidden">
+                    <div class="flex items-center gap-3 mb-5 text-[#C5B358] font-orbitron font-bold text-lg">
+                        <div class="w-10 h-10 rounded-xl bg-[#1F4E5B]/40 flex items-center justify-center border border-[#C5B358]/30 flex-shrink-0">
+                            <i class="fa-solid fa-lightbulb text-xl text-[#C5B358]" aria-hidden="true"></i>
+                        </div>
+                        <h3>Why Tech, and Where It Comes From</h3>
+                    </div>
+
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-4 text-sm">
+                        <div class="p-4 rounded-xl bg-[#0D1F2D]/80 border border-[#C5B358]/20">
+                            <div class="text-[#C5B358] font-orbitron font-semibold text-xs uppercase tracking-wider mb-2">Original Dream</div>
+                            <p class="text-[#B0B8B0] font-light leading-relaxed">
+                                Wanted to be a <span class="text-[#E6E8E6]">Geodetic Engineer</span>. CS was how I could build the spatial tools I once dreamt of using.
+                            </p>
+                        </div>
+                        <div class="p-4 rounded-xl bg-[#0D1F2D]/80 border border-[#C5B358]/20">
+                            <div class="text-[#C5B358] font-orbitron font-semibold text-xs uppercase tracking-wider mb-2">Why Hardware?</div>
+                            <p class="text-[#B0B8B0] font-light leading-relaxed">
+                                Watched <span class="text-[#E6E8E6]">Big Hero 6</span> as a kid, wanted to be Hiro Hamada. Later got hooked on <span class="text-[#E6E8E6]">Michael Reeves</span>' quirky, out-of-the-box builds.
+                            </p>
+                        </div>
+                        <div class="p-4 rounded-xl bg-[#0D1F2D]/80 border border-[#C5B358]/20">
+                            <div class="text-[#C5B358] font-orbitron font-semibold text-xs uppercase tracking-wider mb-2">Journalist Mindset</div>
+                            <p class="text-[#B0B8B0] font-light leading-relaxed">
+                                I treat technical documentation and communication with the same precision as news writing.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+
             </div>
         </section>
 
-        <!-- PAGE 3: PROJECTS -->
+        <!-- PROJECTS -->
         <section id="page-projects" class="page-view space-y-8">
             <div class="text-center space-y-2">
                 <h2 class="text-3xl md:text-4xl font-bold tracking-wide">
@@ -556,7 +700,7 @@
 
             <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
 
-                <!-- E-Pharmacy -->
+                <!-- 1. e-pharmacy -->
                 <div class="glass-panel overflow-hidden flex flex-col justify-between group">
                     <div class="relative h-48 overflow-hidden bg-[#0D1F2D]">
                         <svg class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" viewBox="0 0 400 200" aria-hidden="true">
@@ -582,7 +726,7 @@
                     </div>
                 </div>
 
-                <!-- Online Ordering -->
+                <!-- 2. online ordering -->
                 <div class="glass-panel overflow-hidden flex flex-col justify-between group">
                     <div class="relative h-48 overflow-hidden bg-[#0D1F2D]">
                         <svg class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" viewBox="0 0 400 200" aria-hidden="true">
@@ -611,7 +755,7 @@
                     </div>
                 </div>
 
-                <!-- Scientific Calculator -->
+                <!-- 3. sci calc -->
                 <div class="glass-panel overflow-hidden flex flex-col justify-between group">
                     <div class="relative h-48 overflow-hidden bg-[#0D1F2D]">
                         <svg class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" viewBox="0 0 400 200" aria-hidden="true">
@@ -642,7 +786,7 @@
                     </div>
                 </div>
 
-                <!-- PHM UI Tribute -->
+                <!-- 4. phm ui -->
                 <div class="glass-panel overflow-hidden flex flex-col justify-between group">
                     <div class="relative h-48 overflow-hidden bg-[#0D1F2D]">
                         <svg class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" viewBox="0 0 400 200" aria-hidden="true">
@@ -673,7 +817,7 @@
                     </div>
                 </div>
 
-                <!-- NSPC Champion (full width) -->
+                <!-- 5. nspc (full width) -->
                 <div class="glass-panel overflow-hidden flex flex-col justify-between group md:col-span-2">
                     <div class="relative h-48 overflow-hidden bg-[#0D1F2D]">
                         <svg class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" viewBox="0 0 400 200" aria-hidden="true">
@@ -696,7 +840,7 @@
             </div>
         </section>
 
-        <!-- PAGE 4: GALLERY -->
+        <!-- GALLERY -->
         <section id="page-gallery" class="page-view space-y-8">
             <div class="text-center space-y-2">
                 <h2 class="text-3xl md:text-4xl font-bold tracking-wide">
@@ -740,7 +884,7 @@
                 </a>
             </div>
 
-            <!-- photo dump — masonry style, 20 images -->
+            <!-- photo dump - 20 images in masonry -->
             <div class="text-center space-y-2 mt-20">
                 <h3 class="text-2xl md:text-3xl font-bold tracking-wide">
                     Photo <span class="text-[#C5B358] text-glow-yellow">Compilation</span>
@@ -812,7 +956,7 @@
             </div>
         </section>
 
-        <!-- PAGE 5: CONTACT -->
+        <!-- CONTACT -->
         <section id="page-contact" class="page-view space-y-8">
             <div class="glass-panel p-6 sm:p-8 md:p-12 max-w-2xl mx-auto relative overflow-hidden">
                 <div class="text-center space-y-2 mb-8">
@@ -902,7 +1046,7 @@
 
     </main>
 
-    <!-- FOOTER -->
+    <!-- footer -->
     <footer class="max-w-7xl mx-auto w-full px-4 sm:px-6 lg:px-8 mt-12 mb-6 relative z-10">
         <div class="glass-panel rounded-2xl border border-[#C5B358]/20 py-6 px-6 text-center flex flex-col items-center justify-center space-y-2">
 
@@ -918,8 +1062,8 @@
     </footer>
 
     <script>
-        // star background animation - speed lines + twinkling stars
-        // built this because the plain black bg looked too empty lol
+        // star field bg — speed lines + twinkling stars
+        // built this because plain black looked too empty lol
         (function initCosmicBackground() {
             const canvas = document.getElementById('cosmic-canvas');
             if (!canvas) return;
@@ -960,7 +1104,7 @@
                     });
                 }
 
-                // star density scaled by canvas area
+                // star density scales with canvas area
                 const starCount = Math.floor((canvas.width * canvas.height) / 3800);
                 for (let i = 0; i < starCount; i++) {
                     stars.push({
@@ -977,7 +1121,7 @@
             function draw() {
                 ctx.clearRect(0, 0, canvas.width, canvas.height);
 
-                // drifting speed lines (diagonal)
+                // diagonal speed lines drifting down-right
                 for (const line of speedLines) {
                     line.y += line.speed * 1.1;
                     line.x += line.speed * 0.65;
@@ -1021,7 +1165,7 @@
             draw();
         })();
 
-        // fake "pages" — hide/show sections by adding .active-page
+        // "fake pages" — hides every section then shows the one we want
         function switchPage(pageId) {
             document.querySelectorAll('.page-view').forEach(p => p.classList.remove('active-page'));
             document.querySelectorAll('.nav-tab-btn').forEach(btn => {
@@ -1040,8 +1184,8 @@
 
         // ============================================================
         // STAR MAP
-        // 3D star positions get rotated + projected onto a 2D canvas
-        // so you can drag to orbit and scroll to zoom
+        // stars have 3D positions that get rotated then projected down
+        // to 2D, so you can drag to orbit + scroll to zoom
         // ============================================================
 
         const STAR_DATA = [
@@ -1053,7 +1197,7 @@
             { id: 'sirius', name: 'Sirius', x: -30, y: 90, z: -50, color: '#FFFFFF', radius: 10, class: 'Class A1V', subtitle: 'Brightest Star', dist: '8.6 ly', astrophage: 'NOMINAL', desc: 'Luminous main sequence star. No Petrova spectrum anomalies detected.' }
         ];
 
-        // dashed lines showing mission paths between systems
+        // dashed lines showing mission paths
         const TRAJECTORIES = [
             { from: 'sol', to: 'tau_ceti', color: 'rgba(197, 179, 88, 0.6)' },
             { from: 'tau_ceti', to: 'eridani', color: 'rgba(0, 229, 255, 0.6)' },
@@ -1089,7 +1233,7 @@
                 this.targetRotX = this.rotX;
                 this.targetRotY = this.rotY;
 
-                // touch state (mobile)
+                // touch state for mobile
                 this.touchMode = null;
                 this.lastTouchDist = 0;
                 this.hoveredStar = null;
@@ -1103,7 +1247,7 @@
                 this.bindEvents();
             }
 
-            // canvas needs to match its display size × DPR or it looks blurry
+            // canvas internal size has to be display size × dpr or it's blurry
             resize() {
                 if (!this.canvas) return;
                 const rect = this.canvas.parentElement.getBoundingClientRect();
@@ -1178,7 +1322,7 @@
                 }, { passive: false });
 
                 this.canvas.addEventListener('touchend', () => {
-                    // treat quick tap as select if we landed on a star
+                    // quick tap selects the star under the last touch
                     if (this.touchMode === 'drag' && this.hoveredStar) {
                         updateSelectedStar(this.hoveredStar);
                     }
@@ -1194,7 +1338,7 @@
             }
 
             // 3D point -> 2D screen coords
-            // rotate on Y axis, then X axis, then perspective divide
+            // rotate on Y axis, then X, then perspective divide
             project(x, y, z) {
                 const rx = x * Math.cos(this.rotY) - z * Math.sin(this.rotY);
                 let rz = x * Math.sin(this.rotY) + z * Math.cos(this.rotY);
@@ -1209,7 +1353,7 @@
                 };
             }
 
-            // figure out which star (if any) is under the cursor
+            // which star (if any) is under the cursor
             checkHover(mouseX, mouseY) {
                 let found = null;
                 let bestDist = Infinity;
@@ -1218,7 +1362,7 @@
                     const p = this.project(star.x, star.y, star.z);
                     const dist = Math.hypot(p.x - mouseX, p.y - mouseY);
                     const hitRadius = star.radius * p.scale * 1.5;
-                    // pick the closest one so overlapping stars don't fight
+                    // pick closest so overlapping stars don't fight
                     if (dist < hitRadius && dist < bestDist) {
                         bestDist = dist;
                         found = star;
@@ -1229,7 +1373,7 @@
                 this.canvas.style.cursor = found ? 'pointer' : (this.isDragging ? 'grabbing' : 'grab');
             }
 
-            // smooth camera interpolation — makes drag feel nice instead of jumpy
+            // smooth camera interpolation so drag feels nice not jumpy
             ease() {
                 const k = 0.15;
                 this.zoom += (this.targetZoom - this.zoom) * k;
@@ -1244,7 +1388,7 @@
                 this.ease();
                 this.ctx.clearRect(0, 0, this.width, this.height);
 
-                // faint grid lines for depth
+                // faint grid for depth
                 this.ctx.strokeStyle = 'rgba(197, 179, 88, 0.05)';
                 this.ctx.lineWidth = 1;
                 for (let x = -200; x <= 200; x += 40) {
@@ -1256,7 +1400,7 @@
                     this.ctx.stroke();
                 }
 
-                // trajectory lines between systems
+                // trajectory lines
                 if (showTrajectories) {
                     TRAJECTORIES.forEach(traj => {
                         const s1 = STAR_DATA.find(s => s.id === traj.from);
@@ -1277,7 +1421,7 @@
                     });
                 }
 
-                // draw stars back-to-front so closer ones overlap correctly
+                // draw stars back-to-front so near ones overlap right
                 STAR_DATA.slice().sort((a, b) =>
                     this.project(b.x, b.y, b.z).depth - this.project(a.x, a.y, a.z).depth
                 ).forEach(star => {
@@ -1301,7 +1445,7 @@
                     this.ctx.arc(p.x, p.y, star.radius * p.scale, 0, Math.PI * 2);
                     this.ctx.fill();
 
-                    // white highlight dot
+                    // white highlight
                     this.ctx.fillStyle = '#FFFFFF';
                     this.ctx.beginPath();
                     this.ctx.arc(p.x, p.y, star.radius * 0.45 * p.scale, 0, Math.PI * 2);
@@ -1324,7 +1468,7 @@
                 });
             }
 
-            // used by the "center camera" button
+            // used by "center camera on system" button
             focusOn(x, y) {
                 this.targetPanX = -x;
                 this.targetPanY = -y;
@@ -1336,11 +1480,11 @@
             const isOpening = !modal.classList.contains('active');
             modal.classList.toggle('active');
 
-            // hide the page scrollbar while modal is open so scrollbars don't stack
+            // stop the page behind from scrolling while modal is open
             document.body.classList.toggle('modal-open', isOpening);
 
             if (isOpening) {
-                // small delay because the canvas needs to be visible before we measure it
+                // tiny delay because the canvas has to be visible before we measure it
                 setTimeout(() => {
                     if (!starmapEngine) {
                         starmapEngine = new StarMapEngine('starmap-canvas');
@@ -1358,7 +1502,7 @@
                     loop();
                 }, 60);
             } else {
-                // stop the loop when modal closes to save CPU
+                // stop the loop when closed to save cpu
                 if (starmapEngine && starmapEngine._loop) {
                     cancelAnimationFrame(starmapEngine._loop);
                     starmapEngine._loop = null;
@@ -1382,7 +1526,7 @@
             updateInfoPanel(star);
         }
 
-        // used by the "Featured Locations" quick buttons
+        // used by the "featured locations" quick buttons
         function selectStarByName(name) {
             const star = STAR_DATA.find(s => s.name.toLowerCase() === name.toLowerCase());
             if (star) {
@@ -1409,7 +1553,7 @@
             showTrajectories = !showTrajectories;
         }
 
-        // ESC closes the modal
+        // esc closes the modal
         document.addEventListener('keydown', (e) => {
             if (e.key === 'Escape') {
                 const modal = document.getElementById('starmap-modal');
@@ -1475,7 +1619,7 @@
                 ctx.restore();
             }
 
-            // reusable "3D block" — the body parts are all made of these
+            // reusable "3D block" — the whole robot is made from these
             function draw3DBlock(x, y, width, height, radius, baseColor, topColor, sideColor) {
                 ctx.save();
                 ctx.translate(x, y);
@@ -1491,7 +1635,7 @@
 
                 ctx.shadowColor = 'transparent';
 
-                // highlight on top
+                // top highlight
                 const topGrad = ctx.createLinearGradient(0, -height/2, 0, 0);
                 topGrad.addColorStop(0, topColor);
                 topGrad.addColorStop(1, 'rgba(255, 255, 255, 0)');
@@ -1500,7 +1644,7 @@
                 ctx.roundRect(-width/2 + 2, -height/2 + 2, width - 4, height/2, [radius, radius, 0, 0]);
                 ctx.fill();
 
-                // shadow on bottom
+                // bottom shadow
                 const btmGrad = ctx.createLinearGradient(0, 0, 0, height/2);
                 btmGrad.addColorStop(0, 'rgba(0, 0, 0, 0)');
                 btmGrad.addColorStop(1, sideColor);
@@ -1533,11 +1677,11 @@
                 ctx.ellipse(cx, canvas.height - 25, 45 * shadowScale, 10 * shadowScale, 0, 0, Math.PI * 2);
                 ctx.fill();
 
-                // eyes follow the cursor
+                // eyes follow cursor
                 const targetOffsetX = (mouseX - cx) * 0.12;
                 const targetOffsetY = (mouseY - cy) * 0.12;
 
-                // ambient glow behind the bot
+                // ambient glow behind bot
                 const grad = ctx.createRadialGradient(cx, cy, 10, cx, cy, 110);
                 grad.addColorStop(0, 'rgba(197, 179, 88, 0.15)');
                 grad.addColorStop(1, 'rgba(0, 0, 0, 0)');
@@ -1554,7 +1698,7 @@
                 ctx.lineTo(cx, cy - 78);
                 ctx.stroke();
 
-                // glowing antenna tip
+                // glowing tip
                 const orbColor = (state === 'happy') ? '#B85042' : '#C5B358';
                 ctx.fillStyle = orbColor;
                 ctx.shadowColor = orbColor;
@@ -1640,12 +1784,12 @@
                 draw3DBlock(cx, bodyY, 70, 48, 14, '#1F4E5B', 'rgba(255, 255, 255, 0.15)', 'rgba(6, 9, 14, 0.8)');
                 drawHeart(cx, bodyY - 10, 10, state === 'happy' ? '#B85042' : '#C5B358', 1.0);
 
-                // arms that wave
+                // waving arms
                 const armWave = Math.sin(time * 3) * 5;
                 draw3DBlock(cx - 45, bodyY - 2 + armWave, 14, 28, 6, '#0D1F2D', 'rgba(197, 179, 88, 0.2)', 'rgba(0,0,0,0.6)');
                 draw3DBlock(cx + 45, bodyY - 2 - armWave, 14, 28, 6, '#0D1F2D', 'rgba(197, 179, 88, 0.2)', 'rgba(0,0,0,0.6)');
 
-                // update + draw particle hearts
+                // heart particles drift up and fade
                 particles.forEach((p, idx) => {
                     p.y -= p.speedY;
                     p.x += Math.sin(time * 4 + idx) * 0.8;
@@ -1676,7 +1820,7 @@
                     speech.textContent = `"${phrase}"`;
                 }
 
-                // spawn a burst of hearts
+                // burst of hearts
                 for (let i = 0; i < 18; i++) {
                     particles.push({
                         x: canvas.width / 2 + (Math.random() * 50 - 25),
@@ -1707,10 +1851,10 @@
         const phoneCounter = document.getElementById('phone-counter');
         const phoneWarning = document.getElementById('phone-warning');
 
-        // phone input only accepts digits, max 11
+        // phone input — digits only, max 11
         if (phoneInput) {
             phoneInput.addEventListener('input', (e) => {
-                // strip anything that isn't a digit
+                // strip anything that isn't a number
                 const digitsOnly = e.target.value.replace(/\D/g, '').slice(0, 11);
                 if (e.target.value !== digitsOnly) {
                     e.target.value = digitsOnly;
@@ -1741,14 +1885,14 @@
                 }
             });
 
-            // block letter keys from even registering
+            // block letters from even registering
             phoneInput.addEventListener('keypress', (e) => {
                 if (e.key.length === 1 && !/\d/.test(e.key)) {
                     e.preventDefault();
                 }
             });
 
-            // pasting — strip non-digits before inserting
+            // paste — strip non-digits first
             phoneInput.addEventListener('paste', (e) => {
                 e.preventDefault();
                 const pasted = (e.clipboardData || window.clipboardData).getData('text');
@@ -1758,7 +1902,7 @@
             });
         }
 
-        // tap outside an input -> dismiss the mobile keyboard
+        // tap outside an input -> close the mobile keyboard
         document.addEventListener('touchstart', (e) => {
             const target = e.target;
             if (!(target instanceof HTMLInputElement) && !(target instanceof HTMLTextAreaElement)) {
@@ -1777,12 +1921,12 @@
             }
         });
 
-        // submit handler — sends to the vercel function at /api/contact
+        // submit — sends to the vercel function at /api/contact
         if (contactForm) {
             contactForm.addEventListener('submit', async (e) => {
                 e.preventDefault();
 
-                // final check before sending
+                // last check before sending
                 if (phoneInput && phoneInput.value.length !== 11) {
                     contactStatus.classList.remove('hidden');
                     contactStatus.className = "text-center font-semibold text-sm text-[#B85042]";
@@ -1817,7 +1961,7 @@
                         contactStatus.textContent = `Transmission received! Thank you, ${formData.name}.`;
                         contactForm.reset();
 
-                        // reset the phone counter + warning
+                        // reset phone counter + warning
                         if (phoneCounter) {
                             phoneCounter.textContent = '0/11';
                             phoneCounter.classList.remove('text-emerald-400', 'text-[#B85042]');
