@@ -4,7 +4,7 @@
 
 My personal portfolio — a Project Hail Mary–inspired single-page site built to show off code, media, and design work all in one place. Hand-rolled canvas graphics, no framework, no build step, no dependencies beyond a CDN or two.
 
-**Live:** [kiansogoni.github.io/Portfolio-Hail-Mary](https://kiansogoni.github.io/) *(swap for your real URL)*
+**Live:** https://portfolio-web-eight-peach.vercel.app/
 
 ---
 
